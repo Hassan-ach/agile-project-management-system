@@ -10,20 +10,20 @@ import java.util.List;
 public class ProductBackLogJpaMapper {
 
     public static ProductBackLogJpaEntity
-    toJpaEntity(ProductBackLog ProductBackLog) {
-        if (ProductBackLog == null) {
+    toJpaEntity(ProductBackLog productBackLog) {
+        if (productBackLog == null) {
             return null;
         }
 
         ProductBackLogJpaEntity jpaEntity =
             ProductBackLogJpaEntity.builder()
-                .id(ProductBackLog.getId())
-                .name(ProductBackLog.getName())
-                .description(ProductBackLog.getDescription())
-                .createdDate(ProductBackLog.getCreatedDate())
-                .createdBy(ProductBackLog.getCreatedBy())
-                .lastModifiedDate(ProductBackLog.getLastModifiedDate())
-                .lastModifiedBy(ProductBackLog.getLastModifiedBy())
+                .id(productBackLog.getId())
+                .name(productBackLog.getName())
+                .description(productBackLog.getDescription())
+                .createdDate(productBackLog.getCreatedDate())
+                .createdBy(productBackLog.getCreatedBy())
+                .lastModifiedDate(productBackLog.getLastModifiedDate())
+                .lastModifiedBy(productBackLog.getLastModifiedBy())
                 .build();
         return jpaEntity;
     }

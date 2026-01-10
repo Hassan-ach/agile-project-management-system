@@ -12,7 +12,7 @@ import java.util.List;
 public class ProductBackLogResponseMapper {
 
     public static ProductBackLogResponse
-    tResponse(ProductBackLog productBackLog) {
+    toResponse(ProductBackLog productBackLog) {
         return ProductBackLogResponse.builder()
             .id(productBackLog.getId())
             .name(productBackLog.getName())

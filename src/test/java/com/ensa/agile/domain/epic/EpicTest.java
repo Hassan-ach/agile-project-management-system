@@ -62,6 +62,11 @@ public class EpicTest {
         if (expectedValidity) {
             assertDoesNotThrow(
                 () -> { epic.updateMetadata(title, description); });
+
+            if (title != null)
+                assert (epic.getTitle().equals(title));
+            if (description != null)
+                assert (epic.getDescription().equals(description));
         } else {
             assertThrows(ValidationException.class,
                          () -> { epic.updateMetadata(title, description); });

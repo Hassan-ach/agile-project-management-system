@@ -9,10 +9,10 @@ import com.ensa.agile.domain.product.entity.ProductBackLog;
 import com.ensa.agile.domain.product.entity.ProjectMember;
 import com.ensa.agile.domain.product.enums.MemberStatus;
 import com.ensa.agile.domain.product.enums.RoleType;
+import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.testfactory.TestProductBackLogFactory;
 import com.ensa.agile.testfactory.TestProjectMemberFactory;
 import com.ensa.agile.testfactory.TestUserFactory;
-import com.ensa.agile.domain.user.entity.User;
 import org.junit.jupiter.api.Test;
 
 public class ProjectMemberTest {

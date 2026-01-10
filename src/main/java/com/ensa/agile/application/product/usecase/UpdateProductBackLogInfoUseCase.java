@@ -29,7 +29,7 @@ public class UpdateProductBackLogInfoUseCase
 
         productBackLog.updateMetadata(data.getName(), data.getDescription());
 
-        return ProductBackLogResponseMapper.tResponse(
+        return ProductBackLogResponseMapper.toResponse(
             productBackLogRepository.save(productBackLog));
     }
 }

@@ -55,7 +55,7 @@ public class CreateProductBackLogUseCase
         projectMemberRepository.save(pm);
 
         ProductBackLogResponse response =
-            ProductBackLogResponseMapper.tResponse(pbSaved);
+            ProductBackLogResponseMapper.toResponse(pbSaved);
         return response;
     }
 }

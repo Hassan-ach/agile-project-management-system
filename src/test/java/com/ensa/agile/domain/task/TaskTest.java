@@ -100,6 +100,15 @@ public class TaskTest {
                 task.updateMetadata(title, description, estimatedHours,
                                     actualHours);
             });
+            if (title != null && !title.isEmpty())
+                assert task.getTitle().equals(title);
+            if (description != null && !description.isEmpty())
+                assert task.getDescription().equals(description);
+            if (estimatedHours != null)
+                assert task.getEstimatedHours().equals(estimatedHours);
+            if (actualHours != null)
+                assert task.getActualHours().equals(actualHours);
+
         } else {
             assertThrows(ValidationException.class, () -> {
                 task.updateMetadata(title, description, estimatedHours,

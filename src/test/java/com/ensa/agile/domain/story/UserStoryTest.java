@@ -112,6 +112,20 @@ public class UserStoryTest {
                     moscowType != null ? MoscowType.valueOf(moscowType) : null,
                     storyPoints, acceptanceCriteria);
             });
+
+            if (title != null && !title.isEmpty())
+                assert (userStory.getTitle().equals(title));
+            if (description != null && !description.isEmpty())
+                assert (userStory.getDescription().equals(description));
+            if (moscowType != null)
+                assert (userStory.getPriority().equals(
+                    MoscowType.valueOf(moscowType)));
+            if (storyPoints != null)
+                assert (userStory.getStoryPoints().equals(storyPoints));
+            if (acceptanceCriteria != null && !acceptanceCriteria.isEmpty())
+                assert (userStory.getAcceptanceCriteria().equals(
+                    acceptanceCriteria));
+
         } else {
             assertThrows(ValidationException.class, () -> {
                 userStory.updateMetaData(
