@@ -6,6 +6,7 @@ import com.ensa.agile.application.global.service.ICurrentUser;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.user.exception.UserAlreadyInvitedException;
+import com.ensa.agile.domain.global.exception.BusinessRuleViolationException;
 import com.ensa.agile.domain.product.entity.ProjectMember;
 import com.ensa.agile.domain.product.enums.MemberStatus;
 import com.ensa.agile.domain.product.enums.RoleType;
@@ -49,8 +50,8 @@ public abstract class InviteUseCase
     private InviteResponse invite(InviteRequest data, RoleType roleType) {
         User currentUser = currentUserService.getCurrentUser();
         if (currentUser.getEmail() == data.getEmail()) {
-            throw new IllegalStateException("You cannot invite yourself as " +
-                                            roleType);
+            throw new BusinessRuleViolationException(
+                "You cannot invite yourself as " + roleType);
         }
 
         User u = userRepository.findByEmail(data.getEmail());
