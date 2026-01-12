@@ -5,10 +5,13 @@ import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.product.enums.MemberStatus;
 import com.ensa.agile.domain.product.enums.RoleType;
 import com.ensa.agile.domain.user.entity.User;
+
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Getter
+@Setter
 @SuperBuilder
 public class ProjectMember extends BaseDomainEntity {
 

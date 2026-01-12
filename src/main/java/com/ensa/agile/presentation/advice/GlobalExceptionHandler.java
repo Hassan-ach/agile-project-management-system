@@ -60,12 +60,12 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Map<String, String>>
-    handleIllegalStateException(IllegalStateException ex) {
-        return buildErrorResponse(ex.getMessage(),
-                                  HttpStatus.UNPROCESSABLE_CONTENT);
-    }
+    // @ExceptionHandler(IllegalStateException.class)
+    // public ResponseEntity<Map<String, String>>
+    // handleIllegalStateException(IllegalStateException ex) {
+    //     return buildErrorResponse(ex.getMessage(),
+    //                               HttpStatus.UNPROCESSABLE_CONTENT);
+    // }
 
     @ExceptionHandler({AuthenticationFailureException.class,
                        InvalidCredentialsException.class})

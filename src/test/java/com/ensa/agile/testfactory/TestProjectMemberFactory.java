@@ -3,6 +3,7 @@ package com.ensa.agile.testfactory;
 import com.ensa.agile.domain.product.entity.ProjectMember;
 import com.ensa.agile.domain.product.enums.MemberStatus;
 import com.ensa.agile.domain.product.enums.RoleType;
+import java.util.UUID;
 
 public class TestProjectMemberFactory {
 
@@ -21,6 +22,7 @@ public class TestProjectMemberFactory {
     private static ProjectMember newProjectMember(RoleType role,
                                                   MemberStatus status) {
         return ProjectMember.builder()
+            .id(UUID.randomUUID().toString())
             .user(TestUserFactory.validUser())
             .productBackLog(TestProductBackLogFactory.validProduct())
             .role(role)
