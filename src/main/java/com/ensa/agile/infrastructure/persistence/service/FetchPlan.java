@@ -48,4 +48,63 @@ public final class FetchPlan {
 
         return p;
     }
+
+    public boolean needsMembers(Target target) {
+        return switch (target) {
+            case PRODUCT -> members;
+            case SPRINT, EPIC, STORY -> false;
+        };
+    }
+
+    public boolean needsSprints(Target targer) {
+        return switch (targer) {
+            case PRODUCT -> sprints;
+            case SPRINT -> true;
+            case EPIC, STORY -> false;
+        };
+    }
+    public boolean needsSprintsMembers(Target target) {
+        return switch (target) {
+            case PRODUCT, SPRINT -> sprintMembers;
+            case EPIC, STORY -> false;
+        };
+    }
+    public boolean needsEpics(Target target) {
+        return switch (target) {
+            case PRODUCT -> epics;
+            case EPIC -> true;
+            case SPRINT, STORY -> false;
+        };
+    }
+    public boolean needsEpicStories(Target target) {
+        return switch (target) {
+            case PRODUCT, EPIC -> epicStories;
+            case SPRINT, STORY -> false;
+        };
+    }
+
+    public boolean needsSprintStories(Target target) {
+        return switch (target) {
+            case PRODUCT, SPRINT -> sprintStories;
+            case EPIC, STORY -> false;
+        };
+    }
+
+    public boolean needsOrphanStories(Target target) {
+        return switch (target) {
+            case PRODUCT -> orphanStories;
+            case STORY -> true;
+            case SPRINT, EPIC -> false;
+        };
+    }
+
+    public boolean needsTasks(Target target) {
+        return switch (target) {
+            case PRODUCT ->
+                sprintStoryTasks || epicStoryTasks || orphanStoryTasks;
+            case SPRINT -> sprintStoryTasks;
+            case EPIC -> epicStoryTasks;
+            case STORY -> true;
+        };
+    }
 }

@@ -30,20 +30,23 @@ public class Transformer {
         if (rows == null || rows.isEmpty())
             return null;
 
-        // 1. Root Object (Backlog)
+        // 1. Root Object Initialization
+        // If Product data is missing (sparse row), we return a skeleton
+        // response that holds the requested entity (Sprint, Epic, or Story).
         Row firstRow = rows.get(0);
-        ProductBackLogResponse response = mapBacklog(firstRow);
+        ProductBackLogResponse response =
+            firstRow.getProductId() != null
+                ? mapBacklog(firstRow)
+                : ProductBackLogResponse.builder().build();
 
-        // 2. Identity Maps to handle nesting and prevent duplicates
+        // 2. Identity Maps
         Map<String, ProjectMemberResponse> membersMap = new LinkedHashMap<>();
         Map<String, SprintBackLogResponse> sprintsMap = new LinkedHashMap<>();
         Map<String, EpicResponse> epicsMap = new LinkedHashMap<>();
         Map<String, UserStoryResponse> storiesMap = new LinkedHashMap<>();
-        // Tracks which stories belong to which Epics or the Root
         Map<String, List<UserStoryResponse>> epicStories = new HashMap<>();
 
         for (Row row : rows) {
-
             // Process Project Member
             if (row.getProjectMemberId() != null) {
                 membersMap.computeIfAbsent(row.getProjectMemberId(),
@@ -52,13 +55,14 @@ public class Transformer {
 
             // Process Sprint
             if (row.getSprintId() != null) {
-                sprintsMap.computeIfAbsent(row.getSprintId(),
-                                           id -> mapSprint(row));
-                // Add Sprint Member if present
+                SprintBackLogResponse sprint = sprintsMap.computeIfAbsent(
+                    row.getSprintId(), id -> mapSprint(row));
+
                 if (row.getSprintMemberId() != null) {
-                    sprintsMap.get(row.getSprintId())
-                        .getMembers()
-                        .add(mapSprintMember(row));
+                    if (sprint.getMembers().stream().noneMatch(
+                            m -> m.getId().equals(row.getSprintMemberId()))) {
+                        sprint.getMembers().add(mapSprintMember(row));
+                    }
                 }
             }
 
@@ -72,22 +76,28 @@ public class Transformer {
                 UserStoryResponse story = storiesMap.computeIfAbsent(
                     row.getStoryId(), id -> mapStory(row));
 
-                // Link Story to Epic if applicable
+                // Link to Epic Map if the row shows this story belongs to an
+                // epic
                 if (row.getEpicId() != null) {
-                    epicStories
-                        .computeIfAbsent(row.getEpicId(),
-                                         k -> new ArrayList<>())
-                        .add(story);
+                    List<UserStoryResponse> list = epicStories.computeIfAbsent(
+                        row.getEpicId(), k -> new ArrayList<>());
+                    if (list.stream().noneMatch(
+                            s -> s.getId().equals(story.getId()))) {
+                        list.add(story);
+                    }
                 }
 
                 // Process Task
                 if (row.getTaskId() != null) {
-                    story.getTasks().add(mapTask(row));
+                    if (story.getTasks().stream().noneMatch(
+                            t -> t.getId().equals(row.getTaskId()))) {
+                        story.getTasks().add(mapTask(row));
+                    }
                 }
             }
         }
 
-        // 3. Assemble the Hierarchy
+        // 3. Assemble Hierarchy
         response.setProjectMembers(new ArrayList<>(membersMap.values()));
         response.setSprintBackLogs(new ArrayList<>(sprintsMap.values()));
 
@@ -98,8 +108,11 @@ public class Transformer {
         });
         response.setEpics(new ArrayList<>(epicsMap.values()));
 
-        // Attach Orphan Stories (Stories with no Epic)
-        response.setUserStories(
+        // 4. Resolve Orphan/Root Stories
+        // A story is added to the root list if it appears in at least one row
+        // where epicId is null. This handles PRODUCT, SPRINT, and STORY targets
+        // automatically.
+        List<UserStoryResponse> rootStories =
             storiesMap.values()
                 .stream()
                 .filter(s
@@ -107,7 +120,9 @@ public class Transformer {
                             r
                             -> r.getStoryId().equals(s.getId()) &&
                                    r.getEpicId() == null))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+
+        response.setUserStories(rootStories);
 
         return response;
     }
@@ -150,12 +165,6 @@ public class Transformer {
 
         // Map Sprint History (Latest)
         if (row.getSprintHistoryId() != null) {
-            // SprintHistoryResponse history = new SprintHistoryResponse();
-            // history.setStatusId(row.getSprintHistoryId());
-            // history.setStatus(
-            //     SprintStatus.valueOf(row.getSprintHistoryStatus()));
-            // history.setNote(row.getSprintHistoryNote());
-            // sprint.setStatus(history);
             sprint.setStatus(
                 SprintHistory.builder()
                     .id(row.getSprintHistoryId())
@@ -203,12 +212,6 @@ public class Transformer {
 
         // Map Story History (Latest)
         if (row.getStoryHistoryId() != null) {
-            // UserStoryHistoryResponse history = new
-            // UserStoryHistoryResponse();
-            // history.setStatusId(row.getStoryHistoryId());
-            // history.setStatus(StoryStatus.valueOf(row.getStoryHistoryStatus()));
-            // history.setNote(row.getStoryHistoryNote());
-            // story.setStatus(history);
             story.setStatus(
                 UserStoryHistory.builder()
                     .id(row.getStoryHistoryId())
@@ -234,11 +237,6 @@ public class Transformer {
 
         // Map Task History (Latest)
         if (row.getTaskHistoryId() != null) {
-            // TaskHistoryResponse history = new TaskHistoryResponse();
-            // history.setStatusId(row.getTaskHistoryId());
-            // history.setStatus(TaskStatus.valueOf(row.getTaskHistoryStatus()));
-            // history.setNote(row.getTaskHistoryNote());
-            // task.setStatus(history);
             task.setStatus(
                 TaskHistory.builder()
                     .id(row.getTaskHistoryId())

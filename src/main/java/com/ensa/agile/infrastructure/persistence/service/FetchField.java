@@ -17,7 +17,9 @@ public enum FetchField {
     EPICS_USER_STORIES_TASKS,
 
     USER_STORIES,
-    USER_STORIES_TASKS;
+    USER_STORIES_TASKS,
+
+    TASKS;
 
     public static boolean has(List<String> fields, FetchField f) {
         return fields != null && fields.contains(f.name());
