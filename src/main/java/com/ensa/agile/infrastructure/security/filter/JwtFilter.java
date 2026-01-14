@@ -40,6 +40,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String jwt = authHeader.substring(7);
 
+        if (jwtService.isTokenExpired(jwt)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String userEmail = jwtService.extractEmail(jwt);
         if (userEmail == null ||
             SecurityContextHolder.getContext().getAuthentication() != null) {
@@ -48,10 +53,6 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         User u = userRepository.findByEmail(userEmail);
-        if (!jwtService.isTokenValid(jwt, u)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         List<GrantedAuthority> authorities =
             u.getAuthorities()

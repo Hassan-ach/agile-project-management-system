@@ -2,7 +2,6 @@ package com.ensa.agile.application.story.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.story.enums.MoscowType;
-import com.ensa.agile.domain.story.enums.StoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

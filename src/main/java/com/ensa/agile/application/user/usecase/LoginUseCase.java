@@ -24,7 +24,7 @@ public class LoginUseCase
         throws InvalidCredentialsException {
         String token = autenticationService.login(request.getEmail(),
                                                   request.getPassword());
-        // for now, we return an empty refresh token
-        return AuthenticationResponseMapper.toResponse(token, "");
+        String refreshToken = autenticationService.generateRefreshToken(token);
+        return AuthenticationResponseMapper.toResponse(token, refreshToken);
     }
 }

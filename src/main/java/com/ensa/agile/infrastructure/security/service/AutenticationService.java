@@ -4,6 +4,7 @@ import com.ensa.agile.application.user.exception.AuthenticationFailureException;
 import com.ensa.agile.application.user.exception.InvalidCredentialsException;
 import com.ensa.agile.application.user.security.service.IAuthenticationService;
 import com.ensa.agile.domain.user.entity.User;
+import com.ensa.agile.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AutenticationService implements IAuthenticationService {
     private final JwtService jwtService;
+    private final UserRepository userRepository;
     private final AuthenticationProvider provider;
 
     @Override
@@ -37,5 +39,21 @@ public class AutenticationService implements IAuthenticationService {
     @Override
     public String generateToken(String email) {
         return jwtService.generateToken(email);
+    }
+
+    @Override
+    public String generateRefreshToken(String token) {
+        return jwtService.generateRefreshToken(token);
+    }
+
+    @Override
+    public String refreshToken(String refreshToken)
+        throws InvalidCredentialsException {
+        if (jwtService.isTokenExpired(refreshToken)) {
+            throw new InvalidCredentialsException("Refresh token expired");
+        }
+        String email = jwtService.extractEmail(refreshToken);
+        User user = userRepository.findByEmail(email);
+        return this.generateToken(user.getEmail());
     }
 }
