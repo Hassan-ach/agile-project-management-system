@@ -62,7 +62,7 @@ public class UserStoryController {
                 new UserStoryUpdateRequest(productId, id, request)));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<DeleteResponse>
     deleteUserStory(@PathVariable String productId, @PathVariable String id) {
         deleteUserStoryUseCase.executeTransactionally(id);
