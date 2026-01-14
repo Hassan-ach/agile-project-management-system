@@ -30,8 +30,12 @@ public class AbacService implements IAbacService {
 
     // --- Project Level ---
 
-    public boolean canCreateProject() { return true; }
+    @Override
+    public boolean canCreateProject() {
+        return true;
+    }
 
+    @Override
     public boolean canAccessProject(String projectId, String action) {
         return switch (action) {
             case "INVITE_MEMBER" ->
@@ -49,16 +53,19 @@ public class AbacService implements IAbacService {
 
     // --- Epic Level ---
 
+    @Override
     public boolean canCreateEpic(String projectId) {
         return hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
     }
 
+    @Override
     public boolean canModifyEpic(String projectId, String epicId) {
         return validateOwnershipAndRole(
             projectId, epicId, epicRepository::getProductBackLogIdByEpicId,
             RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER);
     }
 
+    @Override
     public boolean canDeleteEpic(String projectId, String epicId) {
         return validateOwnershipAndRole(
             projectId, epicId, epicRepository::getProductBackLogIdByEpicId,
@@ -67,16 +74,20 @@ public class AbacService implements IAbacService {
 
     // --- User Story Level ---
 
+    @Override
     public boolean canCreateStory(String projectId) {
         return hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
     }
 
+    @Override
     public boolean canModifyStory(String projectId, String storyId) {
         return validateOwnershipAndRole(
             projectId, storyId,
             userStoryRepository::getProductBackLogIdByUserStoryId,
             RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER);
     }
+
+    @Override
     public boolean canDeleteStory(String projectId, String storyId) {
         return validateOwnershipAndRole(
             projectId, storyId,
@@ -84,6 +95,7 @@ public class AbacService implements IAbacService {
             RoleType.PRODUCT_OWNER);
     }
 
+    @Override
     public boolean canUpdateStoryStatus(String projectId, String sprintId,
                                         String storyId) {
         return validateOwnershipAndRole(
@@ -95,11 +107,13 @@ public class AbacService implements IAbacService {
 
     // --- Sprint Level ---
 
+    @Override
     public boolean canCreateSprint(String projectId) {
         return hasProjectRole(projectId, RoleType.PRODUCT_OWNER,
                               RoleType.SCRUM_MASTER);
     }
 
+    @Override
     public boolean canManageSprintStories(String projectId, String sprintId) {
         return validateOwnershipAndRole(
                    projectId, sprintId,
@@ -108,6 +122,7 @@ public class AbacService implements IAbacService {
             isSprintMember(sprintId);
     }
 
+    @Override
     public boolean canUpdateSprintStatus(String projectId, String sprintId) {
         return validateOwnershipAndRole(
                    projectId, sprintId,
@@ -118,6 +133,7 @@ public class AbacService implements IAbacService {
 
     // --- Task Level ---
 
+    @Override
     public boolean canCreateTask(String projectId, String sprintId,
                                  String storyId) {
         boolean isValidHierarchy = false;
@@ -137,6 +153,7 @@ public class AbacService implements IAbacService {
             isSprintMember(sprintId);
     }
 
+    @Override
     public boolean canUpdateTaskStatus(String projectId, String sprintId,
                                        String taskId) {
 
@@ -147,6 +164,7 @@ public class AbacService implements IAbacService {
             isSprintMember(sprintId);
     }
 
+    @Override
     public boolean canAssignTask(String projectId, String sprintId,
                                  String taskId) {
 
@@ -159,6 +177,7 @@ public class AbacService implements IAbacService {
 
     // --- Reporting ---
 
+    @Override
     public boolean canViewReport(String projectId, String sprintId) {
         return validateOwnershipAndRole(
             projectId, sprintId,
