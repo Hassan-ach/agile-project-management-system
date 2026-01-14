@@ -24,10 +24,8 @@ public class UserStoryUpdateRequest {
     private String sprintId;
     private String epicId;
 
-    private StoryStatus status;
-
     // This constructor is for validation purposes
-    public UserStoryUpdateRequest(String productId, String sprintId, String id,
+    public UserStoryUpdateRequest(String productId, String id,
                                   UserStoryUpdateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
@@ -39,9 +37,16 @@ public class UserStoryUpdateRequest {
 
         if (req.getTitle() == null && req.getDescription() == null &&
             req.getPriority() == null && req.getStoryPoints() == null &&
-            req.getAcceptanceCriteria() == null) {
+            req.getAcceptanceCriteria() == null && req.getSprintId() == null) {
             throw new ValidationException(
                 "At least one field must be provided for update");
+        }
+        if (req.getSprintId() != null) {
+            if (req.getSprintId().isBlank()) {
+                throw new ValidationException("sprintId cannot be blank");
+            } else {
+                this.sprintId = req.getSprintId();
+            }
         }
 
         if (req.getTitle() != null) {
@@ -83,9 +88,7 @@ public class UserStoryUpdateRequest {
         }
 
         this.id = id;
-        this.sprintId = sprintId;
         this.productId = productId;
         this.epicId = req.getEpicId();
-        this.status = req.getStatus();
     }
 }

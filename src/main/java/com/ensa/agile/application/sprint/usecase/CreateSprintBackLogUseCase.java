@@ -36,6 +36,7 @@ public class CreateSprintBackLogUseCase
 
     public SprintBackLogResponse execute(SprintBackLogCreateRequest request) {
 
+        // need to check if any of the user stories is already assigned to another sprint
         List<UserStory> userStories =
             this.userStoryRepository.findByBatch(request.getUserStoriesIds());
 

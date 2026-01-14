@@ -12,28 +12,23 @@ import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
 import com.ensa.agile.domain.sprint.repository.SprintBackLogRepository;
 import com.ensa.agile.domain.story.entity.UserStory;
-import com.ensa.agile.domain.story.entity.UserStoryHistory;
-import com.ensa.agile.domain.story.repository.UserStoryHistoryRepository;
 import com.ensa.agile.domain.story.repository.UserStoryRepository;
 
 public class UpdateUserStoryUseCase
     extends BaseUseCase<UserStoryUpdateRequest, UserStoryResponse> {
     private UserStoryRepository userStoryRepository;
-    private UserStoryHistoryRepository userStoryHistoryRepository;
     private ProductBackLogRepository productBackLogRepository;
     private EpicRepository epicRepository;
     private SprintBackLogRepository sprintBackLogRepository;
 
     public UpdateUserStoryUseCase(
         ITransactionalWrapper tr, UserStoryRepository userStoryRepository,
-        UserStoryHistoryRepository userStoryHistoryRepository,
         ProductBackLogRepository productBackLogRepository,
         EpicRepository epicRepository,
         SprintBackLogRepository sprintBackLogRepository) {
 
         super(tr);
         this.userStoryRepository = userStoryRepository;
-        this.userStoryHistoryRepository = userStoryHistoryRepository;
         this.productBackLogRepository = productBackLogRepository;
         this.epicRepository = epicRepository;
         this.sprintBackLogRepository = sprintBackLogRepository;
@@ -71,19 +66,6 @@ public class UpdateUserStoryUseCase
 
         UserStory newUserStory = this.userStoryRepository.save(us);
 
-        // here i need to check if status can go from current status to the new
-        // status
-        UserStoryHistory status = null;
-        if (request.getStatus() != null) {
-            status = this.userStoryHistoryRepository.save(
-                UserStoryHistory.builder()
-                    .userStory(newUserStory)
-                    .note("User Story updated with title: " +
-                          request.getTitle())
-                    .status(request.getStatus())
-                    .build());
-        }
-
-        return UserStoryResponseMapper.toResponse(newUserStory, status);
+        return UserStoryResponseMapper.toResponse(newUserStory);
     }
 }
