@@ -3,6 +3,7 @@ package com.ensa.agile.application.product.usecase;
 import com.ensa.agile.application.global.service.IFetchService;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
+import com.ensa.agile.application.product.exception.ProductBackLogNotFoundException;
 import com.ensa.agile.application.product.request.ProductBackLogGetRequest;
 import com.ensa.agile.application.product.response.ProductBackLogResponse;
 import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
@@ -25,8 +26,9 @@ public class GetProductBackLogUseCase
     }
 
     public ProductBackLogResponse execute(ProductBackLogGetRequest req) {
+        if (!productBackLogRepository.existsById(req.getId())) {
+            throw new ProductBackLogNotFoundException();
+        }
         return fetchService.getResponse(req);
-        // return ProductBackLogResponseMapper.tResponse(
-        //     productBackLogRepository.findById(req.getId()));
     }
 }

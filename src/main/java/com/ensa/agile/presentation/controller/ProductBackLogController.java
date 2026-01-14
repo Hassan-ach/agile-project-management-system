@@ -11,7 +11,6 @@ import com.ensa.agile.application.product.response.ProductBackLogResponse;
 import com.ensa.agile.application.product.usecase.CreateProductBackLogUseCase;
 import com.ensa.agile.application.product.usecase.GetProductBackLogUseCase;
 import com.ensa.agile.application.product.usecase.InviteScrumMasterUseCase;
-import com.ensa.agile.application.product.usecase.LoadProductBackLogUseCase;
 import com.ensa.agile.application.product.usecase.RemoveScrumMasterUseCase;
 import com.ensa.agile.application.product.usecase.UpdateProductBackLogInfoUseCase;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +36,10 @@ public class ProductBackLogController {
     private final InviteScrumMasterUseCase inviteScrumMasterUseCase;
     private final RemoveScrumMasterUseCase removeScrumMasterUseCase;
     private final GetProductBackLogUseCase getProductBackLogUseCase;
-    private final LoadProductBackLogUseCase loadProductBackLogUseCase;
 
     @PostMapping
-    public ResponseEntity<ProductBackLogResponse> createProductBacklog(
-         @RequestBody ProductBackLogCreateRequest request) {
+    public ResponseEntity<ProductBackLogResponse>
+    createProductBacklog(@RequestBody ProductBackLogCreateRequest request) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(createProductBacklogUseCase.executeTransactionally(request));
@@ -57,19 +55,11 @@ public class ProductBackLogController {
                 new ProductBackLogGetRequest(id, with)));
     }
 
-    @GetMapping("/load/{id}")
-    public ResponseEntity<ProductBackLogResponse>
-    loadProductBacklogById(@PathVariable String id) {
-
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(loadProductBackLogUseCase.executeTransactionally(id));
-    }
-
     @PatchMapping("/{id}")
     @PreAuthorize("@abacService.canAccessProject(#id,  'UPDATE')")
-    public ResponseEntity<ProductBackLogResponse> updateProductBacklog(
-        @PathVariable String id,
-         @RequestBody ProductBackLogUpdateRequest request) {
+    public ResponseEntity<ProductBackLogResponse>
+    updateProductBacklog(@PathVariable String id,
+                         @RequestBody ProductBackLogUpdateRequest request) {
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(updateProductBackLogUseCase.executeTransactionally(
