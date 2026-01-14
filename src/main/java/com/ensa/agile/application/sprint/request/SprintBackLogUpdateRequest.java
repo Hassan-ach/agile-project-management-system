@@ -23,8 +23,8 @@ public class SprintBackLogUpdateRequest {
 
     private SprintStatus status;
 
-    public SprintBackLogUpdateRequest(SprintBackLogUpdateRequest req,
-                                      String id) {
+    public SprintBackLogUpdateRequest(String id,
+                                      SprintBackLogUpdateRequest req) {
 
         if (req == null) {
             throw new ValidationException("request cannot be null");

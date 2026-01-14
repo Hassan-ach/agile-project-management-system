@@ -42,4 +42,10 @@ public class TaskRepositoryAdapter implements TaskRepository {
     public boolean existsById(String id) {
         return jpaTaskRepository.existsById(id);
     }
+
+    @Override
+    public String getProductBackLogIdByTaskId(String taskId) {
+        return jpaTaskRepository.getProductBackLogIdByTaskId(taskId)
+            .orElseThrow(TaskNotFoundException::new);
+    }
 }

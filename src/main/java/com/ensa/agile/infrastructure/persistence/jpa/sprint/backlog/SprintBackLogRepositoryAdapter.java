@@ -49,4 +49,10 @@ public class SprintBackLogRepositoryAdapter implements SprintBackLogRepository {
     public boolean existsByStatus(SprintStatus status) {
         return this.jpaSprintBackLogRepository.existsByStatus(status);
     }
+
+    @Override
+    public String getProductBackLogIdBySprintId(String sprintId) {
+        return this.jpaSprintBackLogRepository.getProductBackLogIdBySprintId(
+            sprintId);
+    }
 }

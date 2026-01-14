@@ -8,4 +8,5 @@ public interface SprintBackLogRepository
     extends BaseDomainRepository<SprintBackLog, String> {
 
     boolean existsByStatus(SprintStatus status);
+    String getProductBackLogIdBySprintId(String sprintId);
 }

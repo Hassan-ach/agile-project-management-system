@@ -69,4 +69,18 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
         this.jpaUserStoryRepository.assignToSprint(
             userStoryIds, SprintBackLogJpaMapper.toJpaEntity(sprintBackLog));
     }
+
+    @Override
+    public String getSprintBackLogIdByUserStoryId(String userStoryId) {
+        return this.jpaUserStoryRepository
+            .getSprintBackLogIdByUserStoryId(userStoryId)
+            .orElseThrow(UserStoryNotFoundException::new);
+    }
+
+    @Override
+    public String getProductBackLogIdByUserStoryId(String userStoryId) {
+        return this.jpaUserStoryRepository
+            .getProductBackLogIdByUserStoryId(userStoryId)
+            .orElseThrow(UserStoryNotFoundException::new);
+    }
 }

@@ -2,6 +2,7 @@ package com.ensa.agile.infrastructure.persistence.jpa.story.userstory;
 
 import com.ensa.agile.infrastructure.persistence.jpa.sprint.backlog.SprintBackLogJpaEntity;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,16 @@ public interface JpaUserStoryRepository
         """)
     void assignToSprint(List<String> userStoryIds,
                         SprintBackLogJpaEntity sprintBackLog);
+
+    @Query("""
+        SELECT u.sprintBackLog.id FROM UserStoryJpaEntity u
+        WHERE u.id = :userStoryId
+        """)
+    Optional<String> getSprintBackLogIdByUserStoryId(String userStoryId);
+
+    @Query("""
+        SELECT u.productBackLog.id FROM UserStoryJpaEntity u
+        WHERE u.id = :userStoryId
+        """)
+    Optional<String> getProductBackLogIdByUserStoryId(String userStoryId);
 }

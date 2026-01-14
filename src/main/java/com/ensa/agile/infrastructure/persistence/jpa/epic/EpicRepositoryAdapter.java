@@ -57,4 +57,10 @@ public class EpicRepositoryAdapter implements EpicRepository {
         return EpicJpaMapper.toDomainEntity(
             this.jpaEpicRepository.loadEpicRowsById(id));
     }
+
+    @Override
+    public String getProductBackLogIdByEpicId(String epicId) {
+        return this.jpaEpicRepository.getProductBackLogIdByEpicId(epicId)
+            .orElseThrow(EpicNotFoundException::new);
+    }
 }

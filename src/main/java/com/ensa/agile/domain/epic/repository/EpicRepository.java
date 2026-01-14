@@ -8,4 +8,5 @@ public interface EpicRepository extends BaseDomainRepository<Epic, String> {
     List<Epic> findAllByProductBackLogId(String productBackLogId);
 
     Epic loadEpicById(String id);
+    String getProductBackLogIdByEpicId(String epicId);
 }

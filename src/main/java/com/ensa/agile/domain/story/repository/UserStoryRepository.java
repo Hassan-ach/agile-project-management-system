@@ -10,4 +10,6 @@ public interface UserStoryRepository
     List<UserStory> findAllByEpicId(String epicId);
     List<UserStory> findByBatch(List<String> ids);
     void assignToSprint(List<String> userStoryIds, SprintBackLog sprintBackLog);
+    String getSprintBackLogIdByUserStoryId(String userStoryId);
+    String getProductBackLogIdByUserStoryId(String userStoryId);
 }
