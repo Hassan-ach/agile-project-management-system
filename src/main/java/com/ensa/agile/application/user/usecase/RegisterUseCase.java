@@ -43,7 +43,8 @@ public class RegisterUseCase
 
         userRepository.save(u);
 
+        // for now, we return an empty refresh token
         return AuthenticationResponseMapper.toResponse(
-            authenticationService.generateToken(u.getEmail()));
+            authenticationService.generateToken(u.getEmail()), "");
     }
 }

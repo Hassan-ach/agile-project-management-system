@@ -4,8 +4,8 @@ import com.ensa.agile.application.user.response.AuthenticationResponse;
 
 public class AuthenticationResponseMapper {
 
-    public static AuthenticationResponse toResponse(String token) {
-        return new AuthenticationResponse(token);
+    public static AuthenticationResponse toResponse(String accesToken,
+                                                    String refreshToken) {
+        return new AuthenticationResponse(accesToken, refreshToken);
     }
-
 }

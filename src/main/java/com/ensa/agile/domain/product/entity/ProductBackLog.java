@@ -23,22 +23,6 @@ public class ProductBackLog extends BaseDomainEntity {
     private List<ProjectMember> projectMembers;
     private List<SprintBackLog> sprintBackLogs;
 
-    // public ProductBackLog(String id, String name, String description,
-    //                       List<Epic> epics, List<UserStory> userStories,
-    //                       List<ProjectMember> projectMembers,
-    //                       List<SprintBackLog> sprintBackLogs,
-    //                       LocalDateTime createdDate, String createdBy,
-    //                       LocalDateTime lastModifiedDate,
-    //                       String lastModifiedBy) {
-    //     super(id, createdDate, createdBy, lastModifiedDate, lastModifiedBy);
-    //     this.name = name;
-    //     this.description = description;
-    //     this.epics = epics;
-    //     this.userStories = userStories;
-    //     this.projectMembers = projectMembers;
-    //     this.sprintBackLogs = sprintBackLogs;
-    // }
-
     protected ProductBackLog(ProductBackLogBuilder<?, ?> b) {
         super(b);
         this.name = b.name;
