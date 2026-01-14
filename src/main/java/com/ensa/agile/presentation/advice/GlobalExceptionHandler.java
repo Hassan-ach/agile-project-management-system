@@ -2,13 +2,14 @@ package com.ensa.agile.presentation.advice;
 
 import com.ensa.agile.application.epic.exception.EpicNotFoundException;
 import com.ensa.agile.application.product.exception.ProductBackLogNotFoundException;
-import com.ensa.agile.application.user.exception.UserAlreadyInvitedException;
 import com.ensa.agile.application.user.exception.AuthenticationFailureException;
 import com.ensa.agile.application.user.exception.EmailAlreadyUsedException;
 import com.ensa.agile.application.user.exception.InvalidCredentialsException;
+import com.ensa.agile.application.user.exception.UserAlreadyInvitedException;
 import com.ensa.agile.application.user.exception.UserNotFoundException;
 import com.ensa.agile.domain.global.exception.AlreadyExistsException;
 import com.ensa.agile.domain.global.exception.ApplicationException;
+import com.ensa.agile.domain.global.exception.BusinessRuleViolationException;
 import com.ensa.agile.domain.global.exception.DataBaseTransactionException;
 import com.ensa.agile.domain.global.exception.DomainException;
 import com.ensa.agile.domain.global.exception.ForbidException;
@@ -60,12 +61,12 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
-    // @ExceptionHandler(IllegalStateException.class)
-    // public ResponseEntity<Map<String, String>>
-    // handleIllegalStateException(IllegalStateException ex) {
-    //     return buildErrorResponse(ex.getMessage(),
-    //                               HttpStatus.UNPROCESSABLE_CONTENT);
-    // }
+    @ExceptionHandler(BusinessRuleViolationException.class)
+    public ResponseEntity<Map<String, String>>
+    handleIllegalStateException(BusinessRuleViolationException ex) {
+        return buildErrorResponse(ex.getMessage(),
+                                  HttpStatus.UNPROCESSABLE_CONTENT);
+    }
 
     @ExceptionHandler({AuthenticationFailureException.class,
                        InvalidCredentialsException.class})

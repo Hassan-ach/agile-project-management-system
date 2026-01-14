@@ -57,10 +57,10 @@ public class User {
             throw new ValidationException("Password cannot be null or empty");
         }
 
-        // if (!ValidationUtil.isValidPassword(this.password)) {
-        //     throw new ValidationException(
-        //         "Password does not meet complexity requirements");
-        // }
+        if (!ValidationUtil.isValidPassword(this.password)) {
+            throw new ValidationException(
+                "Password does not meet complexity requirements");
+        }
 
         if (!ValidationUtil.isValidEmail(this.email)) {
             throw new ValidationException("Email format is invalid");
