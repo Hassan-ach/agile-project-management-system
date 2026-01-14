@@ -1,5 +1,7 @@
 package com.ensa.agile.application.story.usecase;
 
+import org.springframework.stereotype.Component;
+
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.product.exception.ProductBackLogNotFoundException;
@@ -14,6 +16,7 @@ import com.ensa.agile.domain.sprint.repository.SprintBackLogRepository;
 import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.story.repository.UserStoryRepository;
 
+@Component
 public class UpdateUserStoryUseCase
     extends BaseUseCase<UserStoryUpdateRequest, UserStoryResponse> {
     private UserStoryRepository userStoryRepository;

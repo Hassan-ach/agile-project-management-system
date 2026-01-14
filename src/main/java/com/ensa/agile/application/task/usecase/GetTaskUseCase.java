@@ -1,5 +1,7 @@
 package com.ensa.agile.application.task.usecase;
 
+import org.springframework.stereotype.Component;
+
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.task.exception.TaskNotFoundException;
@@ -8,6 +10,7 @@ import com.ensa.agile.application.task.request.TaskGetRequest;
 import com.ensa.agile.application.task.response.TaskResponse;
 import com.ensa.agile.domain.task.repository.TaskRepository;
 
+@Component
 public class GetTaskUseCase extends BaseUseCase<TaskGetRequest, TaskResponse> {
     private final TaskRepository taskRepository;
     public GetTaskUseCase(ITransactionalWrapper tr,

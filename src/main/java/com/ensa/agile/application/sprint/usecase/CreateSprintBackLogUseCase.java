@@ -14,7 +14,9 @@ import com.ensa.agile.domain.sprint.repository.SprintHistoryRepository;
 import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.story.repository.UserStoryRepository;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CreateSprintBackLogUseCase
     extends BaseUseCase<SprintBackLogCreateRequest, SprintBackLogResponse> {
     private final SprintBackLogRepository sprintBackLogRepository;
@@ -36,7 +38,8 @@ public class CreateSprintBackLogUseCase
 
     public SprintBackLogResponse execute(SprintBackLogCreateRequest request) {
 
-        // need to check if any of the user stories is already assigned to another sprint
+        // need to check if any of the user stories is already assigned to
+        // another sprint
         List<UserStory> userStories =
             this.userStoryRepository.findByBatch(request.getUserStoriesIds());
 
