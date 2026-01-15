@@ -15,7 +15,14 @@ import java.util.Set;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
+/**
+ * Attribute-Based Access Control (ABAC) service responsible for authorization
+ * decisions across the project management domain.
+ *
+ * This service evaluates whether the current authenticated user is allowed
+ * to perform specific actions on projects and their related resources
+ * (epics, user stories, sprints, tasks, and reports).
+ */
 @RequiredArgsConstructor
 @Component("abacService")
 public class AbacService implements IAbacService {
@@ -45,8 +52,7 @@ public class AbacService implements IAbacService {
                                RoleType.SCRUM_MASTER, RoleType.DEVELOPER);
             case "REMOVE_MEMBER" ->
                 hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
-            case "UPDATE_PROJECT_META_DATA" ->
-                hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
+            case "UPDATE" -> hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
             default -> false;
         };
     }
@@ -171,7 +177,7 @@ public class AbacService implements IAbacService {
         return validateOwnershipAndRole(
                    projectId, taskId,
                    taskRepository::getProductBackLogIdByTaskId,
-                   RoleType.SCRUM_MASTER) &&
+                   RoleType.SCRUM_MASTER, RoleType.DEVELOPER) &&
             isSprintMember(sprintId);
     }
 
