@@ -6,7 +6,9 @@ import com.ensa.agile.application.user.mapper.AuthenticationResponseMapper;
 import com.ensa.agile.application.user.request.RefreshTokenRequest;
 import com.ensa.agile.application.user.response.AuthenticationResponse;
 import com.ensa.agile.application.user.security.service.IAuthenticationService;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RefreshTokenUseCase
     extends BaseUseCase<RefreshTokenRequest, AuthenticationResponse> {
     private final IAuthenticationService autenticationService;

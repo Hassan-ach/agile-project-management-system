@@ -1,7 +1,5 @@
 package com.ensa.agile.application.task.usecase;
 
-import org.springframework.stereotype.Component;
-
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.task.mapper.TaskResponseMapper;
@@ -18,6 +16,7 @@ import com.ensa.agile.domain.task.repository.TaskHistoryRepository;
 import com.ensa.agile.domain.task.repository.TaskRepository;
 import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.domain.user.repository.UserRepository;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CreateTaskUseCase
@@ -63,10 +62,12 @@ public class CreateTaskUseCase
         TaskHistory status = this.taskHistoryRepository.save(
             TaskHistory.builder()
                 .task(task)
-                .status(TaskStatus.TODO)
+                .status(TaskStatus.NEW)
                 .note("Task created with title: " + request.getTitle())
                 .build());
 
-        return TaskResponseMapper.toResponse(task, ur.getEmail(), status);
+        task.setStatus(status);
+
+        return TaskResponseMapper.toResponse(task, ur.getEmail());
     }
 }

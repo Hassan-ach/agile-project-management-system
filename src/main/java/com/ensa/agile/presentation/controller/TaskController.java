@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/{producId}/{spritId/{storyId}/tasks")
+@RequestMapping("/api/{producId}/{spritId}/{storyId}/tasks")
 public class TaskController {
     private final CreateTaskUseCase createTaskUseCase;
     private final UpdateTaskUseCase updateTaskUseCase;
