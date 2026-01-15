@@ -39,4 +39,21 @@ public class SprintHistory extends BaseDomainEntity {
                 "SprintHistory note cannot exceed 500 characters.");
         }
     }
+
+    public SprintStatus getNextStatus() {
+        switch (this.status) {
+        case PLANNED:
+            return SprintStatus.ACTIVE;
+        case ACTIVE:
+            return SprintStatus.COMPLETED;
+        case COMPLETED:
+            throw new ValidationException(
+                "Cannot transition from COMPLETED to another status.");
+        case CANCELLED:
+            throw new ValidationException(
+                "Cannot transition from CANCELLED to another status.");
+        default:
+            throw new ValidationException("Invalid status transition.");
+        }
+    }
 }

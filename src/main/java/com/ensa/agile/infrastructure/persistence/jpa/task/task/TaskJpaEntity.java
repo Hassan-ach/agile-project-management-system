@@ -38,7 +38,7 @@ public class TaskJpaEntity extends BaseJpaEntity {
     private SprintBackLogJpaEntity sprintBackLog;
 
     @ManyToOne
-    @JoinColumn(name = "assignee_id", nullable = false)
+    @JoinColumn(name = "assignee_id", nullable = true)
     private UserJpaEntity assignee;
 
     @Column(name = "estimated_hours", nullable = false)

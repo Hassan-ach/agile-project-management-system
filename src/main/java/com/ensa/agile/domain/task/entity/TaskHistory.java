@@ -36,4 +36,27 @@ public class TaskHistory extends BaseDomainEntity {
                 "TaskHistory note cannot exceed 500 characters.");
         }
     }
+
+    public TaskStatus getNextStatus() {
+        switch (this.status) {
+        case NEW:
+            return TaskStatus.ASSIGNED;
+        case ASSIGNED:
+            return TaskStatus.TODO;
+        case TODO:
+            return TaskStatus.IN_PROGRESS;
+        case IN_PROGRESS:
+            return TaskStatus.IN_TEST;
+        case IN_TEST:
+            return TaskStatus.DONE;
+        case DONE:
+            throw new ValidationException(
+                "Cannot transition from DONE to another status.");
+        case BLOCKED:
+            throw new ValidationException(
+                "Cannot transition from BLOCKED to another status.");
+        default:
+            throw new ValidationException("Invalid status transition.");
+        }
+    }
 }

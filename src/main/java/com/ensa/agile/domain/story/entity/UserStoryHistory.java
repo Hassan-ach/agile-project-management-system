@@ -28,4 +28,19 @@ public class UserStoryHistory extends BaseDomainEntity {
                 "UserStoryHistory note cannot exceed 500 characters.");
         }
     }
+
+    public StoryStatus getNextStatus() {
+
+        switch (this.status) {
+        case TODO:
+            return StoryStatus.IN_PROGRESS;
+        case IN_PROGRESS:
+            return StoryStatus.DONE;
+        case DONE:
+            throw new ValidationException(
+                "Cannot transition from DONE to another status.");
+        default:
+            throw new ValidationException("Invalid status transition.");
+        }
+    }
 }

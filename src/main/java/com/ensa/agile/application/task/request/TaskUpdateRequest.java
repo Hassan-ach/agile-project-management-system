@@ -2,7 +2,6 @@ package com.ensa.agile.application.task.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.global.utils.ValidationUtil;
-import com.ensa.agile.domain.task.enums.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +18,6 @@ public class TaskUpdateRequest {
     private Double estimatedHours;
     private String assigneeEmail;
     private Double actualHours;
-    private TaskStatus status;
 
     private String userStoryId;
     private String sprintId;
@@ -81,10 +79,6 @@ public class TaskUpdateRequest {
             } else {
                 this.assigneeEmail = req.assigneeEmail;
             }
-        }
-
-        if (req.status != null) {
-            this.status = req.status;
         }
     }
 }
