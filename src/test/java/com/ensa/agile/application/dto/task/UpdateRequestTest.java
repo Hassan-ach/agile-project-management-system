@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ensa.agile.application.task.request.TaskUpdateRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
-import com.ensa.agile.domain.task.enums.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 public class UpdateRequestTest {
@@ -13,11 +12,9 @@ public class UpdateRequestTest {
     @Test
     void shouldCreateTaskUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new TaskUpdateRequest("sprint-123", "us-456", "task-789",
-                                  TaskUpdateRequest.builder()
-                                      .title("Updated Title")
-                                      .status(TaskStatus.IN_PROGRESS)
-                                      .build());
+            new TaskUpdateRequest(
+                "sprint-123", "us-456", "task-789",
+                TaskUpdateRequest.builder().title("Updated Title").build());
         });
     }
 

@@ -13,11 +13,11 @@ public class UpdateRequestTest {
     @Test
     void shouldCreateSprintBackLogUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new SprintBackLogUpdateRequest(SprintBackLogUpdateRequest.builder()
-                                               .name("Updated Sprint Name")
-                                               .goal("Updated Goal")
-                                               .build(),
-                                           "sprint-123");
+            new SprintBackLogUpdateRequest(
+                "sprint-123", SprintBackLogUpdateRequest.builder()
+                    .name("Updated Sprint Name")
+                    .goal("Updated Goal")
+                    .build());
         });
     }
 
@@ -25,7 +25,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenAllFieldsAreNull() {
         assertThrows(ValidationException.class, () -> {
             new SprintBackLogUpdateRequest(
-                SprintBackLogUpdateRequest.builder().build(), "sprint-123");
+                "sprint-123", SprintBackLogUpdateRequest.builder().build());
         });
     }
 
@@ -33,8 +33,8 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenNameIsProvidedAsBlank() {
         assertThrows(ValidationException.class, () -> {
             new SprintBackLogUpdateRequest(
-                SprintBackLogUpdateRequest.builder().name(" ").build(),
-                "sprint-123");
+                "sprint-123",
+                SprintBackLogUpdateRequest.builder().name(" ").build());
         });
     }
 
@@ -42,29 +42,28 @@ public class UpdateRequestTest {
     void shouldUpdateDateSuccessfully_whenDatesAreProvided() {
         assertDoesNotThrow(() -> {
             new SprintBackLogUpdateRequest(
-                SprintBackLogUpdateRequest.builder()
-                    .startDate(LocalDate.now())
-                    .endDate(LocalDate.now().plusDays(7))
-                    .build(),
-                "sprint-123");
+                "sprint-123", SprintBackLogUpdateRequest.builder()
+                                  .startDate(LocalDate.now())
+                                  .endDate(LocalDate.now().plusDays(7))
+                                  .build());
         });
     }
 
     @Test
     void shouldThrowValidationException_whenRequestIsNull() {
         assertThrows(ValidationException.class, () -> {
-            new SprintBackLogUpdateRequest(null, "sprint-123");
+            new SprintBackLogUpdateRequest("sprint-123", null);
         });
     }
 
     @Test
     void shouldThrowValidationException_whenIdIsNull() {
         assertThrows(ValidationException.class, () -> {
-            new SprintBackLogUpdateRequest(SprintBackLogUpdateRequest.builder()
+            new SprintBackLogUpdateRequest(null,
+                                           SprintBackLogUpdateRequest.builder()
                                                .name("Updated Sprint Name")
                                                .goal("Updated Goal")
-                                               .build(),
-                                           null);
+                                               .build());
         });
     }
 }

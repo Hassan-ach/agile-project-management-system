@@ -12,7 +12,7 @@ public class UpdateRequestTest {
     @Test
     void shouldCreateUserStoryUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new UserStoryUpdateRequest("prod-123", "sprint-456", "us-789",
+            new UserStoryUpdateRequest("prod-123", "us-789",
                                        UserStoryUpdateRequest.builder()
                                            .title("Updated Title")
                                            .storyPoints(8)
@@ -24,7 +24,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenIdIsNull() {
         assertThrows(ValidationException.class, () -> {
             new UserStoryUpdateRequest(
-                "prod-123", "sprint-456", null,
+                "prod-123", null,
                 UserStoryUpdateRequest.builder().title("Title").build());
         });
     }
@@ -33,8 +33,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenNoFieldsProvidedForUpdate() {
         assertThrows(ValidationException.class, () -> {
             new UserStoryUpdateRequest(
-                "prod-123", "sprint-456", "us-789",
-                UserStoryUpdateRequest.builder().build());
+                "prod-123", "us-789", UserStoryUpdateRequest.builder().build());
         });
     }
 
@@ -42,7 +41,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenStoryPointsIsInvalidInUpdate() {
         assertThrows(ValidationException.class, () -> {
             new UserStoryUpdateRequest(
-                "prod-123", "sprint-456", "us-789",
+                "prod-123", "us-789",
                 UserStoryUpdateRequest.builder().storyPoints(0).build());
         });
     }
@@ -50,7 +49,7 @@ public class UpdateRequestTest {
     @Test
     void shouldUpdateOnlyAcceptanceCriteriaSuccessfully() {
         assertDoesNotThrow(() -> {
-            new UserStoryUpdateRequest("prod-123", "sprint-456", "us-789",
+            new UserStoryUpdateRequest("prod-123", "us-789",
                                        UserStoryUpdateRequest.builder()
                                            .acceptanceCriteria("New criteria")
                                            .build());
@@ -61,7 +60,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenTitleIsProvidedAsBlank() {
         assertThrows(ValidationException.class, () -> {
             new UserStoryUpdateRequest(
-                "prod-123", "sprint-456", "us-789",
+                "prod-123", "us-789",
                 UserStoryUpdateRequest.builder().title(" ").build());
         });
     }
