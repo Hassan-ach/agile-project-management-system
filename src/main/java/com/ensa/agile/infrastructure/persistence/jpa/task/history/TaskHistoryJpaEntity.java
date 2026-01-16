@@ -6,6 +6,7 @@ import com.ensa.agile.infrastructure.persistence.jpa.task.task.TaskJpaEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -15,7 +16,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "task_histories")
+@Table(name = "task_histories",
+       indexes =
+       { @Index(name = "idx_task_history_task", columnList = "task_id") })
 @Entity
 @Getter
 @Setter

@@ -7,9 +7,11 @@ import com.ensa.agile.infrastructure.persistence.jpa.task.history.TaskHistoryJpa
 import com.ensa.agile.infrastructure.persistence.jpa.user.UserJpaEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,20 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JoinFormula;
 
-@Table(name = "tasks")
+@Table(name = "tasks",
+       uniqueConstraints =
+       {
+           @UniqueConstraint(name = "uk_tiltle_user_story",
+                             columnNames = {"title", "user_story_id"})
+       },
+       indexes =
+       {
+           @Index(name = "idx_task_user_story", columnList = "user_story_id")
+           ,
+               @Index(name = "idx_task_sprint_backlog",
+                      columnList = "sprint_backlog_id"),
+               @Index(name = "idx_task_assignee", columnList = "assignee_id")
+       })
 @Entity
 @Getter
 @Setter
@@ -25,7 +40,6 @@ import org.hibernate.annotations.JoinFormula;
 @NoArgsConstructor
 @SuperBuilder
 public class TaskJpaEntity extends BaseJpaEntity {
-
     @Column(nullable = false) private String title;
     @Column(nullable = false) private String description;
 

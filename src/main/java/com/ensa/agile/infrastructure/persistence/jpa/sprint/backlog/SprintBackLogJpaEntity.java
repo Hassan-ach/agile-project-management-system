@@ -7,9 +7,11 @@ import com.ensa.agile.infrastructure.persistence.jpa.user.UserJpaEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +20,21 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JoinFormula;
 
-@Table(name = "sprint_backlogs")
+@Table(name = "sprint_backlogs",
+       uniqueConstraints =
+       {
+           @UniqueConstraint(name = "uk_sprint_name_product_backlog",
+                             columnNames = {"name", "product_backlog_id"})
+       },
+       indexes =
+       {
+           @Index(name = "idx_sprint_backlog_product_backlog",
+                  columnList = "product_backlog_id")
+           ,
+               @Index(name = "idx_sprint_backlog_scrum_master",
+                      columnList = "scrum_master_id")
+       })
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

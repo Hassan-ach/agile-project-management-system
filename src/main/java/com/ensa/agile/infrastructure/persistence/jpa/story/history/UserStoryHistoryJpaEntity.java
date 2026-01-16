@@ -6,6 +6,7 @@ import com.ensa.agile.infrastructure.persistence.jpa.story.userstory.UserStoryJp
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -15,7 +16,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "user_story_histories")
+@Table(name = "user_story_histories",
+       indexes =
+       {
+           @Index(name = "idx_user_story_history_user_story",
+                  columnList = "user_story_id")
+       })
 @Entity
 @Getter
 @Setter

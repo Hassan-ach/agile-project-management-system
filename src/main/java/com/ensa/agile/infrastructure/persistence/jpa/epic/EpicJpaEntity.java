@@ -3,9 +3,11 @@ package com.ensa.agile.infrastructure.persistence.jpa.epic;
 import com.ensa.agile.infrastructure.persistence.jpa.global.entity.BaseJpaEntity;
 import com.ensa.agile.infrastructure.persistence.jpa.product.backlog.ProductBackLogJpaEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -20,7 +22,17 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "epics")
+@Table(name = "epics",
+       uniqueConstraints =
+       {
+           @UniqueConstraint(name = "uk_epic_title_product_backlog",
+                             columnNames = {"title", "product_backlog_id"})
+       },
+       indexes =
+       {
+           @Index(name = "idx_epic_product_backlog",
+                  columnList = "product_backlog_id")
+       })
 public class EpicJpaEntity extends BaseJpaEntity {
 
     private String title;

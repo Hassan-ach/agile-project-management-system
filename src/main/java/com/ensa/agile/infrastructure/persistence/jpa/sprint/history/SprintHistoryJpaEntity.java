@@ -6,6 +6,7 @@ import com.ensa.agile.infrastructure.persistence.jpa.sprint.backlog.SprintBackLo
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -15,7 +16,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Table(name = "sprint_histories")
+@Table(name = "sprint_histories",
+       indexes =
+       {
+           @Index(name = "idx_sprint_history_sprint_backlog",
+                  columnList = "sprint_backlog_id")
+       })
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

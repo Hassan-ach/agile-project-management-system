@@ -11,9 +11,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +23,21 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JoinFormula;
 
-@Table(name = "user_stories")
+@Table(name = "user_stories",
+       uniqueConstraints =
+       {
+           @UniqueConstraint(name = "uk_user_story_title_product_backlog",
+                             columnNames = {"title", "product_backlog_id"})
+       },
+       indexes =
+       {
+           @Index(name = "idx_user_story_product_backlog",
+                  columnList = "product_backlog_id")
+           ,
+               @Index(name = "idx_user_story_sprint_backlog",
+                      columnList = "sprint_backlog_id"),
+               @Index(name = "idx_user_story_epic", columnList = "epic_id"),
+       })
 @Entity
 @Getter
 @Setter
