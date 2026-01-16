@@ -1,4 +1,4 @@
-package com.ensa.agile.application.usecase.product;
+package com.ensa.agile.application.product.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
