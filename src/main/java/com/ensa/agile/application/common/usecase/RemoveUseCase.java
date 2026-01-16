@@ -59,6 +59,11 @@ public abstract class RemoveUseCase
 
     private boolean hasRole(String userEmail, String projectId, RoleType role) {
 
+        if (role == RoleType.MEMBER) {
+            return projectMemberRepository.existsByUserEmailAndProductBackLogId(
+                userEmail, projectId);
+        }
+
         return projectMemberRepository
             .existsByUserEmailAndProductBackLogIdAndRole(userEmail, projectId,
                                                          role);
