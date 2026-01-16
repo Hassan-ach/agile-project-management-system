@@ -2,7 +2,7 @@ package com.ensa.agile.application.common.usecase;
 
 import com.ensa.agile.application.common.request.InviteRequest;
 import com.ensa.agile.application.common.response.InviteResponse;
-import com.ensa.agile.application.global.service.ICurrentUser;
+import com.ensa.agile.application.global.service.ICurrentUserService;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.user.exception.UserAlreadyInvitedException;
@@ -21,12 +21,12 @@ public abstract class InviteUseCase
     private final ProductBackLogRepository productBackLogRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final UserRepository userRepository;
-    private final ICurrentUser currentUserService;
+    private final ICurrentUserService currentUserService;
 
     public InviteUseCase(ProjectMemberRepository projectMemberRepository,
                          ProductBackLogRepository productBackLogRepository,
                          UserRepository userRepository,
-                         ICurrentUser currentUserService,
+                         ICurrentUserService currentUserService,
                          ITransactionalWrapper transactionalWrapper) {
 
         super(transactionalWrapper);

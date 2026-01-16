@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class GetProductBackLogUseCase
     extends BaseUseCase<ProductBackLogGetRequest, ProductBackLogResponse> {
     private final ProductBackLogRepository productBackLogRepository;
-    private IFetchService fetchService;
+    private final IFetchService fetchService;
 
     public GetProductBackLogUseCase(
         ITransactionalWrapper tr,

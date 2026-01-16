@@ -1,6 +1,6 @@
 package com.ensa.agile.application.product.usecase;
 
-import com.ensa.agile.application.global.service.ICurrentUser;
+import com.ensa.agile.application.global.service.ICurrentUserService;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.product.mapper.ProductBackLogResponseMapper;
@@ -21,12 +21,12 @@ public class CreateProductBackLogUseCase
 
     private final ProductBackLogRepository productBackLogRepository;
     private final ProjectMemberRepository projectMemberRepository;
-    private final ICurrentUser currentUserService;
+    private final ICurrentUserService currentUserService;
 
     public CreateProductBackLogUseCase(
         ProductBackLogRepository productBackLogRepository,
         ProjectMemberRepository projectMemberRepository,
-        ICurrentUser currentUserService,
+        ICurrentUserService currentUserService,
         ITransactionalWrapper transactionalWrapper) {
 
         super(transactionalWrapper);

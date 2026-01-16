@@ -3,7 +3,7 @@ package com.ensa.agile.application.product.usecase;
 import com.ensa.agile.application.common.request.InviteRequest;
 import com.ensa.agile.application.common.response.InviteResponse;
 import com.ensa.agile.application.common.usecase.InviteUseCase;
-import com.ensa.agile.application.global.service.ICurrentUser;
+import com.ensa.agile.application.global.service.ICurrentUserService;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.domain.product.enums.RoleType;
 import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
@@ -17,7 +17,7 @@ public class InviteScrumMasterUseCase extends InviteUseCase {
     public InviteScrumMasterUseCase(
         ProjectMemberRepository projectMemberRepository,
         ProductBackLogRepository productBackLogRepository,
-        UserRepository userRepository, ICurrentUser currentUserService,
+        UserRepository userRepository, ICurrentUserService currentUserService,
         ITransactionalWrapper transactionalWrapper) {
 
         super(projectMemberRepository, productBackLogRepository, userRepository,
