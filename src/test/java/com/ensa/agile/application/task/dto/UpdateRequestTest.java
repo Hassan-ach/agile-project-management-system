@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ensa.agile.application.task.request.TaskUpdateRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 public class UpdateRequestTest {
@@ -13,7 +14,7 @@ public class UpdateRequestTest {
     void shouldCreateTaskUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
             new TaskUpdateRequest(
-                "sprint-123", "us-456", "task-789",
+                UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
                 TaskUpdateRequest.builder().title("Updated Title").build());
         });
     }
@@ -21,17 +22,9 @@ public class UpdateRequestTest {
     @Test
     void shouldThrowValidationException_whenNoFieldsProvidedForUpdate() {
         assertThrows(ValidationException.class, () -> {
-            new TaskUpdateRequest("sprint-123", "us-456", "task-789",
+            new TaskUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
+                                  UUID.randomUUID(),
                                   TaskUpdateRequest.builder().build());
-        });
-    }
-
-    @Test
-    void shouldThrowValidationException_whenIdIsBlank() {
-        assertThrows(ValidationException.class, () -> {
-            new TaskUpdateRequest(
-                "sprint-123", "us-456", "",
-                TaskUpdateRequest.builder().title("Title").build());
         });
     }
 
@@ -39,7 +32,7 @@ public class UpdateRequestTest {
     void shouldUpdateActualHoursSuccessfully_whenPositive() {
         assertDoesNotThrow(() -> {
             new TaskUpdateRequest(
-                "sprint-123", "us-456", "task-789",
+                UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
                 TaskUpdateRequest.builder().actualHours(5.5).build());
         });
     }
@@ -48,7 +41,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenTitleIsProvidedAsBlank() {
         assertThrows(ValidationException.class, () -> {
             new TaskUpdateRequest(
-                "sprint-123", "us-456", "task-789",
+                UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
                 TaskUpdateRequest.builder().title(" ").build());
         });
     }
@@ -56,7 +49,8 @@ public class UpdateRequestTest {
     @Test
     void shouldThrowValidationException_whenAssigneeEmailIsInvalid() {
         assertThrows(ValidationException.class, () -> {
-            new TaskUpdateRequest("sprint-123", "us-456", "task-789",
+            new TaskUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
+                                  UUID.randomUUID(),
                                   TaskUpdateRequest.builder()
                                       .assigneeEmail("invalid-email")
                                       .build());

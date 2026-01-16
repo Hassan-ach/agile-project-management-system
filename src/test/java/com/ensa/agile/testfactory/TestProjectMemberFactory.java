@@ -22,7 +22,7 @@ public class TestProjectMemberFactory {
     private static ProjectMember newProjectMember(RoleType role,
                                                   MemberStatus status) {
         return ProjectMember.builder()
-            .id(UUID.randomUUID().toString())
+            .id(UUID.randomUUID())
             .user(TestUserFactory.validUser())
             .productBackLog(TestProductBackLogFactory.validProduct())
             .role(role)

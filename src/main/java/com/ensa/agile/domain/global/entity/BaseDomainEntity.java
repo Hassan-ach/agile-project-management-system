@@ -1,6 +1,7 @@
 package com.ensa.agile.domain.global.entity;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -9,13 +10,13 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class BaseDomainEntity {
-    private final String id;
+    private final UUID id;
     private final LocalDateTime createdDate;
-    private final String createdBy;
+    private final UUID createdBy;
     private final LocalDateTime lastModifiedDate;
-    private final String lastModifiedBy;
+    private final UUID lastModifiedBy;
 
-    public BaseDomainEntity(String id) {
+    public BaseDomainEntity(UUID id) {
         this.id = id;
         this.createdDate = LocalDateTime.now();
         this.createdBy = null;

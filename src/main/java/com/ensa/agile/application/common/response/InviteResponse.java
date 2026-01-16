@@ -1,5 +1,7 @@
 package com.ensa.agile.application.common.response;
 
+import java.util.UUID;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class InviteResponse {
     private final String message;
-    private final String inviteId;
+    private final UUID inviteId;
     private final boolean success;
 }

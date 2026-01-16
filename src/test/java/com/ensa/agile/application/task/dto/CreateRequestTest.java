@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ensa.agile.application.task.request.TaskCreateRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 public class CreateRequestTest {
@@ -13,7 +14,7 @@ public class CreateRequestTest {
     void shouldCreateTaskCreateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
             new TaskCreateRequest(
-                "sprint-123", "us-456",
+                UUID.randomUUID(), UUID.randomUUID(),
                 TaskCreateRequest.builder()
                     .title("Fix Bug")
                     .description("Fix the login timeout issue")
@@ -24,22 +25,9 @@ public class CreateRequestTest {
     }
 
     @Test
-    void shouldThrowValidationException_whenSprintIdIsBlank() {
-        assertThrows(ValidationException.class, () -> {
-            new TaskCreateRequest(" ", "us-456",
-                                  TaskCreateRequest.builder()
-                                      .title("Task")
-                                      .description("Desc")
-                                      .estimatedHours(1.0)
-                                      .assigneeEmail("dev@ensa.ma")
-                                      .build());
-        });
-    }
-
-    @Test
     void shouldThrowValidationException_whenEstimatedHoursIsZeroOrNegative() {
         assertThrows(ValidationException.class, () -> {
-            new TaskCreateRequest("sprint-123", "us-456",
+            new TaskCreateRequest(UUID.randomUUID(), UUID.randomUUID(),
                                   TaskCreateRequest.builder()
                                       .title("Task")
                                       .description("Desc")
@@ -52,7 +40,7 @@ public class CreateRequestTest {
     @Test
     void shouldThrowValidationException_whenEmailFormatIsInvalid() {
         assertThrows(ValidationException.class, () -> {
-            new TaskCreateRequest("sprint-123", "us-456",
+            new TaskCreateRequest(UUID.randomUUID(), UUID.randomUUID(),
                                   TaskCreateRequest.builder()
                                       .title("Task")
                                       .description("Desc")
@@ -65,7 +53,7 @@ public class CreateRequestTest {
     @Test
     void shouldThrowValidationException_whenRequestIsNull() {
         assertThrows(ValidationException.class, () -> {
-            new TaskCreateRequest("sprint-123", "us-456", null);
+            new TaskCreateRequest(UUID.randomUUID(), UUID.randomUUID(), null);
         });
     }
 }

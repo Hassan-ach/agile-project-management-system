@@ -2,6 +2,8 @@ package com.ensa.agile.application.sprint.request;
 
 import com.ensa.agile.application.common.request.RemoveRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import com.ensa.agile.domain.global.utils.ValidationUtil;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -11,8 +13,8 @@ import lombok.experimental.SuperBuilder;
 @Setter
 public class RemoveSprintMemberRequest extends RemoveRequest {
 
-    private String sprintId;
-    public RemoveSprintMemberRequest(String productId, String sprintId,
+    private UUID sprintId;
+    public RemoveSprintMemberRequest(UUID productId, UUID sprintId,
                                      String userEmail) {
         super(productId, userEmail);
         this.sprintId = sprintId;
@@ -20,7 +22,7 @@ public class RemoveSprintMemberRequest extends RemoveRequest {
 
     public void validate() {
         super.validate();
-        if (sprintId == null || sprintId.isBlank()) {
+        if (sprintId == null || !ValidationUtil.isValidUUID(sprintId)) {
             throw new ValidationException("Sprint ID cannot be null or empty");
         }
     }

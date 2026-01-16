@@ -1,16 +1,15 @@
 package com.ensa.agile.application.story.usecase;
 
-import org.springframework.stereotype.Component;
-
 import com.ensa.agile.application.common.response.DeleteResponse;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.story.exception.UserStoryNotFoundException;
 import com.ensa.agile.domain.story.repository.UserStoryRepository;
+import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 @Component
-public class DeleteUserStoryUseCase
-    extends BaseUseCase<String, DeleteResponse> {
+public class DeleteUserStoryUseCase extends BaseUseCase<UUID, DeleteResponse> {
     private UserStoryRepository userStoryRepository;
     public DeleteUserStoryUseCase(ITransactionalWrapper tr,
                                   UserStoryRepository userStoryRepository) {
@@ -19,7 +18,7 @@ public class DeleteUserStoryUseCase
     }
 
     @Override
-    public DeleteResponse execute(String id) {
+    public DeleteResponse execute(UUID id) {
         if (!userStoryRepository.existsById(id)) {
             throw new UserStoryNotFoundException();
         }

@@ -8,6 +8,7 @@ import com.ensa.agile.application.user.exception.UserNotFoundException;
 import com.ensa.agile.domain.product.enums.RoleType;
 import com.ensa.agile.domain.product.repository.ProjectMemberRepository;
 import com.ensa.agile.domain.user.repository.UserRepository;
+import java.util.UUID;
 
 public abstract class RemoveUseCase
     extends BaseUseCase<RemoveRequest, RemoveResponse> {
@@ -57,7 +58,7 @@ public abstract class RemoveUseCase
         return userRepository.existsByEmail(userEmail);
     }
 
-    private boolean hasRole(String userEmail, String projectId, RoleType role) {
+    private boolean hasRole(String userEmail, UUID projectId, RoleType role) {
 
         if (role == RoleType.MEMBER) {
             return projectMemberRepository.existsByUserEmailAndProductBackLogId(

@@ -22,6 +22,7 @@ import com.ensa.agile.domain.user.repository.UserRepository;
 import com.ensa.agile.testfactory.TestProductBackLogFactory;
 import com.ensa.agile.testfactory.TestProjectMemberFactory;
 import com.ensa.agile.testfactory.TestUserFactory;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,8 +49,7 @@ public class InviteUseCaseTest {
     @Mock ProjectMemberRepository projectMemberRepository;
     @Mock ProductBackLogRepository productBackLogRepository;
     @Mock UserRepository userRepository;
-    @Mock
-    ICurrentUserService currentUserService;
+    @Mock ICurrentUserService currentUserService;
 
     @InjectMocks TestInviteUseCase inviteUseCase;
 
@@ -58,7 +58,8 @@ public class InviteUseCaseTest {
         String invitedEmail = "invited@gmail.com";
         String currentEmail = "admin@gmail.com";
 
-        InviteRequest request = new InviteRequest("productId123", invitedEmail);
+        InviteRequest request =
+            new InviteRequest(UUID.randomUUID(), invitedEmail);
         User invitedUser = TestUserFactory.validUserWithEmail(invitedEmail);
         User currentUser = TestUserFactory.validUserWithEmail(currentEmail);
         ProductBackLog pb = TestProductBackLogFactory.validProductWithId();
@@ -91,7 +92,7 @@ public class InviteUseCaseTest {
     void shouldThrowException_WhenUserInvitesThemselves() {
         String currentEmail = "self@test.com";
         User currentUser = TestUserFactory.validUserWithEmail(currentEmail);
-        InviteRequest request = new InviteRequest("prod-123", currentEmail);
+        InviteRequest request = new InviteRequest(UUID.randomUUID(), currentEmail);
 
         when(currentUserService.getCurrentUser()).thenReturn(currentUser);
 

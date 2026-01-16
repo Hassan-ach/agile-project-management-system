@@ -16,6 +16,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -114,7 +115,7 @@ public class FetchService implements IFetchService {
         + "CAST(NULL AS VARCHAR) AS taskHistoryStatus, CAST(NULL AS VARCHAR) "
         + "AS taskHistoryNote";
 
-    public List<Row> fetch(String id, Target target, List<String> fields) {
+    public List<Row> fetch(UUID id, Target target, List<String> fields) {
         FetchPlan plan = FetchPlan.resolve(fields);
         List<Row> results = new ArrayList<>();
 
@@ -145,7 +146,7 @@ public class FetchService implements IFetchService {
         return results;
     }
 
-    private List<Row> execute(String id, String sql) {
+    private List<Row> execute(UUID id, String sql) {
         Query query =
             entityManager.createNativeQuery(sql, "ProductBackLogFetchMapping");
         query.setParameter("id", id);

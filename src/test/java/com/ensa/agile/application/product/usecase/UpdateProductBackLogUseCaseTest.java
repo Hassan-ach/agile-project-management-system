@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,6 +14,7 @@ import com.ensa.agile.application.product.request.ProductBackLogUpdateRequest;
 import com.ensa.agile.application.product.response.ProductBackLogResponse;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
 import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,17 +33,17 @@ public class UpdateProductBackLogUseCaseTest {
     void execute_ShouldUpdateProductBackLog_WhenDataIsValid() {
         //
         ProductBackLog existingBackLog = ProductBackLog.builder()
-                                             .id("Backlog123")
+                                             .id(UUID.randomUUID())
                                              .name("Old Name")
                                              .description("Old Description")
                                              .build();
         ProductBackLog updatedBackLog = ProductBackLog.builder()
-                                            .id("Backlog123")
+                                            .id(UUID.randomUUID())
                                             .name("Updated Name")
                                             .description("Updated Description")
                                             .build();
         ProductBackLogUpdateRequest request = new ProductBackLogUpdateRequest(
-            "Backlog123", "Updated Name", "Updated Description");
+            UUID.randomUUID(), "Updated Name", "Updated Description");
 
         when(productBackLogRepository.findById(request.getId()))
             .thenReturn(existingBackLog);
@@ -58,23 +58,24 @@ public class UpdateProductBackLogUseCaseTest {
         assertEquals("Updated Name", response.getName());
         assertEquals("Updated Description", response.getDescription());
 
-        verify(productBackLogRepository, times(1)).findById(anyString());
+        verify(productBackLogRepository, times(1)).findById(any(UUID.class));
         verify(productBackLogRepository, times(1))
             .save(any(ProductBackLog.class));
     }
 
     @Test
     void execute_ShouldThrowException_WhenProductBackLogNotFound() {
+        UUID nonExistentId = UUID.randomUUID();
         ProductBackLogUpdateRequest request = new ProductBackLogUpdateRequest(
-            "NonExistentID", "Updated Name", "Updated Description");
+            nonExistentId, "Updated Name", "Updated Description");
 
-        when(productBackLogRepository.findById("NonExistentID"))
+        when(productBackLogRepository.findById(nonExistentId))
             .thenThrow(ProductBackLogNotFoundException.class);
 
         assertThrows(ProductBackLogNotFoundException.class,
                      () -> updateProductBackLogInfoUseCase.execute(request));
 
-        verify(productBackLogRepository, times(1)).findById(anyString());
+        verify(productBackLogRepository, times(1)).findById(nonExistentId);
         verify(productBackLogRepository, times(0))
             .save(any(ProductBackLog.class));
     }

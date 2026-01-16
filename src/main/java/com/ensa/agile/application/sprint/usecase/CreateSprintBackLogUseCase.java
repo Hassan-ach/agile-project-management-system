@@ -16,6 +16,7 @@ import com.ensa.agile.domain.sprint.repository.SprintHistoryRepository;
 import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.story.repository.UserStoryRepository;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -82,7 +83,7 @@ public class CreateSprintBackLogUseCase
         }
 
         // validate that all user stories belong to the same product backlog
-        String productId = request.getProductId();
+        UUID productId = request.getProductId();
         for (UserStory us : userStories) {
             if (!us.getProductBackLog().getId().equals(productId)) {
                 throw new ValidationException(

@@ -5,6 +5,7 @@ import com.ensa.agile.domain.product.entity.ProjectMember;
 import com.ensa.agile.domain.product.enums.RoleType;
 import com.ensa.agile.domain.product.repository.ProjectMemberRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +22,7 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
     }
 
     @Override
-    public ProjectMember findById(String id) {
+    public ProjectMember findById(UUID id) {
         return ProjectMemberJpaMapper.toDomainEntity(
             jpaProjectMemberRepository.findById(id).orElseThrow(
                 ProjectMemberNotFoundException::new));
@@ -36,34 +37,34 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
     }
 
     @Override
-    public void deleteById(String projectMemberId) {
+    public void deleteById(UUID projectMemberId) {
         jpaProjectMemberRepository.deleteById(projectMemberId);
     }
 
     @Override
-    public boolean existsById(String id) {
+    public boolean existsById(UUID id) {
         return jpaProjectMemberRepository.existsById(id);
     }
 
     @Override
-    public boolean existsByProductBackLogIdAndUserId(String productBackLogId,
-                                                     String userId) {
+    public boolean existsByProductBackLogIdAndUserId(UUID productBackLogId,
+                                                     UUID userId) {
         return jpaProjectMemberRepository.existsByUser_IdAndProductBackLog_Id(
             userId, productBackLogId);
     }
 
     @Override
-    public boolean
-    existsByUserEmailAndProductBackLogId(String userEmail,
-                                         String productBackLogId) {
+    public boolean existsByUserEmailAndProductBackLogId(String userEmail,
+                                                        UUID productBackLogId) {
         return jpaProjectMemberRepository
             .existsByUser_EmailAndProductBackLog_Id(userEmail,
                                                     productBackLogId);
     }
 
     @Override
-    public boolean existsByUserIdAndProductBackLogIdAndRole(
-        String userId, String productBackLogId, RoleType role) {
+    public boolean
+    existsByUserIdAndProductBackLogIdAndRole(UUID userId, UUID productBackLogId,
+                                             RoleType role) {
         return jpaProjectMemberRepository
             .existsByUser_IdAndProductBackLog_IdAndRole(userId,
                                                         productBackLogId, role);
@@ -71,7 +72,7 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
 
     @Override
     public void deleteByUserEmailAndProductBackLogId(String userEmail,
-                                                     String productBackLogId) {
+                                                     UUID productBackLogId) {
 
         jpaProjectMemberRepository.deleteByUser_EmailAndProductBackLog_Id(
             userEmail, productBackLogId);
@@ -79,7 +80,7 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
 
     @Override
     public boolean existsByUserEmailAndProductBackLogIdAndRole(
-        String userEmail, String productBackLogId, RoleType role) {
+        String userEmail, UUID productBackLogId, RoleType role) {
 
         return jpaProjectMemberRepository
             .existsByUser_EmailAndProductBackLog_IdAndRole(
@@ -88,7 +89,7 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
 
     @Override
     public ProjectMember
-    findByUserIdAndProductBackLogId(String userId, String productBackLogId) {
+    findByUserIdAndProductBackLogId(UUID userId, UUID productBackLogId) {
         return ProjectMemberJpaMapper.toDomainEntity(
             jpaProjectMemberRepository
                 .findByUser_IdAndProductBackLog_Id(userId, productBackLogId)

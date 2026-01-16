@@ -9,6 +9,7 @@ import com.ensa.agile.application.sprint.usecase.CreateSprintBackLogUseCase;
 import com.ensa.agile.application.sprint.usecase.DeleteSprintBackLogUseCase;
 import com.ensa.agile.application.sprint.usecase.GetSprintBackLogUseCase;
 import com.ensa.agile.application.sprint.usecase.UpdateSprintBackLogUseCase;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class SprintController {
 
     @GetMapping("/{sprintId}")
     public ResponseEntity<SprintBackLogResponse>
-    getSprint(@PathVariable String sprintId,
+    getSprint(@PathVariable UUID sprintId,
               @RequestParam(name = "with", required = false) String with) {
 
         SprintBackLogResponse response =
@@ -54,7 +55,7 @@ public class SprintController {
 
     @PatchMapping("/{sprintId}")
     public ResponseEntity<SprintBackLogResponse>
-    updateSprint(@PathVariable String sprintId,
+    updateSprint(@PathVariable UUID sprintId,
                  @RequestBody SprintBackLogUpdateRequest request) {
         SprintBackLogResponse response =
             updateSprintBackLogUseCase.executeTransactionally(
@@ -64,7 +65,7 @@ public class SprintController {
 
     @DeleteMapping
     public ResponseEntity<DeleteResponse>
-    deleteSprint(@PathVariable String sprintId) {
+    deleteSprint(@PathVariable UUID sprintId) {
         deleteSprintBackLogUseCase.executeTransactionally(sprintId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

@@ -6,6 +6,7 @@ import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.story.repository.UserStoryRepository;
 import com.ensa.agile.infrastructure.persistence.jpa.sprint.backlog.SprintBackLogJpaMapper;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,7 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
     }
 
     @Override
-    public UserStory findById(String s) {
+    public UserStory findById(UUID s) {
         return UserStoryJpaMapper.toDomainEntity(
             this.jpaUserStoryRepository.findById(s).orElseThrow(
                 UserStoryNotFoundException::new));
@@ -38,17 +39,17 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
     }
 
     @Override
-    public void deleteById(String s) {
+    public void deleteById(UUID s) {
         this.jpaUserStoryRepository.deleteById(s);
     }
 
     @Override
-    public boolean existsById(String s) {
+    public boolean existsById(UUID s) {
         return this.jpaUserStoryRepository.existsById(s);
     }
 
     @Override
-    public List<UserStory> findAllByEpicId(String epicId) {
+    public List<UserStory> findAllByEpicId(UUID epicId) {
         return this.jpaUserStoryRepository.findAllByEpic_Id(epicId)
             .stream()
             .map(UserStoryJpaMapper::toDomainEntity)
@@ -56,7 +57,7 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
     }
 
     @Override
-    public List<UserStory> findByBatch(List<String> ids) {
+    public List<UserStory> findByBatch(List<UUID> ids) {
         return this.jpaUserStoryRepository.findByBatch(ids)
             .stream()
             .map(UserStoryJpaMapper::toDomainEntity)
@@ -64,21 +65,21 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
     }
 
     @Override
-    public void assignToSprint(List<String> userStoryIds,
+    public void assignToSprint(List<UUID> userStoryIds,
                                SprintBackLog sprintBackLog) {
         this.jpaUserStoryRepository.assignToSprint(
             userStoryIds, SprintBackLogJpaMapper.toJpaEntity(sprintBackLog));
     }
 
     @Override
-    public String getSprintBackLogIdByUserStoryId(String userStoryId) {
+    public UUID getSprintBackLogIdByUserStoryId(UUID userStoryId) {
         return this.jpaUserStoryRepository
             .getSprintBackLogIdByUserStoryId(userStoryId)
             .orElseThrow(UserStoryNotFoundException::new);
     }
 
     @Override
-    public String getProductBackLogIdByUserStoryId(String userStoryId) {
+    public UUID getProductBackLogIdByUserStoryId(UUID userStoryId) {
         return this.jpaUserStoryRepository
             .getProductBackLogIdByUserStoryId(userStoryId)
             .orElseThrow(UserStoryNotFoundException::new);

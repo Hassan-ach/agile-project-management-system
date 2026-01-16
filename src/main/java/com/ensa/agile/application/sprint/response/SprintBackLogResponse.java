@@ -5,6 +5,7 @@ import com.ensa.agile.domain.sprint.entity.SprintHistory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class SprintBackLogResponse {
-    private String id;
+    private UUID id;
     private String name;
     private String scrumMasterEmail;
     private SprintHistory status;
@@ -24,9 +25,9 @@ public class SprintBackLogResponse {
     private String goal;
     private List<SprintHistory> sprintHistories;
 
-    private String createdBy;
+    private UUID createdBy;
     private LocalDateTime createdDate;
-    private String lastModifiedBy;
+    private UUID lastModifiedBy;
     private LocalDateTime lastModifiedDate;
 
     private List<SprintMemberResponse> members;

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ensa.agile.application.product.request.ProductBackLogUpdateRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 public class UpdateRequestTest {
@@ -12,10 +13,11 @@ public class UpdateRequestTest {
     void shouldCreateProductBackLogUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
             new ProductBackLogUpdateRequest(
-                "123", ProductBackLogUpdateRequest.builder()
-                           .name("Updated Backlog")
-                           .description("This is an updated product backlog.")
-                           .build());
+                UUID.randomUUID(),
+                ProductBackLogUpdateRequest.builder()
+                    .name("Updated Backlog")
+                    .description("This is an updated product backlog.")
+                    .build());
         });
     }
 
@@ -23,10 +25,10 @@ public class UpdateRequestTest {
     void shouldUpdateOnlyNameSuccessfully_whenDescriptionIsNull() {
         assertDoesNotThrow(() -> {
             new ProductBackLogUpdateRequest(
-                "123", ProductBackLogUpdateRequest.builder()
-                           .name("Updated Backlog")
-                           .description(null)
-                           .build());
+                UUID.randomUUID(), ProductBackLogUpdateRequest.builder()
+                                       .name("Updated Backlog")
+                                       .description(null)
+                                       .build());
         });
     }
 
@@ -34,10 +36,11 @@ public class UpdateRequestTest {
     void shouldUpdateOnlyDescriptionSuccessfully_whenNameIsNull() {
         assertDoesNotThrow(() -> {
             new ProductBackLogUpdateRequest(
-                "123", ProductBackLogUpdateRequest.builder()
-                           .name(null)
-                           .description("This is an updated product backlog.")
-                           .build());
+                UUID.randomUUID(),
+                ProductBackLogUpdateRequest.builder()
+                    .name(null)
+                    .description("This is an updated product backlog.")
+                    .build());
         });
     }
 
@@ -45,20 +48,21 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenBothFieldsAreNull() {
         assertThrows(ValidationException.class, () -> {
             new ProductBackLogUpdateRequest(
-                "123", ProductBackLogUpdateRequest.builder()
-                           .name(null)
-                           .description(null)
-                           .build());
+                UUID.randomUUID(), ProductBackLogUpdateRequest.builder()
+                                       .name(null)
+                                       .description(null)
+                                       .build());
         });
     }
     @Test
     void shouldThrowValidationException_whenNameIsBlank() {
         assertThrows(ValidationException.class, () -> {
             new ProductBackLogUpdateRequest(
-                "123", ProductBackLogUpdateRequest.builder()
-                           .name(" ")
-                           .description("This is an updated product backlog.")
-                           .build());
+                UUID.randomUUID(),
+                ProductBackLogUpdateRequest.builder()
+                    .name(" ")
+                    .description("This is an updated product backlog.")
+                    .build());
         });
     }
 
@@ -66,16 +70,17 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenDescriptionIsBlank() {
         assertThrows(ValidationException.class, () -> {
             new ProductBackLogUpdateRequest(
-                "123", ProductBackLogUpdateRequest.builder()
-                           .name("Updated Backlog")
-                           .description(" ")
-                           .build());
+                UUID.randomUUID(), ProductBackLogUpdateRequest.builder()
+                                       .name("Updated Backlog")
+                                       .description(" ")
+                                       .build());
         });
     }
     @Test
     void shouldThrowValidationException_whenUpdateRequestIsNull() {
-        assertThrows(ValidationException.class,
-                     () -> { new ProductBackLogUpdateRequest("123", null); });
+        assertThrows(ValidationException.class, () -> {
+            new ProductBackLogUpdateRequest(UUID.randomUUID(), null);
+        });
     }
 
     @Test
@@ -86,16 +91,6 @@ public class UpdateRequestTest {
                           .name("Updated Backlog")
                           .description("This is an updated product backlog.")
                           .build());
-        });
-    }
-    @Test
-    void shouldThrowValidationException_whenIdIsBlank() {
-        assertThrows(ValidationException.class, () -> {
-            new ProductBackLogUpdateRequest(
-                " ", ProductBackLogUpdateRequest.builder()
-                         .name("Updated Backlog")
-                         .description("This is an updated product backlog.")
-                         .build());
         });
     }
 }

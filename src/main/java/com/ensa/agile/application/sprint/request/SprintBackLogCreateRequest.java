@@ -4,6 +4,7 @@ import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.global.utils.ValidationUtil;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,14 +18,18 @@ public class SprintBackLogCreateRequest {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final String goal;
-    private final List<String> userStoriesIds;
-    private String productId;
+    private final List<UUID> userStoriesIds;
+    private UUID productId;
 
     // This constructor is for validation purposes
-    public SprintBackLogCreateRequest(String productId,
+    public SprintBackLogCreateRequest(UUID productId,
                                       SprintBackLogCreateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
+        }
+        if (productId == null || !ValidationUtil.isValidUUID(productId)) {
+            throw new ValidationException(
+                "productId cannot be null or invalid");
         }
         if (req.getName() == null || req.getName().isBlank()) {
             throw new ValidationException("name cannot be null or blank");

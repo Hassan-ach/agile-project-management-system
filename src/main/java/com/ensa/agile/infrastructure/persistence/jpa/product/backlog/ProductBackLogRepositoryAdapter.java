@@ -5,6 +5,7 @@ import com.ensa.agile.domain.global.exception.DataBasePersistenceException;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
 import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -28,7 +29,7 @@ public class ProductBackLogRepositoryAdapter
     }
 
     @Override
-    public ProductBackLog findById(String s) {
+    public ProductBackLog findById(UUID s) {
         return this.jpaProductBackLogRepository.findById(s)
             .map(ProductBackLogJpaMapper::toDomainEntity)
             .orElseThrow(ProductBackLogNotFoundException::new);
@@ -43,7 +44,7 @@ public class ProductBackLogRepositoryAdapter
     }
 
     @Override
-    public void deleteById(String s) {
+    public void deleteById(UUID s) {
         try {
             this.jpaProductBackLogRepository.deleteById(s);
         } catch (EmptyResultDataAccessException e) {
@@ -52,13 +53,7 @@ public class ProductBackLogRepositoryAdapter
     }
 
     @Override
-    public boolean existsById(String s) {
+    public boolean existsById(UUID s) {
         return this.jpaProductBackLogRepository.existsById(s);
-    }
-
-    @Override
-    public ProductBackLog findProductBackLogById(String id) {
-        return ProductBackLogJpaMapper.toDomainEntity(
-            this.jpaProductBackLogRepository.findProductBackLogRowsById(id));
     }
 }

@@ -2,6 +2,7 @@ package com.ensa.agile.application.task.response;
 
 import com.ensa.agile.domain.task.entity.TaskHistory;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class TaskResponse {
-    private String id;
+    private UUID id;
     private String title;
     private String description;
     private String assignee;
@@ -20,8 +21,8 @@ public class TaskResponse {
     private TaskHistory status;
     private Double actualHours;
 
-    private String createdBy;
+    private UUID createdBy;
     private LocalDateTime createdDate;
-    private String lastModifiedBy;
+    private UUID lastModifiedBy;
     private LocalDateTime lastModifiedDate;
 }

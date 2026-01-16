@@ -3,6 +3,7 @@ package com.ensa.agile.application.sprint.request;
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.global.utils.ValidationUtil;
 import java.time.LocalDate;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,21 +14,20 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class SprintBackLogUpdateRequest {
-    private String id;
+    private UUID id;
     private String name;
     private String goal;
     private LocalDate startDate;
     private LocalDate endDate;
     private String scrumMasterEmail;
 
-    public SprintBackLogUpdateRequest(String id,
-                                      SprintBackLogUpdateRequest req) {
+    public SprintBackLogUpdateRequest(UUID id, SprintBackLogUpdateRequest req) {
 
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
 
-        if (id == null || id.isBlank()) {
+        if (id == null || !ValidationUtil.isValidUUID(id)) {
             throw new ValidationException("ID cannot be null or blank");
         }
 

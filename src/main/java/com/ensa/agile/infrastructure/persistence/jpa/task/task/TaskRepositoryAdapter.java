@@ -4,6 +4,7 @@ import com.ensa.agile.application.task.exception.TaskNotFoundException;
 import com.ensa.agile.domain.task.entity.Task;
 import com.ensa.agile.domain.task.repository.TaskRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +20,7 @@ public class TaskRepositoryAdapter implements TaskRepository {
     }
 
     @Override
-    public Task findById(String id) {
+    public Task findById(UUID id) {
         return jpaTaskRepository.findById(id)
             .map(TaskJpaMapper::toDomainEntity)
             .orElseThrow(TaskNotFoundException::new);
@@ -34,17 +35,17 @@ public class TaskRepositoryAdapter implements TaskRepository {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(UUID id) {
         jpaTaskRepository.deleteById(id);
     }
 
     @Override
-    public boolean existsById(String id) {
+    public boolean existsById(UUID id) {
         return jpaTaskRepository.existsById(id);
     }
 
     @Override
-    public String getProductBackLogIdByTaskId(String taskId) {
+    public UUID getProductBackLogIdByTaskId(UUID taskId) {
         return jpaTaskRepository.getProductBackLogIdByTaskId(taskId)
             .orElseThrow(TaskNotFoundException::new);
     }

@@ -4,12 +4,13 @@ import com.ensa.agile.domain.global.repository.BaseDomainRepository;
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
 import com.ensa.agile.domain.story.entity.UserStory;
 import java.util.List;
+import java.util.UUID;
 
 public interface UserStoryRepository
-    extends BaseDomainRepository<UserStory, String> {
-    List<UserStory> findAllByEpicId(String epicId);
-    List<UserStory> findByBatch(List<String> ids);
-    void assignToSprint(List<String> userStoryIds, SprintBackLog sprintBackLog);
-    String getSprintBackLogIdByUserStoryId(String userStoryId);
-    String getProductBackLogIdByUserStoryId(String userStoryId);
+    extends BaseDomainRepository<UserStory, UUID> {
+    List<UserStory> findAllByEpicId(UUID epicId);
+    List<UserStory> findByBatch(List<UUID> ids);
+    void assignToSprint(List<UUID> userStoryIds, SprintBackLog sprintBackLog);
+    UUID getSprintBackLogIdByUserStoryId(UUID userStoryId);
+    UUID getProductBackLogIdByUserStoryId(UUID userStoryId);
 }

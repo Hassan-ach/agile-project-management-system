@@ -2,26 +2,28 @@ package com.ensa.agile.infrastructure.persistence.jpa.product.member;
 
 import com.ensa.agile.domain.product.enums.RoleType;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaProjectMemberRepository
-    extends JpaRepository<ProjectMemberJpaEntity, String> {
+    extends JpaRepository<ProjectMemberJpaEntity, UUID> {
 
-    boolean existsByUser_IdAndProductBackLog_Id(String userId,
-                                                String productBackLogId);
+    boolean existsByUser_IdAndProductBackLog_Id(UUID userId,
+                                                UUID productBackLogId);
 
     boolean existsByUser_EmailAndProductBackLog_Id(String userEmail,
-                                                   String productBackLogId);
-    boolean existsByUser_IdAndProductBackLog_IdAndRole(String userId,
-                                                       String productBackLogId,
+                                                   UUID productBackLogId);
+    boolean existsByUser_IdAndProductBackLog_IdAndRole(UUID userId,
+                                                       UUID productBackLogId,
                                                        RoleType role);
 
-    boolean existsByUser_EmailAndProductBackLog_IdAndRole(
-        String userEmail, String productBackLogId, RoleType role);
+    boolean existsByUser_EmailAndProductBackLog_IdAndRole(String userEmail,
+                                                          UUID productBackLogId,
+                                                          RoleType role);
 
     void deleteByUser_EmailAndProductBackLog_Id(String userEmail,
-                                                String productBackLogId);
+                                                UUID productBackLogId);
 
     Optional<ProjectMemberJpaEntity>
-    findByUser_IdAndProductBackLog_Id(String userId, String productBackLogId);
+    findByUser_IdAndProductBackLog_Id(UUID userId, UUID productBackLogId);
 }

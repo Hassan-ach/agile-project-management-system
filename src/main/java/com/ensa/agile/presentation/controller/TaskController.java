@@ -9,6 +9,7 @@ import com.ensa.agile.application.task.usecase.CreateTaskUseCase;
 import com.ensa.agile.application.task.usecase.DeleteTaskUseCase;
 import com.ensa.agile.application.task.usecase.GetTaskUseCase;
 import com.ensa.agile.application.task.usecase.UpdateTaskUseCase;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,8 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<TaskResponse>
-    createTask(@PathVariable String productId, @PathVariable String sprintId,
-               @PathVariable String storyId,
+    createTask(@PathVariable UUID productId, @PathVariable UUID sprintId,
+               @PathVariable UUID storyId,
                @RequestBody TaskCreateRequest request) {
         TaskResponse response = createTaskUseCase.executeTransactionally(
             new TaskCreateRequest(sprintId, storyId, request));
@@ -44,7 +45,7 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse>
-    getTask(@PathVariable String id,
+    getTask(@PathVariable UUID id,
             @RequestParam(name = "with", required = false) String with) {
         TaskResponse response =
             getTaskUseCase.executeTransactionally(new TaskGetRequest(id, with));
@@ -53,9 +54,8 @@ public class TaskController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<TaskResponse>
-    updateTask(@PathVariable String sprintId, @PathVariable String storyId,
-               @PathVariable String id,
-               @RequestBody TaskUpdateRequest request) {
+    updateTask(@PathVariable UUID sprintId, @PathVariable UUID storyId,
+               @PathVariable UUID id, @RequestBody TaskUpdateRequest request) {
         TaskResponse response = updateTaskUseCase.executeTransactionally(
             new TaskUpdateRequest(sprintId, storyId, id, request));
 
@@ -63,7 +63,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DeleteResponse> deleteTask(@PathVariable String id) {
+    public ResponseEntity<DeleteResponse> deleteTask(@PathVariable UUID id) {
         deleteTaskUseCase.executeTransactionally(id);
 
         return ResponseEntity.noContent().build();

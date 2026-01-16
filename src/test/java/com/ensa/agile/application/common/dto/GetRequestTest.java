@@ -5,19 +5,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ensa.agile.application.common.request.GetRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 public class GetRequestTest {
 
     @Test
     void shouldCreateGetRequestSuccessfully_whenValidInput() {
-        assertDoesNotThrow(
-            () -> { new GetRequest("123", "field1, field2, field3"); });
+        assertDoesNotThrow(() -> {
+            new GetRequest(UUID.randomUUID(), "field1, field2, field3");
+        });
     }
 
     @Test
     void shouldCreateGetRequestSuccessfully_whenWithIsBlank() {
-        assertDoesNotThrow(() -> { new GetRequest("123", " "); });
+        assertDoesNotThrow(() -> { new GetRequest(UUID.randomUUID(), " "); });
     }
 
     @Test
@@ -28,7 +30,8 @@ public class GetRequestTest {
 
     @Test
     void shouldTrimAndUpperCaseFieldsSuccessfully() {
-        GetRequest request = new GetRequest("123", " field1 , FIELD2, FiElD3 ");
+        GetRequest request =
+            new GetRequest(UUID.randomUUID(), " field1 , FIELD2, FiElD3 ");
         assert (request.getFields().size() == 3);
         assert (request.getFields().get(0).equals("FIELD1"));
         assert (request.getFields().get(1).equals("FIELD2"));

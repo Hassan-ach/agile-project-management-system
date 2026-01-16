@@ -1,18 +1,20 @@
 package com.ensa.agile.application.common.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
+import com.ensa.agile.domain.global.utils.ValidationUtil;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
 public class UpdateStatusRequest<T> {
-    private final String id;
+    private final UUID id;
     private final String note;
     private final T status;
 
-    public UpdateStatusRequest(String id, String note, T status) {
-        if (id == null || id.isBlank()) {
+    public UpdateStatusRequest(UUID id, String note, T status) {
+        if (id == null || !ValidationUtil.isValidUUID(id)) {
             throw new ValidationException("");
         }
         if (status == null) {

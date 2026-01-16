@@ -9,6 +9,7 @@ import com.ensa.agile.application.story.usecase.CreateUserStoryUseCase;
 import com.ensa.agile.application.story.usecase.DeleteUserStoryUseCase;
 import com.ensa.agile.application.story.usecase.GetUserStoryUseCase;
 import com.ensa.agile.application.story.usecase.UpdateUserStoryUseCase;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class UserStoryController {
     @PostMapping
     public ResponseEntity<UserStoryResponse>
     createUserStory(@RequestBody UserStoryCreateRequest request,
-                    @PathVariable String productId) {
+                    @PathVariable UUID productId) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(createUserStoryUseCase.executeTransactionally(
@@ -44,7 +45,7 @@ public class UserStoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserStoryResponse> getUserStoryById(
-        @PathVariable String productId, @PathVariable String id,
+        @PathVariable UUID productId, @PathVariable UUID id,
         @RequestParam(name = "with", required = false) String with) {
 
         return ResponseEntity.ok().body(
@@ -54,7 +55,7 @@ public class UserStoryController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserStoryResponse>
-    updateUserStory(@PathVariable String productId, @PathVariable String id,
+    updateUserStory(@PathVariable UUID productId, @PathVariable UUID id,
                     @RequestBody UserStoryUpdateRequest request) {
 
         return ResponseEntity.ok().body(
@@ -64,7 +65,7 @@ public class UserStoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteResponse>
-    deleteUserStory(@PathVariable String productId, @PathVariable String id) {
+    deleteUserStory(@PathVariable UUID productId, @PathVariable UUID id) {
         deleteUserStoryUseCase.executeTransactionally(id);
         return ResponseEntity.noContent().build();
     }

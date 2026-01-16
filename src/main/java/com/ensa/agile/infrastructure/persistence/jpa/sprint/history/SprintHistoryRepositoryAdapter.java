@@ -4,6 +4,7 @@ import com.ensa.agile.application.sprint.exception.SprintHistoryNotFoundExceptio
 import com.ensa.agile.domain.sprint.entity.SprintHistory;
 import com.ensa.agile.domain.sprint.repository.SprintHistoryRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +20,7 @@ public class SprintHistoryRepositoryAdapter implements SprintHistoryRepository {
     }
 
     @Override
-    public SprintHistory findById(String s) {
+    public SprintHistory findById(UUID s) {
         return jpaSprintHistoryRepository.findById(s)
             .map(SprintHistoryJpaMapper::toDomainEntity)
             .orElseThrow(SprintHistoryNotFoundException::new);
@@ -34,12 +35,12 @@ public class SprintHistoryRepositoryAdapter implements SprintHistoryRepository {
     }
 
     @Override
-    public void deleteById(String s) {
+    public void deleteById(UUID s) {
         jpaSprintHistoryRepository.deleteById(s);
     }
 
     @Override
-    public boolean existsById(String s) {
+    public boolean existsById(UUID s) {
         return jpaSprintHistoryRepository.existsById(s);
     }
 }

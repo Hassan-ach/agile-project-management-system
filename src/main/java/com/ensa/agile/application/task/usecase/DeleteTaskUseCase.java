@@ -1,14 +1,14 @@
 package com.ensa.agile.application.task.usecase;
 
-import org.springframework.stereotype.Component;
-
 import com.ensa.agile.application.common.response.DeleteResponse;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.domain.task.repository.TaskRepository;
+import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 @Component
-public class DeleteTaskUseCase extends BaseUseCase<String, DeleteResponse> {
+public class DeleteTaskUseCase extends BaseUseCase<UUID, DeleteResponse> {
     private final TaskRepository taskRepository;
 
     public DeleteTaskUseCase(ITransactionalWrapper tr,
@@ -18,7 +18,7 @@ public class DeleteTaskUseCase extends BaseUseCase<String, DeleteResponse> {
     }
 
     @Override
-    public DeleteResponse execute(String id) {
+    public DeleteResponse execute(UUID id) {
         this.taskRepository.deleteById(id);
         return DeleteResponse.builder()
             .message("Task deleted successfully")

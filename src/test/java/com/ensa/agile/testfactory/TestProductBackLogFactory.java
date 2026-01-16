@@ -11,7 +11,7 @@ public final class TestProductBackLogFactory {
             .build();
     }
     public static ProductBackLog validProductWithId() {
-        String id = UUID.randomUUID().toString();
+        UUID id = UUID.randomUUID();
 
         return ProductBackLog.builder()
             .id(id)

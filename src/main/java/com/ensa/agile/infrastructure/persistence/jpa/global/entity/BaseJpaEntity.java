@@ -1,24 +1,23 @@
 package com.ensa.agile.infrastructure.persistence.jpa.global.entity;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @MappedSuperclass
 @Getter
@@ -29,9 +28,7 @@ import lombok.experimental.SuperBuilder;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseJpaEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID id;
 
     @CreatedDate
     @Column(name = "CREATED_DATE", updatable = false, nullable = false)
@@ -39,7 +36,7 @@ public abstract class BaseJpaEntity {
 
     @CreatedBy
     @Column(name = "CREATED_BY", nullable = false, updatable = false)
-    private String createdBy;
+    private UUID createdBy;
 
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_DATE", insertable = false)
@@ -47,9 +44,7 @@ public abstract class BaseJpaEntity {
 
     @LastModifiedBy
     @Column(name = "LAST_MODIFIED_BY", insertable = false)
-    private String lastModifiedBy;
+    private UUID lastModifiedBy;
 
-    public BaseJpaEntity(String id) {
-        this.id = id;
-    }
+    public BaseJpaEntity(UUID id) { this.id = id; }
 }

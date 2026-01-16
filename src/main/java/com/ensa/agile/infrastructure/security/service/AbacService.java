@@ -12,6 +12,7 @@ import com.ensa.agile.domain.story.repository.UserStoryRepository;
 import com.ensa.agile.domain.task.repository.TaskRepository;
 import com.ensa.agile.domain.user.entity.User;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -172,7 +173,7 @@ public class AbacService implements IAbacService {
     }
 
     @Override
-    public boolean canAccessProject(String projectId, String action) {
+    public boolean canAccessProject(UUID projectId, String action) {
         return switch (action) {
             case "INVITE_MEMBER" ->
                 hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
@@ -188,8 +189,7 @@ public class AbacService implements IAbacService {
 
     // --- Epic Level ---
     @Override
-    public boolean canAccessEpic(String projectId, String epicId,
-                                 String action) {
+    public boolean canAccessEpic(UUID projectId, UUID epicId, String action) {
         return switch (action) {
             case "CREATE" ->
                 isValideId(projectId) &&
@@ -223,8 +223,8 @@ public class AbacService implements IAbacService {
 
     // --- User Story Level ---
     @Override
-    public boolean canAccessStory(String projectId, String sprintId,
-                                  String storyId, String action) {
+    public boolean canAccessStory(UUID projectId, UUID sprintId, UUID storyId,
+                                  String action) {
         return switch (action) {
             case "CREATE" ->
                 isValideId(projectId) &&
@@ -261,7 +261,7 @@ public class AbacService implements IAbacService {
 
     // --- Sprint Level ---
     @Override
-    public boolean canAccessSprint(String projectId, String sprintId,
+    public boolean canAccessSprint(UUID projectId, UUID sprintId,
                                    String action) {
         return switch (action) {
             case "CREATE" ->
@@ -308,8 +308,8 @@ public class AbacService implements IAbacService {
 
     // --- Task Level ---
     @Override
-    public boolean canAccessTask(String projectId, String sprintId,
-                                 String storyId, String taskId, String action) {
+    public boolean canAccessTask(UUID projectId, UUID sprintId, UUID storyId,
+                                 UUID taskId, String action) {
         return switch (action) {
             case "CREATE" ->
                 isValideId(projectId, sprintId, storyId) &&
@@ -350,7 +350,7 @@ public class AbacService implements IAbacService {
 
     // --- Reporting ---
     @Override
-    public boolean canViewReport(String projectId, String sprintId) {
+    public boolean canViewReport(UUID projectId, UUID sprintId) {
         return validateOwnershipAndRole(
             projectId, sprintId,
             sprintBackLogRepository::getProductBackLogIdBySprintId,
@@ -358,13 +358,13 @@ public class AbacService implements IAbacService {
     }
 
     // --- Helper Methods ---
-    private boolean canCreateTaskHelper(String projectId, String sprintId,
-                                        String storyId) {
+    private boolean canCreateTaskHelper(UUID projectId, UUID sprintId,
+                                        UUID storyId) {
         boolean isValidHierarchy = false;
         try {
-            String spId =
+            UUID spId =
                 userStoryRepository.getSprintBackLogIdByUserStoryId(storyId);
-            String prId =
+            UUID prId =
                 sprintBackLogRepository.getProductBackLogIdBySprintId(sprintId);
             isValidHierarchy = sprintId.equals(spId) && projectId.equals(prId);
         } catch (Exception e) {
@@ -376,7 +376,7 @@ public class AbacService implements IAbacService {
                            RoleType.SCRUM_MASTER, RoleType.DEVELOPER);
     }
 
-    private boolean hasProjectRole(String projectId, RoleType... roles) {
+    private boolean hasProjectRole(UUID projectId, RoleType... roles) {
         if (projectId == null)
             return false;
         try {
@@ -390,12 +390,11 @@ public class AbacService implements IAbacService {
         }
     }
 
-    private boolean
-    validateOwnershipAndRole(String projectId, String resourceId,
-                             Function<String, String> idResolver,
-                             RoleType... roles) {
+    private boolean validateOwnershipAndRole(UUID projectId, UUID resourceId,
+                                             Function<UUID, UUID> idResolver,
+                                             RoleType... roles) {
         try {
-            String resolvedProjectId = idResolver.apply(resourceId);
+            UUID resolvedProjectId = idResolver.apply(resourceId);
             if (!projectId.equals(resolvedProjectId))
                 return false;
             return hasProjectRole(projectId, roles);
@@ -404,7 +403,7 @@ public class AbacService implements IAbacService {
         }
     }
 
-    private boolean isSprintMember(String sprintId) {
+    private boolean isSprintMember(UUID sprintId) {
         try {
             User currentUser = currentUserService.getCurrentUser();
             if (!sprintMembersRepository.existsBySprintBackLogIdAndUserId(
@@ -417,9 +416,9 @@ public class AbacService implements IAbacService {
         }
     }
 
-    private boolean isValideId(String... id) {
-        for (String i : id) {
-            if (i == null || i.isBlank()) {
+    private boolean isValideId(UUID... id) {
+        for (UUID i : id) {
+            if (i == null) {
                 return false;
             }
         }

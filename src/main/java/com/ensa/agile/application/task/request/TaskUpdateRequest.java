@@ -2,6 +2,7 @@ package com.ensa.agile.application.task.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.global.utils.ValidationUtil;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,30 +13,30 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class TaskUpdateRequest {
-    private String id;
+    private UUID id;
     private String title;
     private String description;
     private Double estimatedHours;
     private String assigneeEmail;
     private Double actualHours;
 
-    private String userStoryId;
-    private String sprintId;
+    private UUID userStoryId;
+    private UUID sprintId;
 
-    public TaskUpdateRequest(String sprintId, String userStoryId, String id,
+    public TaskUpdateRequest(UUID sprintId, UUID userStoryId, UUID id,
                              TaskUpdateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
-        if (id == null || id.isBlank()) {
-            throw new ValidationException("id cannot be null or blank");
+        if (id == null || !ValidationUtil.isValidUUID(id)) {
+            throw new ValidationException("id cannot be null or invalid");
         }
-        if (sprintId == null || sprintId.isBlank()) {
-            throw new ValidationException("sprintId cannot be null or blank");
+        if (sprintId == null || !ValidationUtil.isValidUUID(sprintId)) {
+            throw new ValidationException("sprintId cannot be null or invalid");
         }
-        if (userStoryId == null || userStoryId.isBlank()) {
+        if (userStoryId == null || !ValidationUtil.isValidUUID(userStoryId)) {
             throw new ValidationException(
-                "userStoryId cannot be null or blank");
+                "userStoryId cannot be null or invalid");
         }
 
         if (req.title == null && req.description == null &&

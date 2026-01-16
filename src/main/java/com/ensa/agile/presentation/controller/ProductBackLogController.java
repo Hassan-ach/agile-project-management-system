@@ -13,6 +13,7 @@ import com.ensa.agile.application.product.usecase.GetProductBackLogUseCase;
 import com.ensa.agile.application.product.usecase.InviteScrumMasterUseCase;
 import com.ensa.agile.application.product.usecase.RemoveScrumMasterUseCase;
 import com.ensa.agile.application.product.usecase.UpdateProductBackLogInfoUseCase;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class ProductBackLogController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductBackLogResponse> getProductBacklogById(
-        @PathVariable String id,
+        @PathVariable UUID id,
         @RequestParam(name = "with", required = false) String with) {
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -58,7 +59,7 @@ public class ProductBackLogController {
     @PatchMapping("/{id}")
     @PreAuthorize("@abacService.canAccessProject(#id,  'UPDATE')")
     public ResponseEntity<ProductBackLogResponse>
-    updateProductBacklog(@PathVariable String id,
+    updateProductBacklog(@PathVariable UUID id,
                          @RequestBody ProductBackLogUpdateRequest request) {
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -69,7 +70,7 @@ public class ProductBackLogController {
     @PostMapping("/{id}/invite/scrum-master")
     public ResponseEntity<InviteResponse>
     inviteScrumMaster(@RequestBody InviteRequest request,
-                      @PathVariable String id) {
+                      @PathVariable UUID id) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(inviteScrumMasterUseCase.executeTransactionally(
@@ -79,7 +80,7 @@ public class ProductBackLogController {
     @PostMapping("/{id}/remove/scrum-master")
     public ResponseEntity<RemoveResponse>
     removeScrumeMaster(@RequestBody RemoveRequest request,
-                       @PathVariable String id) {
+                       @PathVariable UUID id) {
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(removeScrumMasterUseCase.executeTransactionally(

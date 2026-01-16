@@ -2,6 +2,7 @@ package com.ensa.agile.application.task.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.global.utils.ValidationUtil;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,18 +18,18 @@ public class TaskCreateRequest {
     private Double estimatedHours;
     private String assigneeEmail;
 
-    private String userStoryId;
-    private String sprintId;
+    private UUID userStoryId;
+    private UUID sprintId;
 
-    public TaskCreateRequest(String sprintId, String userStoryId,
+    public TaskCreateRequest(UUID sprintId, UUID userStoryId,
                              TaskCreateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
-        if (sprintId == null || sprintId.isBlank()) {
+        if (sprintId == null || !ValidationUtil.isValidUUID(sprintId)) {
             throw new ValidationException("sprintId cannot be null or blank");
         }
-        if (userStoryId == null || userStoryId.isBlank()) {
+        if (userStoryId == null || !ValidationUtil.isValidUUID(userStoryId)) {
             throw new ValidationException(
                 "userStoryId cannot be null or blank");
         }

@@ -1,12 +1,11 @@
 package com.ensa.agile.application.product.response;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.ensa.agile.application.epic.response.EpicResponse;
 import com.ensa.agile.application.sprint.response.SprintBackLogResponse;
 import com.ensa.agile.application.story.response.UserStoryResponse;
-
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,12 +15,12 @@ import lombok.Data;
 @Builder
 public class ProductBackLogResponse {
 
-    private final String id;
+    private final UUID id;
     private final String name;
     private final String description;
-    private final String createdBy;
+    private final UUID createdBy;
     private final LocalDateTime createdDate;
-    private final String lastModifiedBy;
+    private final UUID lastModifiedBy;
     private final LocalDateTime lastModifiedDate;
 
     private List<ProjectMemberResponse> projectMembers;

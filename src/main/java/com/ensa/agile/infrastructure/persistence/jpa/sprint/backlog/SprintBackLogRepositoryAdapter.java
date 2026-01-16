@@ -5,6 +5,7 @@ import com.ensa.agile.domain.sprint.entity.SprintBackLog;
 import com.ensa.agile.domain.sprint.enums.SprintStatus;
 import com.ensa.agile.domain.sprint.repository.SprintBackLogRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +22,7 @@ public class SprintBackLogRepositoryAdapter implements SprintBackLogRepository {
     }
 
     @Override
-    public SprintBackLog findById(String s) {
+    public SprintBackLog findById(UUID s) {
         return this.jpaSprintBackLogRepository.findById(s)
             .map(SprintBackLogJpaMapper::toDomainEntity)
             .orElseThrow(SprintBackLogNotFoundException::new);
@@ -36,12 +37,12 @@ public class SprintBackLogRepositoryAdapter implements SprintBackLogRepository {
     }
 
     @Override
-    public void deleteById(String s) {
+    public void deleteById(UUID s) {
         this.jpaSprintBackLogRepository.deleteById(s);
     }
 
     @Override
-    public boolean existsById(String s) {
+    public boolean existsById(UUID s) {
         return this.jpaSprintBackLogRepository.existsById(s);
     }
 
@@ -51,7 +52,7 @@ public class SprintBackLogRepositoryAdapter implements SprintBackLogRepository {
     }
 
     @Override
-    public String getProductBackLogIdBySprintId(String sprintId) {
+    public UUID getProductBackLogIdBySprintId(UUID sprintId) {
         return this.jpaSprintBackLogRepository.getProductBackLogIdBySprintId(
             sprintId);
     }

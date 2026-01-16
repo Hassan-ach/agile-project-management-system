@@ -22,6 +22,7 @@ import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
 import com.ensa.agile.domain.product.repository.ProjectMemberRepository;
 import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.testfactory.TestUserFactory;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -47,12 +48,12 @@ public class CreateProductBackLogUseCaseTest {
         User user = TestUserFactory.validUser();
         ProductBackLog savedProductBackLog =
             ProductBackLog.builder()
-                .id("Backlog123")
+                .id(UUID.randomUUID())
                 .name(request.getName())
                 .description(request.getDescription())
                 .build();
         ProjectMember projectMember = ProjectMember.builder()
-                                          .id("Member123")
+                                          .id(UUID.randomUUID())
                                           .user(user)
                                           .productBackLog(savedProductBackLog)
                                           .role(RoleType.PRODUCT_OWNER)

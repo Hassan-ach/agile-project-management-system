@@ -2,6 +2,7 @@ package com.ensa.agile.application.common.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.global.utils.ValidationUtil;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,10 +13,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RemoveRequest {
+    private UUID productId;
     private String email;
-    private String productId;
 
-    public RemoveRequest(String productId, RemoveRequest req) {
+    public RemoveRequest(UUID productId, RemoveRequest req) {
         this.productId = productId;
         this.email = req.getEmail();
 
@@ -36,7 +37,7 @@ public class RemoveRequest {
         if (!ValidationUtil.isValidEmail(email)) {
             throw new ValidationException("Email format is invalid");
         }
-        if (productId == null || productId.isBlank()) {
+        if (productId == null || !ValidationUtil.isValidUUID(productId)) {
             throw new ValidationException("Product ID cannot be null or empty");
         }
     }

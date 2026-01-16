@@ -1,11 +1,15 @@
 package com.ensa.agile.infrastructure.persistence.jpa.sprint.member;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Repository;
+
 import com.ensa.agile.application.sprint.exception.SprintMemberNotFoundException;
 import com.ensa.agile.domain.sprint.entity.SprintMember;
 import com.ensa.agile.domain.sprint.repository.SprintMembersRepository;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
@@ -20,7 +24,7 @@ public class SprintMemberRepositoryAdapter implements SprintMembersRepository {
     }
 
     @Override
-    public SprintMember findById(String s) {
+    public SprintMember findById(UUID s) {
         return this.jpaSprintMemberRepository.findById(s)
             .map(SprintMemberJpaMapper::toDomainEntity)
             .orElseThrow(SprintMemberNotFoundException::new);
@@ -35,25 +39,25 @@ public class SprintMemberRepositoryAdapter implements SprintMembersRepository {
     }
 
     @Override
-    public void deleteById(String s) {
+    public void deleteById(UUID s) {
         this.jpaSprintMemberRepository.deleteById(s);
     }
 
     @Override
-    public boolean existsById(String s) {
+    public boolean existsById(UUID s) {
         return this.jpaSprintMemberRepository.existsById(s);
     }
 
     @Override
-    public boolean existsBySprintBackLogIdAndUserId(String sprintId,
-                                                    String userId) {
+    public boolean existsBySprintBackLogIdAndUserId(UUID sprintId,
+                                                    UUID userId) {
         return this.jpaSprintMemberRepository
             .existsBySprintBackLog_IdAndUser_Id(sprintId, userId);
     }
 
     @Override
     public void deleteByUserEmailAndSprintBackLogId(String email,
-                                                    String sprintId) {
+                                                    UUID sprintId) {
         this.jpaSprintMemberRepository.deleteByUser_EmailAndSprintBackLog_Id(
             email, sprintId);
     }

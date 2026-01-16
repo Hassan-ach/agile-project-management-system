@@ -15,6 +15,7 @@ import com.ensa.agile.application.user.exception.UserNotFoundException;
 import com.ensa.agile.domain.product.enums.RoleType;
 import com.ensa.agile.domain.product.repository.ProjectMemberRepository;
 import com.ensa.agile.domain.user.repository.UserRepository;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,11 +49,11 @@ public class RemoveMemberUseCaseTest {
     @Test
     void execute_ShouldRemoveProjectMember_WhenDataIsValid() {
         RemoveRequest request =
-            new RemoveRequest("productId", "test@gmail.com");
+            new RemoveRequest(UUID.randomUUID(), "test@gmail.com");
 
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
         when(projectMemberRepository.existsByUserEmailAndProductBackLogId(
-                 anyString(), anyString()))
+                 anyString(), any(UUID.class)))
             .thenReturn(true);
 
         RemoveResponse response = removeMemberUseCase.execute(request);
@@ -69,7 +70,7 @@ public class RemoveMemberUseCaseTest {
     @Test
     void execute_ShouldThrowException_WhenUserNotFound() {
         RemoveRequest request =
-            new RemoveRequest("productId", "test@gmail.com");
+            new RemoveRequest(UUID.randomUUID(), "test@gmail.com");
 
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
 
@@ -81,12 +82,12 @@ public class RemoveMemberUseCaseTest {
     void execute_ShouldFail_WhenUserNotMemberOrRoleMisMatch() {
 
         RemoveRequest request =
-            new RemoveRequest("productId", "test@gmail.com");
+            new RemoveRequest(UUID.randomUUID(), "test@gmail.com");
 
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
         when(
             projectMemberRepository.existsByUserEmailAndProductBackLogIdAndRole(
-                anyString(), anyString(), any(RoleType.class)))
+                anyString(), any(UUID.class), any(RoleType.class)))
             .thenReturn(false);
 
         RemoveResponse response = removeMemberUseCase.testRemoveUserWithRole(

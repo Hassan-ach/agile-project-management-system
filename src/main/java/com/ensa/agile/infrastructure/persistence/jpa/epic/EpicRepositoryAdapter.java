@@ -4,6 +4,7 @@ import com.ensa.agile.application.epic.exception.EpicNotFoundException;
 import com.ensa.agile.domain.epic.entity.Epic;
 import com.ensa.agile.domain.epic.repository.EpicRepository;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,7 @@ public class EpicRepositoryAdapter implements EpicRepository {
     }
 
     @Override
-    public Epic findById(String s) {
+    public Epic findById(UUID s) {
         return EpicJpaMapper.toDomainEntity(
             jpaEpicRepository.findById(s).orElseThrow(
                 EpicNotFoundException::new));
@@ -35,17 +36,17 @@ public class EpicRepositoryAdapter implements EpicRepository {
     }
 
     @Override
-    public void deleteById(String s) {
+    public void deleteById(UUID s) {
         jpaEpicRepository.deleteById(s);
     }
 
     @Override
-    public boolean existsById(String s) {
+    public boolean existsById(UUID s) {
         return jpaEpicRepository.existsById(s);
     }
 
     @Override
-    public List<Epic> findAllByProductBackLogId(String projectId) {
+    public List<Epic> findAllByProductBackLogId(UUID projectId) {
         return jpaEpicRepository.findAllByProductBackLog_Id(projectId)
             .stream()
             .map(EpicJpaMapper::toDomainEntity)
@@ -53,7 +54,7 @@ public class EpicRepositoryAdapter implements EpicRepository {
     }
 
     @Override
-    public String getProductBackLogIdByEpicId(String epicId) {
+    public UUID getProductBackLogIdByEpicId(UUID epicId) {
         return this.jpaEpicRepository.getProductBackLogIdByEpicId(epicId)
             .orElseThrow(EpicNotFoundException::new);
     }

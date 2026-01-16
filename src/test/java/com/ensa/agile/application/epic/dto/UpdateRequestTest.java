@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ensa.agile.application.epic.request.EpicUpdateRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 public class UpdateRequestTest {
@@ -12,7 +13,7 @@ public class UpdateRequestTest {
     @Test
     void shouldCreateEpicUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new EpicUpdateRequest("prod-123", "epic-456",
+            new EpicUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
                                   EpicUpdateRequest.builder()
                                       .title("New Title")
                                       .description("New Description")
@@ -23,7 +24,7 @@ public class UpdateRequestTest {
     @Test
     void shouldThrowValidationException_whenBothTitleAndDescriptionAreNull() {
         assertThrows(ValidationException.class, () -> {
-            new EpicUpdateRequest("prod-123", "epic-456",
+            new EpicUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
                                   EpicUpdateRequest.builder()
                                       .title(null)
                                       .description(null)
@@ -32,19 +33,10 @@ public class UpdateRequestTest {
     }
 
     @Test
-    void shouldThrowValidationException_whenIdIsBlank() {
-        assertThrows(ValidationException.class, () -> {
-            new EpicUpdateRequest(
-                "prod-123", " ",
-                EpicUpdateRequest.builder().title("Title").build());
-        });
-    }
-
-    @Test
     void shouldUpdateOnlyTitleSuccessfully_whenDescriptionIsNull() {
         assertDoesNotThrow(() -> {
             new EpicUpdateRequest(
-                "prod-123", "epic-456",
+                UUID.randomUUID(), UUID.randomUUID(),
                 EpicUpdateRequest.builder().title("Updated Title").build());
         });
     }
@@ -53,7 +45,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenTitleIsBlank() {
         assertThrows(ValidationException.class, () -> {
             new EpicUpdateRequest(
-                "prod-123", "epic-456",
+                UUID.randomUUID(), UUID.randomUUID(),
                 EpicUpdateRequest.builder().title("").build());
         });
     }

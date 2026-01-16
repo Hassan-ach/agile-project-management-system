@@ -5,6 +5,7 @@ import com.ensa.agile.domain.global.utils.ValidationUtil;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ import lombok.Getter;
 @Builder
 public class User {
 
-    private String id;
+    private UUID id;
     private String firstName;
     private String lastName;
     private String email;
@@ -23,7 +24,7 @@ public class User {
     private boolean credentialsExpired;
     private LocalDate createdDate;
 
-    public User(String id, String firstName, String lastName, String email,
+    public User(UUID id, String firstName, String lastName, String email,
                 String password, Boolean emailVerified, Boolean enabled,
                 Boolean locked, Boolean credentialsExpired,
                 LocalDate createdDate) {

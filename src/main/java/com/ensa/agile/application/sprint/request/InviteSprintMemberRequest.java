@@ -2,7 +2,8 @@ package com.ensa.agile.application.sprint.request;
 
 import com.ensa.agile.application.common.request.InviteRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
-
+import com.ensa.agile.domain.global.utils.ValidationUtil;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -11,22 +12,22 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 public class InviteSprintMemberRequest extends InviteRequest {
-    private String sprintId;
+    private UUID sprintId;
 
-    public InviteSprintMemberRequest(String productId, String sprintId,
+    public InviteSprintMemberRequest(UUID productId, UUID sprintId,
                                      String userEmail) {
         super(productId, userEmail);
         this.sprintId = sprintId;
     }
 
-    public InviteSprintMemberRequest(String sprintId, InviteRequest req) {
+    public InviteSprintMemberRequest(UUID sprintId, InviteRequest req) {
         super(req.getProductId(), req.getEmail());
         this.sprintId = sprintId;
     }
 
     public void validate() {
         super.validate();
-        if (sprintId == null || sprintId.isBlank()) {
+        if (sprintId == null || !ValidationUtil.isValidUUID(sprintId)) {
             throw new ValidationException("Sprint ID cannot be null or empty");
         }
     }

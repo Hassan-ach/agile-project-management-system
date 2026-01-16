@@ -14,6 +14,7 @@ import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
 import com.ensa.agile.domain.product.repository.ProjectMemberRepository;
 import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.domain.user.repository.UserRepository;
+import java.util.UUID;
 
 public abstract class InviteUseCase
     extends BaseUseCase<InviteRequest, InviteResponse> {
@@ -77,7 +78,7 @@ public abstract class InviteUseCase
             .build();
     }
 
-    private boolean isUserAlreadyInvited(String email, String productId) {
+    private boolean isUserAlreadyInvited(String email, UUID productId) {
         return projectMemberRepository.existsByUserEmailAndProductBackLogId(
             email, productId);
     }

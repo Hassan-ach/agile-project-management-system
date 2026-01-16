@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Transformer {
@@ -60,7 +61,9 @@ public class Transformer {
 
                 if (row.getSprintMemberId() != null) {
                     if (sprint.getMembers().stream().noneMatch(
-                            m -> m.getId().equals(row.getSprintMemberId()))) {
+                            m
+                            -> m.getId().toString().equals(
+                                row.getSprintMemberId()))) {
                         sprint.getMembers().add(mapSprintMember(row));
                     }
                 }
@@ -90,7 +93,8 @@ public class Transformer {
                 // Process Task
                 if (row.getTaskId() != null) {
                     if (story.getTasks().stream().noneMatch(
-                            t -> t.getId().equals(row.getTaskId()))) {
+                            t
+                            -> t.getId().toString().equals(row.getTaskId()))) {
                         story.getTasks().add(mapTask(row));
                     }
                 }
@@ -118,7 +122,7 @@ public class Transformer {
                 .filter(s
                         -> rows.stream().anyMatch(
                             r
-                            -> r.getStoryId().equals(s.getId()) &&
+                            -> r.getStoryId().equals(s.getId().toString()) &&
                                    r.getEpicId() == null))
                 .collect(Collectors.toList());
 
@@ -129,12 +133,12 @@ public class Transformer {
 
     private static ProductBackLogResponse mapBacklog(Row row) {
         return ProductBackLogResponse.builder()
-            .id(row.getProductId())
+            .id(UUID.fromString(row.getProductId()))
             .name(row.getProductName())
             .description(row.getProductDescription())
-            .createdBy(row.getProductCreatedBy())
+            .createdBy(UUID.fromString(row.getProductCreatedBy()))
             .createdDate(row.getProductCreatedDate())
-            .lastModifiedBy(row.getProductLastModifiedBy())
+            .lastModifiedBy(UUID.fromString(row.getProductLastModifiedBy()))
             .lastModifiedDate(row.getProductLastModifiedDate())
             .build();
     }
@@ -142,32 +146,35 @@ public class Transformer {
     private static ProjectMemberResponse mapMember(Row row) {
         ProjectMemberResponse member =
             ProjectMemberResponse.builder()
-                .memberId(row.getProjectMemberId())
+                .memberId(UUID.fromString(row.getProjectMemberId()))
                 .userEmail(row.getProjectMemberEmail())
                 .role(RoleType.valueOf(row.getProjectMemberRole()))
                 .status(MemberStatus.valueOf(row.getProjectMemberStatus()))
-                .invitedBy(row.getProjectMemberInvitedBy())
+                .invitedBy(UUID.fromString(row.getProjectMemberInvitedBy()))
                 .invitationDate(row.getProjectMemberInvitationDate())
                 .build();
         return member;
     }
 
     private static SprintBackLogResponse mapSprint(Row row) {
-        SprintBackLogResponse sprint = new SprintBackLogResponse();
-        sprint.setId(row.getSprintId());
-        sprint.setName(row.getSprintName());
-        sprint.setScrumMasterEmail(row.getSprintScrumMasterEmail());
-        sprint.setStartDate(row.getSprintStartDate());
-        sprint.setEndDate(row.getSprintEndDate());
-        sprint.setGoal(row.getSprintGoal());
-        sprint.setCreatedBy(row.getSprintCreatedBy());
-        sprint.setCreatedDate(row.getSprintCreatedDate());
+
+        SprintBackLogResponse sprint =
+            SprintBackLogResponse.builder()
+                .id(UUID.fromString(row.getSprintId()))
+                .name(row.getSprintName())
+                .scrumMasterEmail(row.getSprintScrumMasterEmail())
+                .startDate(row.getSprintStartDate())
+                .endDate(row.getSprintEndDate())
+                .goal(row.getSprintGoal())
+                .createdBy(UUID.fromString(row.getSprintCreatedBy()))
+                .createdDate(row.getSprintCreatedDate())
+                .build();
 
         // Map Sprint History (Latest)
         if (row.getSprintHistoryId() != null) {
             sprint.setStatus(
                 SprintHistory.builder()
-                    .id(row.getSprintHistoryId())
+                    .id(UUID.fromString(row.getSprintHistoryId()))
                     .status(SprintStatus.valueOf(row.getSprintHistoryStatus()))
                     .note(row.getSprintHistoryNote())
                     .build());
@@ -179,42 +186,49 @@ public class Transformer {
     }
 
     private static SprintMemberResponse mapSprintMember(Row row) {
-        SprintMemberResponse sm = new SprintMemberResponse();
-        sm.setId(row.getSprintMemberId());
-        sm.setUserEmail(row.getSprintMemberEmail());
-        sm.setInvitedBy(row.getSprintMemberInvitedBy());
-        sm.setJoinedAt(row.getSprintMemberJoinedAt());
+
+        SprintMemberResponse sm =
+            SprintMemberResponse.builder()
+                .id(UUID.fromString(row.getSprintMemberId()))
+                .userEmail(row.getSprintMemberEmail())
+                .invitedBy(UUID.fromString(row.getSprintMemberInvitedBy()))
+                .joinedAt(row.getSprintMemberJoinedAt())
+                .build();
         return sm;
     }
 
     private static EpicResponse mapEpic(Row row) {
-        EpicResponse epic = EpicResponse.builder()
-                                .id(row.getEpicId())
-                                .title(row.getEpicTitle())
-                                .description(row.getEpicDescription())
-                                .createdBy(row.getEpicCreatedBy())
-                                .createdDate(row.getEpicCreatedDate())
-                                .userStories(new ArrayList<>())
-                                .build();
+        EpicResponse epic =
+            EpicResponse.builder()
+                .id(UUID.fromString(row.getEpicId()))
+                .title(row.getEpicTitle())
+                .description(row.getEpicDescription())
+                .createdBy(UUID.fromString(row.getEpicCreatedBy()))
+                .createdDate(row.getEpicCreatedDate())
+                .userStories(new ArrayList<>())
+                .build();
         return epic;
     }
 
     private static UserStoryResponse mapStory(Row row) {
-        UserStoryResponse story = new UserStoryResponse();
-        story.setId(row.getStoryId());
-        story.setTitle(row.getStoryTitle());
-        story.setDescription(row.getStoryDescription());
-        story.setPriority(MoscowType.valueOf(row.getStoryPriority()));
-        story.setStoryPoints(row.getStoryPoints());
-        story.setAcceptanceCriteria(row.getStoryAcceptanceCriteria());
-        story.setCreatedBy(row.getStoryCreatedBy());
-        story.setCreatedDate(row.getStoryCreatedDate());
+        UserStoryResponse story =
+            UserStoryResponse.builder()
+                .id(UUID.fromString(row.getStoryId()))
+                .title(row.getStoryTitle())
+                .description(row.getStoryDescription())
+                .priority(MoscowType.valueOf(row.getStoryPriority()))
+                .storyPoints(row.getStoryPoints())
+                .acceptanceCriteria(row.getStoryAcceptanceCriteria())
+                .createdBy(UUID.fromString(row.getStoryCreatedBy()))
+                .createdDate(row.getStoryCreatedDate())
+                .tasks(new ArrayList<>())
+                .build();
 
         // Map Story History (Latest)
         if (row.getStoryHistoryId() != null) {
             story.setStatus(
                 UserStoryHistory.builder()
-                    .id(row.getStoryHistoryId())
+                    .id(UUID.fromString(row.getStoryHistoryId()))
                     .status(StoryStatus.valueOf(row.getStoryHistoryStatus()))
                     .note(row.getStoryHistoryNote())
                     .build());
@@ -225,21 +239,23 @@ public class Transformer {
     }
 
     private static TaskResponse mapTask(Row row) {
-        TaskResponse task = new TaskResponse();
-        task.setId(row.getTaskId());
-        task.setTitle(row.getTaskTitle());
-        task.setDescription(row.getTaskDescription());
-        task.setAssignee(row.getTaskAssignee());
-        task.setEstimatedHours(row.getTaskEstimatedHours());
-        task.setActualHours(row.getTaskActualHours());
-        task.setCreatedBy(row.getTaskCreatedBy());
-        task.setCreatedDate(row.getTaskCreatedDate());
+        TaskResponse task =
+            TaskResponse.builder()
+                .id(UUID.fromString(row.getTaskId()))
+                .title(row.getTaskTitle())
+                .description(row.getTaskDescription())
+                .assignee(row.getTaskAssignee())
+                .estimatedHours(row.getTaskEstimatedHours())
+                .actualHours(row.getTaskActualHours())
+                .createdBy(UUID.fromString(row.getTaskCreatedBy()))
+                .createdDate(row.getTaskCreatedDate())
+                .build();
 
         // Map Task History (Latest)
         if (row.getTaskHistoryId() != null) {
             task.setStatus(
                 TaskHistory.builder()
-                    .id(row.getTaskHistoryId())
+                    .id(UUID.fromString(row.getTaskHistoryId()))
                     .status(TaskStatus.valueOf(row.getTaskHistoryStatus()))
                     .note(row.getTaskHistoryNote())
                     .build());

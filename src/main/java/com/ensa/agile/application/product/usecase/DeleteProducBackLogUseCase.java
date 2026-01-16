@@ -5,9 +5,10 @@ import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.product.exception.ProductBackLogNotFoundException;
 import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
+import java.util.UUID;
 
 public class DeleteProducBackLogUseCase
-    extends BaseUseCase<String, RemoveResponse> {
+    extends BaseUseCase<UUID, RemoveResponse> {
     private ProductBackLogRepository productBackLogRepository;
 
     public DeleteProducBackLogUseCase(ITransactionalWrapper tr,
@@ -17,7 +18,7 @@ public class DeleteProducBackLogUseCase
     }
 
     @Override
-    public RemoveResponse execute(String id) {
+    public RemoveResponse execute(UUID id) {
         if (!productBackLogRepository.existsById(id)) {
             throw new ProductBackLogNotFoundException();
         }

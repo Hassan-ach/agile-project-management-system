@@ -1,6 +1,7 @@
 package com.ensa.agile.application.sprint.response;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class SprintMemberResponse {
-    private String id;
+    private UUID id;
     private String userEmail;
 
-    private String invitedBy;
+    private UUID invitedBy;
     private LocalDateTime joinedAt;
 }

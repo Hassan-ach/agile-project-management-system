@@ -2,6 +2,7 @@ package com.ensa.agile.application.common.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.global.utils.ValidationUtil;
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -10,15 +11,16 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Data
 public class InviteRequest {
-    private String productId;
+    private UUID productId;
     private String email;
 
-    public InviteRequest(String productId, InviteRequest req) {
+    public InviteRequest(UUID productId, InviteRequest req) {
         this.productId = productId;
         this.email = req.getEmail();
+        validate();
     }
 
-    public InviteRequest(String productId, String email) {
+    public InviteRequest(UUID productId, String email) {
         this.productId = productId;
         this.email = email;
 
@@ -28,6 +30,7 @@ public class InviteRequest {
     public InviteRequest(String email) {
         this.email = email;
         this.productId = null;
+        validate();
     }
 
     public void validate() {
@@ -37,7 +40,7 @@ public class InviteRequest {
         if (!ValidationUtil.isValidEmail(email)) {
             throw new ValidationException("Email format is invalid");
         }
-        if (productId == null || productId.isBlank()) {
+        if (productId == null || !ValidationUtil.isValidUUID(productId)) {
             throw new ValidationException("Product ID cannot be null or empty");
         }
     }

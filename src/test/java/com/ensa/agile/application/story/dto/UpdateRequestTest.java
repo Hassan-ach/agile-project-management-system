@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ensa.agile.application.story.request.UserStoryUpdateRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 public class UpdateRequestTest {
@@ -12,7 +13,7 @@ public class UpdateRequestTest {
     @Test
     void shouldCreateUserStoryUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new UserStoryUpdateRequest("prod-123", "us-789",
+            new UserStoryUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
                                        UserStoryUpdateRequest.builder()
                                            .title("Updated Title")
                                            .storyPoints(8)
@@ -24,7 +25,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenIdIsNull() {
         assertThrows(ValidationException.class, () -> {
             new UserStoryUpdateRequest(
-                "prod-123", null,
+                UUID.randomUUID(), null,
                 UserStoryUpdateRequest.builder().title("Title").build());
         });
     }
@@ -33,7 +34,8 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenNoFieldsProvidedForUpdate() {
         assertThrows(ValidationException.class, () -> {
             new UserStoryUpdateRequest(
-                "prod-123", "us-789", UserStoryUpdateRequest.builder().build());
+                UUID.randomUUID(), UUID.randomUUID(),
+                UserStoryUpdateRequest.builder().build());
         });
     }
 
@@ -41,7 +43,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenStoryPointsIsInvalidInUpdate() {
         assertThrows(ValidationException.class, () -> {
             new UserStoryUpdateRequest(
-                "prod-123", "us-789",
+                UUID.randomUUID(), UUID.randomUUID(),
                 UserStoryUpdateRequest.builder().storyPoints(0).build());
         });
     }
@@ -49,7 +51,7 @@ public class UpdateRequestTest {
     @Test
     void shouldUpdateOnlyAcceptanceCriteriaSuccessfully() {
         assertDoesNotThrow(() -> {
-            new UserStoryUpdateRequest("prod-123", "us-789",
+            new UserStoryUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
                                        UserStoryUpdateRequest.builder()
                                            .acceptanceCriteria("New criteria")
                                            .build());
@@ -60,7 +62,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenTitleIsProvidedAsBlank() {
         assertThrows(ValidationException.class, () -> {
             new UserStoryUpdateRequest(
-                "prod-123", "us-789",
+                UUID.randomUUID(), UUID.randomUUID(),
                 UserStoryUpdateRequest.builder().title(" ").build());
         });
     }

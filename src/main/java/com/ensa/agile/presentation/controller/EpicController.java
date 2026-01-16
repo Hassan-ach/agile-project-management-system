@@ -10,6 +10,7 @@ import com.ensa.agile.application.epic.usecase.CreateEpicUseCase;
 import com.ensa.agile.application.epic.usecase.DeleteEpicUseCase;
 import com.ensa.agile.application.epic.usecase.GetEpicUseCase;
 import com.ensa.agile.application.epic.usecase.UpdateEpicUseCase;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class EpicController {
 
     @PostMapping
     public ResponseEntity<EpicResponse>
-    createEpic(@PathVariable String productId,
+    createEpic(@PathVariable UUID productId,
                @RequestBody EpicCreateRequest request) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -45,7 +46,7 @@ public class EpicController {
 
     @GetMapping("/{epicId}")
     public ResponseEntity<EpicResponse>
-    getEpicById(@PathVariable String productId, @PathVariable String epicId,
+    getEpicById(@PathVariable UUID productId, @PathVariable UUID epicId,
                 @RequestParam String with) {
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -55,7 +56,7 @@ public class EpicController {
 
     @PatchMapping("/{epicId}")
     public ResponseEntity<EpicResponse>
-    updateEpic(@PathVariable String productId, @PathVariable String epicId,
+    updateEpic(@PathVariable UUID productId, @PathVariable UUID epicId,
                @RequestBody EpicUpdateRequest request) {
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -65,7 +66,7 @@ public class EpicController {
 
     @DeleteMapping("/{epicId}")
     public ResponseEntity<DeleteResponse>
-    deleteEpic(@PathVariable String productId, @PathVariable String epicId) {
+    deleteEpic(@PathVariable UUID productId, @PathVariable UUID epicId) {
 
         deleteEpicUseCase.executeTransactionally(
             new EpicRequest(epicId, productId));

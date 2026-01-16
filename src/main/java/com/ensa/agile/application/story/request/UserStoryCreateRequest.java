@@ -2,6 +2,7 @@ package com.ensa.agile.application.story.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.story.enums.MoscowType;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,16 +19,15 @@ public class UserStoryCreateRequest {
     private MoscowType priority;
     private Integer storyPoints;
     private String acceptanceCriteria;
-    private String productId;
+    private UUID productId;
 
     // This constructor is for validation purposes
-    public UserStoryCreateRequest(String productId,
-                                  UserStoryCreateRequest req) {
+    public UserStoryCreateRequest(UUID productId, UserStoryCreateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
 
-        if (productId == null || productId.isBlank()) {
+        if (productId == null) {
             throw new ValidationException("productId cannot be null or blank");
         }
 

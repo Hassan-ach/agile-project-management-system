@@ -1,6 +1,7 @@
 package com.ensa.agile.application.epic.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,18 +10,18 @@ import lombok.Data;
 @Builder
 @Data
 public class EpicRequest {
-    String epicId;
-    String productId;
+    UUID epicId;
+    UUID productId;
 
-    public EpicRequest(String productId, EpicRequest req) {
+    public EpicRequest(UUID productId, EpicRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
-        if (req.getEpicId() == null || req.getEpicId().isBlank()) {
-            throw new ValidationException("epicId cannot be null or blank");
+        if (req.getEpicId() == null) {
+            throw new ValidationException("epicId cannot be null");
         }
-        if (productId == null || productId.isBlank()) {
-            throw new ValidationException("productId cannot be null or blank");
+        if (productId == null) {
+            throw new ValidationException("productId cannot be null");
         }
         this.productId = productId;
         this.epicId = req.getEpicId();
