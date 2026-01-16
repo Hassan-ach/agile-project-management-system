@@ -1,4 +1,4 @@
-package com.ensa.agile.application.dto.user;
+package com.ensa.agile.application.user.dto;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

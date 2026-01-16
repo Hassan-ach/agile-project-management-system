@@ -8,3 +8,5 @@
     - [ ] implement Use Cases tests
 - [ ] add test for Product Backlog use cases
 - [ ] implement Fetch service that works for all entities (Global Fetch Service)
+- [ ] test refresh token mechanism
+- [ ] test fetch service

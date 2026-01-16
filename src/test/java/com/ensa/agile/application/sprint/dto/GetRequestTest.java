@@ -1,4 +1,4 @@
-package com.ensa.agile.application.dto.sprint;
+package com.ensa.agile.application.sprint.dto;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 

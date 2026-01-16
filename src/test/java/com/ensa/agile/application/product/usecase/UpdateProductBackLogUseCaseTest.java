@@ -1,4 +1,4 @@
-package com.ensa.agile.application.product;
+package com.ensa.agile.application.product.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -13,7 +13,6 @@ import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.product.exception.ProductBackLogNotFoundException;
 import com.ensa.agile.application.product.request.ProductBackLogUpdateRequest;
 import com.ensa.agile.application.product.response.ProductBackLogResponse;
-import com.ensa.agile.application.product.usecase.UpdateProductBackLogInfoUseCase;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
 import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
 import org.junit.jupiter.api.Test;

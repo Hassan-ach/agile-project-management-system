@@ -1,4 +1,4 @@
-package com.ensa.agile.application.product.usecase;
+package com.ensa.agile.application.common.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import com.ensa.agile.application.common.request.RemoveRequest;
 import com.ensa.agile.application.common.response.RemoveResponse;
-import com.ensa.agile.application.common.usecase.RemoveUseCase;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.user.exception.UserNotFoundException;
 import com.ensa.agile.domain.product.enums.RoleType;
@@ -34,6 +33,10 @@ public class RemoveMemberUseCaseTest {
         public RemoveResponse execute(RemoveRequest request) {
             return removeUser(request);
         }
+        public RemoveResponse testRemoveUserWithRole(RemoveRequest request,
+                                                     RoleType role) {
+            return removeUserWithRole(request, role);
+        }
     }
 
     @Mock ITransactionalWrapper transactionalWrapper;
@@ -48,9 +51,8 @@ public class RemoveMemberUseCaseTest {
             new RemoveRequest("productId", "test@gmail.com");
 
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
-        when(
-            projectMemberRepository.existsByUserEmailAndProductBackLogIdAndRole(
-                anyString(), anyString(), any(RoleType.class)))
+        when(projectMemberRepository.existsByUserEmailAndProductBackLogId(
+                 anyString(), anyString()))
             .thenReturn(true);
 
         RemoveResponse response = removeMemberUseCase.execute(request);
@@ -60,8 +62,8 @@ public class RemoveMemberUseCaseTest {
 
         verify(userRepository).existsByEmail(request.getEmail());
         verify(projectMemberRepository)
-            .existsByUserEmailAndProductBackLogIdAndRole(
-                request.getEmail(), request.getProductId(), RoleType.MEMBER);
+            .existsByUserEmailAndProductBackLogId(request.getEmail(),
+                                                  request.getProductId());
     }
 
     @Test
@@ -87,11 +89,15 @@ public class RemoveMemberUseCaseTest {
                 anyString(), anyString(), any(RoleType.class)))
             .thenReturn(false);
 
-        RemoveResponse response = removeMemberUseCase.execute(request);
+        RemoveResponse response = removeMemberUseCase.testRemoveUserWithRole(
+            request, RoleType.DEVELOPER);
 
         assertNotNull(response);
         assertEquals(false, response.isSuccess());
 
         verify(userRepository).existsByEmail(request.getEmail());
+        verify(projectMemberRepository)
+            .existsByUserEmailAndProductBackLogIdAndRole(
+                request.getEmail(), request.getProductId(), RoleType.DEVELOPER);
     }
 }

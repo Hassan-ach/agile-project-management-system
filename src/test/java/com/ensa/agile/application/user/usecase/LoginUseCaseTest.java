@@ -1,4 +1,4 @@
-package com.ensa.agile.application.user;
+package com.ensa.agile.application.user.usecase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -12,7 +12,6 @@ import com.ensa.agile.application.user.exception.InvalidCredentialsException;
 import com.ensa.agile.application.user.request.AuthenticationRequest;
 import com.ensa.agile.application.user.response.AuthenticationResponse;
 import com.ensa.agile.application.user.security.service.IAuthenticationService;
-import com.ensa.agile.application.user.usecase.LoginUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

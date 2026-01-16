@@ -1,4 +1,4 @@
-package com.ensa.agile.application.dtos.story.dto;
+package com.ensa.agile.application.story.dto;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

@@ -1,4 +1,4 @@
-package com.ensa.agile.application.dtos.task.dto;
+package com.ensa.agile.application.task.dto;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

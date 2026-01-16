@@ -1,4 +1,4 @@
-package com.ensa.agile.application.user;
+package com.ensa.agile.application.user.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.user.exception.UserNotFoundException;
-import com.ensa.agile.application.user.usecase.GetUserInfoUseCase;
 import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.domain.user.repository.UserRepository;
 import com.ensa.agile.testfactory.TestUserFactory;

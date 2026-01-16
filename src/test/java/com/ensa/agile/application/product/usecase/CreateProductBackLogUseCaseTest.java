@@ -1,4 +1,4 @@
-package com.ensa.agile.application.product;
+package com.ensa.agile.application.product.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,11 +9,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.ensa.agile.application.global.service.ICurrentUser;
+import com.ensa.agile.application.global.service.ICurrentUserService;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.product.request.ProductBackLogCreateRequest;
 import com.ensa.agile.application.product.response.ProductBackLogResponse;
-import com.ensa.agile.application.product.usecase.CreateProductBackLogUseCase;
 import com.ensa.agile.domain.global.exception.DataBasePersistenceException;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
 import com.ensa.agile.domain.product.entity.ProjectMember;
@@ -36,7 +35,7 @@ public class CreateProductBackLogUseCaseTest {
     @Mock private ITransactionalWrapper transactionalWrapper;
     @Mock private ProductBackLogRepository productBackLogRepository;
     @Mock private ProjectMemberRepository projectMemberRepository;
-    @Mock private ICurrentUser currentUserService;
+    @Mock private ICurrentUserService currentUserService;
 
     @InjectMocks
     private CreateProductBackLogUseCase createProductBackLogUseCase;

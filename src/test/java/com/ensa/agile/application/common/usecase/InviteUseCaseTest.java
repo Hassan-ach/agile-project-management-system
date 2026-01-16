@@ -1,4 +1,4 @@
-package com.ensa.agile.application.product.usecase;
+package com.ensa.agile.application.common.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,8 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.ensa.agile.application.common.request.InviteRequest;
 import com.ensa.agile.application.common.response.InviteResponse;
-import com.ensa.agile.application.common.usecase.InviteUseCase;
-import com.ensa.agile.application.global.service.ICurrentUser;
+import com.ensa.agile.application.global.service.ICurrentUserService;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.domain.global.exception.BusinessRuleViolationException;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
@@ -34,7 +33,7 @@ public class InviteUseCaseTest {
     private static class TestInviteUseCase extends InviteUseCase {
         public TestInviteUseCase(ProjectMemberRepository pmr,
                                  ProductBackLogRepository pbr,
-                                 UserRepository ur, ICurrentUser cus,
+                                 UserRepository ur, ICurrentUserService cus,
                                  ITransactionalWrapper tw) {
             super(pmr, pbr, ur, cus, tw);
         }
@@ -49,7 +48,8 @@ public class InviteUseCaseTest {
     @Mock ProjectMemberRepository projectMemberRepository;
     @Mock ProductBackLogRepository productBackLogRepository;
     @Mock UserRepository userRepository;
-    @Mock ICurrentUser currentUserService;
+    @Mock
+    ICurrentUserService currentUserService;
 
     @InjectMocks TestInviteUseCase inviteUseCase;
 
