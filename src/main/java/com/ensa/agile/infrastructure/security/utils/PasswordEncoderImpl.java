@@ -1,4 +1,4 @@
-package com.ensa.agile.infrastructure.security.utils.passwordEncoder;
+package com.ensa.agile.infrastructure.security.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
