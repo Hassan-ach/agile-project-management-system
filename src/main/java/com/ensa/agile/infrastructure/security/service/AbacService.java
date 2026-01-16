@@ -1,7 +1,7 @@
 package com.ensa.agile.infrastructure.security.service;
 
 import com.ensa.agile.application.global.service.IAbacService;
-import com.ensa.agile.application.global.service.ICurrentUser;
+import com.ensa.agile.application.global.service.ICurrentUserService;
 import com.ensa.agile.domain.epic.repository.EpicRepository;
 import com.ensa.agile.domain.product.entity.ProjectMember;
 import com.ensa.agile.domain.product.enums.RoleType;
@@ -15,19 +15,149 @@ import java.util.Set;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
 /**
- * Attribute-Based Access Control (ABAC) service responsible for authorization
- * decisions across the project management domain.
+ * ABAC authorization service for the project management domain.
  *
- * This service evaluates whether the current authenticated user is allowed
- * to perform specific actions on projects and their related resources
- * (epics, user stories, sprints, tasks, and reports).
+ * Purpose
+ * -------
+ * Centralizes all authorization decisions using:
+ * - User attributes   (current authenticated user)
+ * - Resource attributes (project, sprint, epic, story, task ownership)
+ * - Role attributes   (PRODUCT_OWNER, SCRUM_MASTER, DEVELOPER)
+ *
+ * No permission is granted without:
+ * - Valid identifiers
+ * - Correct resource-to-project ownership
+ * - Required role
+ * - Sprint membership where relevant
+ *
+ * Authorization Rules by Scope
+ * -----------------------------
+ *
+ * PROJECT
+ * - CREATE
+ *   • Always allowed (project bootstrap).
+ *
+ * - INVITE_MEMBER
+ *   • PRODUCT_OWNER
+ *
+ * - VIEW / VIEW_BACKLOG
+ *   • PRODUCT_OWNER
+ *   • SCRUM_MASTER
+ *   • DEVELOPER
+ *
+ * - UPDATE
+ *   • PRODUCT_OWNER
+ *
+ * - REMOVE_MEMBER
+ *   • PRODUCT_OWNER
+ *
+ * EPIC
+ * - CREATE
+ *   • PRODUCT_OWNER
+ *   • Valid project ID
+ *
+ * - VIEW
+ *   • Resource belongs to project
+ *   • PRODUCT_OWNER | SCRUM_MASTER | DEVELOPER
+ *
+ * - UPDATE
+ *   • Resource belongs to project
+ *   • PRODUCT_OWNER | SCRUM_MASTER
+ *
+ * - DELETE
+ *   • Resource belongs to project
+ *   • PRODUCT_OWNER
+ *
+ * USER STORY
+ * - CREATE
+ *   • PRODUCT_OWNER
+ *
+ * - VIEW
+ *   • Resource belongs to project
+ *   • PRODUCT_OWNER | SCRUM_MASTER | DEVELOPER
+ *
+ * - UPDATE
+ *   • Resource belongs to project
+ *   • PRODUCT_OWNER | SCRUM_MASTER
+ *
+ * - DELETE
+ *   • Resource belongs to project
+ *   • PRODUCT_OWNER
+ *
+ * - UPDATE_STATUS
+ *   • Resource belongs to project
+ *   • SCRUM_MASTER | DEVELOPER
+ *   • User must be sprint member
+ *
+ * SPRINT
+ * - CREATE
+ *   • PRODUCT_OWNER | SCRUM_MASTER
+ *
+ * - VIEW
+ *   • Resource belongs to project
+ *   • PRODUCT_OWNER | SCRUM_MASTER | DEVELOPER
+ *   • User must be sprint member
+ *
+ * - MANAGE_STORIES
+ *   • PRODUCT_OWNER | SCRUM_MASTER
+ *   • User must be sprint member
+ *
+ * - UPDATE_STATUS
+ *   • SCRUM_MASTER
+ *   • User must be sprint member
+ *
+ * - INVITE_MEMBER
+ *   • PRODUCT_OWNER | SCRUM_MASTER
+ *   • User must be sprint member
+ *
+ * TASK
+ * - CREATE
+ *   • Valid project → sprint → story hierarchy
+ *   • PRODUCT_OWNER | SCRUM_MASTER | DEVELOPER
+ *   • User must be sprint member
+ *
+ * - VIEW
+ *   • Resource belongs to project
+ *   • PRODUCT_OWNER | SCRUM_MASTER | DEVELOPER
+ *   • User must be sprint member
+ *
+ * - UPDATE
+ *   • PRODUCT_OWNER | SCRUM_MASTER
+ *   • User must be sprint member
+ *
+ * - UPDATE_STATUS
+ *   • SCRUM_MASTER | DEVELOPER
+ *   • User must be sprint member
+ *
+ * - ASSIGN
+ *   • SCRUM_MASTER | DEVELOPER
+ *   • User must be sprint member
+ *
+ * REPORTING
+ * - VIEW_REPORT
+ *   • Resource belongs to project
+ *   • PRODUCT_OWNER | SCRUM_MASTER | DEVELOPER
+ *
+ * Enforcement Strategy
+ * --------------------
+ * - Ownership is verified via repository ID resolution
+ * - Roles are checked at project scope only
+ * - Sprint access always requires sprint membership
+ * - Any exception or invalid state results in denial
+ *
+ * Security Model
+ * --------------
+ * Default-deny.
+ * Fail-closed.
+ * No implicit permissions.
  */
 @RequiredArgsConstructor
 @Component("abacService")
 public class AbacService implements IAbacService {
 
-    private final ICurrentUser currentUserService;
+    private final ICurrentUserService currentUserService;
     private final ProjectMemberRepository projectMemberRepository;
     private final SprintMembersRepository sprintMembersRepository;
     private final SprintBackLogRepository sprintBackLogRepository;
@@ -36,7 +166,6 @@ public class AbacService implements IAbacService {
     private final TaskRepository taskRepository;
 
     // --- Project Level ---
-
     @Override
     public boolean canCreateProject() {
         return true;
@@ -58,90 +187,179 @@ public class AbacService implements IAbacService {
     }
 
     // --- Epic Level ---
-
     @Override
-    public boolean canCreateEpic(String projectId) {
-        return hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
-    }
+    public boolean canAccessEpic(String projectId, String epicId,
+                                 String action) {
+        return switch (action) {
+            case "CREATE" ->
+                isValideId(projectId) &&
+                    hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
 
-    @Override
-    public boolean canModifyEpic(String projectId, String epicId) {
-        return validateOwnershipAndRole(
-            projectId, epicId, epicRepository::getProductBackLogIdByEpicId,
-            RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER);
-    }
+            case "VIEW" ->
+                isValideId(projectId, epicId) &&
+                    validateOwnershipAndRole(
+                        projectId, epicId,
+                        epicRepository::getProductBackLogIdByEpicId,
+                        RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER,
+                        RoleType.DEVELOPER);
 
-    @Override
-    public boolean canDeleteEpic(String projectId, String epicId) {
-        return validateOwnershipAndRole(
-            projectId, epicId, epicRepository::getProductBackLogIdByEpicId,
-            RoleType.PRODUCT_OWNER);
+            case "UPDATE" ->
+                isValideId(projectId, epicId) &&
+                    validateOwnershipAndRole(
+                        projectId, epicId,
+                        epicRepository::getProductBackLogIdByEpicId,
+                        RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER);
+
+            case "DELETE" ->
+                isValideId(projectId, epicId) &&
+                    validateOwnershipAndRole(
+                        projectId, epicId,
+                        epicRepository::getProductBackLogIdByEpicId,
+                        RoleType.PRODUCT_OWNER);
+
+            default -> false;
+        };
     }
 
     // --- User Story Level ---
-
     @Override
-    public boolean canCreateStory(String projectId) {
-        return hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
-    }
-
-    @Override
-    public boolean canModifyStory(String projectId, String storyId) {
-        return validateOwnershipAndRole(
-            projectId, storyId,
-            userStoryRepository::getProductBackLogIdByUserStoryId,
-            RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER);
-    }
-
-    @Override
-    public boolean canDeleteStory(String projectId, String storyId) {
-        return validateOwnershipAndRole(
-            projectId, storyId,
-            userStoryRepository::getProductBackLogIdByUserStoryId,
-            RoleType.PRODUCT_OWNER);
-    }
-
-    @Override
-    public boolean canUpdateStoryStatus(String projectId, String sprintId,
-                                        String storyId) {
-        return validateOwnershipAndRole(
-                   projectId, storyId,
-                   userStoryRepository::getProductBackLogIdByUserStoryId,
-                   RoleType.SCRUM_MASTER, RoleType.DEVELOPER) &&
-            isSprintMember(sprintId);
+    public boolean canAccessStory(String projectId, String sprintId,
+                                  String storyId, String action) {
+        return switch (action) {
+            case "CREATE" ->
+                isValideId(projectId) &&
+                    hasProjectRole(projectId, RoleType.PRODUCT_OWNER);
+            case "VIEW" ->
+                isValideId(projectId, storyId) &&
+                    validateOwnershipAndRole(
+                        projectId, storyId,
+                        userStoryRepository::getProductBackLogIdByUserStoryId,
+                        RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER,
+                        RoleType.DEVELOPER);
+            case "UPDATE" ->
+                isValideId(projectId, storyId) &&
+                    validateOwnershipAndRole(
+                        projectId, storyId,
+                        userStoryRepository::getProductBackLogIdByUserStoryId,
+                        RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER);
+            case "DELETE" ->
+                isValideId(projectId, storyId) &&
+                    validateOwnershipAndRole(
+                        projectId, storyId,
+                        userStoryRepository::getProductBackLogIdByUserStoryId,
+                        RoleType.PRODUCT_OWNER);
+            case "UPDATE_STATUS" ->
+                isValideId(projectId, sprintId, storyId) &&
+                    validateOwnershipAndRole(
+                        projectId, storyId,
+                        userStoryRepository::getProductBackLogIdByUserStoryId,
+                        RoleType.SCRUM_MASTER, RoleType.DEVELOPER) &&
+                    isSprintMember(sprintId);
+            default -> false;
+        };
     }
 
     // --- Sprint Level ---
-
     @Override
-    public boolean canCreateSprint(String projectId) {
-        return hasProjectRole(projectId, RoleType.PRODUCT_OWNER,
-                              RoleType.SCRUM_MASTER);
-    }
+    public boolean canAccessSprint(String projectId, String sprintId,
+                                   String action) {
+        return switch (action) {
+            case "CREATE" ->
+                isValideId(projectId) &&
+                    hasProjectRole(projectId, RoleType.PRODUCT_OWNER,
+                                   RoleType.SCRUM_MASTER);
 
-    @Override
-    public boolean canManageSprintStories(String projectId, String sprintId) {
-        return validateOwnershipAndRole(
-                   projectId, sprintId,
-                   sprintBackLogRepository::getProductBackLogIdBySprintId,
-                   RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER) &&
-            isSprintMember(sprintId);
-    }
+            case "VIEW" ->
+                isValideId(projectId, sprintId) &&
+                    validateOwnershipAndRole(
+                        projectId, sprintId,
+                        sprintBackLogRepository::getProductBackLogIdBySprintId,
+                        RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER,
+                        RoleType.DEVELOPER) &&
+                    isSprintMember(sprintId);
 
-    @Override
-    public boolean canUpdateSprintStatus(String projectId, String sprintId) {
-        return validateOwnershipAndRole(
-                   projectId, sprintId,
-                   sprintBackLogRepository::getProductBackLogIdBySprintId,
-                   RoleType.SCRUM_MASTER) &&
-            isSprintMember(sprintId);
+            case "MANAGE_STORIES" ->
+                isValideId(projectId, sprintId) &&
+                    validateOwnershipAndRole(
+                        projectId, sprintId,
+                        sprintBackLogRepository::getProductBackLogIdBySprintId,
+                        RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER) &&
+                    isSprintMember(sprintId);
+
+            case "UPDATE_STATUS" ->
+                isValideId(projectId, sprintId) &&
+                    validateOwnershipAndRole(
+                        projectId, sprintId,
+                        sprintBackLogRepository::getProductBackLogIdBySprintId,
+                        RoleType.SCRUM_MASTER) &&
+                    isSprintMember(sprintId);
+
+            case "INVITE_MEMBER" ->
+                isValideId(projectId, sprintId) &&
+                    validateOwnershipAndRole(
+                        projectId, sprintId,
+                        sprintBackLogRepository::getProductBackLogIdBySprintId,
+                        RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER) &&
+                    isSprintMember(sprintId);
+
+            default -> false;
+        };
     }
 
     // --- Task Level ---
-
     @Override
-    public boolean canCreateTask(String projectId, String sprintId,
-                                 String storyId) {
+    public boolean canAccessTask(String projectId, String sprintId,
+                                 String storyId, String taskId, String action) {
+        return switch (action) {
+            case "CREATE" ->
+                isValideId(projectId, sprintId, storyId) &&
+                    canCreateTaskHelper(projectId, sprintId, storyId);
+
+            case "VIEW" ->
+                isValideId(projectId, taskId) &&
+                    validateOwnershipAndRole(
+                        projectId, taskId,
+                        taskRepository::getProductBackLogIdByTaskId,
+                        RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER,
+                        RoleType.DEVELOPER);
+
+            case "UPDATE" ->
+                isValideId(projectId, sprintId, taskId) &&
+                    validateOwnershipAndRole(
+                        projectId, taskId,
+                        taskRepository::getProductBackLogIdByTaskId,
+                        RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER);
+
+            case "UPDATE_STATUS" ->
+                isValideId(projectId, sprintId, taskId) &&
+                    validateOwnershipAndRole(
+                        projectId, taskId,
+                        taskRepository::getProductBackLogIdByTaskId,
+                        RoleType.SCRUM_MASTER, RoleType.DEVELOPER);
+
+            case "ASSIGN" ->
+                isValideId(projectId, sprintId, taskId) &&
+                    validateOwnershipAndRole(
+                        projectId, taskId,
+                        taskRepository::getProductBackLogIdByTaskId,
+                        RoleType.SCRUM_MASTER, RoleType.DEVELOPER);
+
+            default -> false;
+        } && isSprintMember(sprintId);
+    }
+
+    // --- Reporting ---
+    @Override
+    public boolean canViewReport(String projectId, String sprintId) {
+        return validateOwnershipAndRole(
+            projectId, sprintId,
+            sprintBackLogRepository::getProductBackLogIdBySprintId,
+            RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER, RoleType.DEVELOPER);
+    }
+
+    // --- Helper Methods ---
+    private boolean canCreateTaskHelper(String projectId, String sprintId,
+                                        String storyId) {
         boolean isValidHierarchy = false;
         try {
             String spId =
@@ -155,43 +373,8 @@ public class AbacService implements IAbacService {
 
         return isValidHierarchy &&
             hasProjectRole(projectId, RoleType.PRODUCT_OWNER,
-                           RoleType.SCRUM_MASTER, RoleType.DEVELOPER) &&
-            isSprintMember(sprintId);
+                           RoleType.SCRUM_MASTER, RoleType.DEVELOPER);
     }
-
-    @Override
-    public boolean canUpdateTaskStatus(String projectId, String sprintId,
-                                       String taskId) {
-
-        return validateOwnershipAndRole(
-                   projectId, taskId,
-                   taskRepository::getProductBackLogIdByTaskId,
-                   RoleType.SCRUM_MASTER, RoleType.DEVELOPER) &&
-            isSprintMember(sprintId);
-    }
-
-    @Override
-    public boolean canAssignTask(String projectId, String sprintId,
-                                 String taskId) {
-
-        return validateOwnershipAndRole(
-                   projectId, taskId,
-                   taskRepository::getProductBackLogIdByTaskId,
-                   RoleType.SCRUM_MASTER, RoleType.DEVELOPER) &&
-            isSprintMember(sprintId);
-    }
-
-    // --- Reporting ---
-
-    @Override
-    public boolean canViewReport(String projectId, String sprintId) {
-        return validateOwnershipAndRole(
-            projectId, sprintId,
-            sprintBackLogRepository::getProductBackLogIdBySprintId,
-            RoleType.PRODUCT_OWNER, RoleType.SCRUM_MASTER, RoleType.DEVELOPER);
-    }
-
-    // --- Helper Methods ---
 
     private boolean hasProjectRole(String projectId, RoleType... roles) {
         if (projectId == null)
@@ -232,5 +415,14 @@ public class AbacService implements IAbacService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private boolean isValideId(String... id) {
+        for (String i : id) {
+            if (i == null || i.isBlank()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
