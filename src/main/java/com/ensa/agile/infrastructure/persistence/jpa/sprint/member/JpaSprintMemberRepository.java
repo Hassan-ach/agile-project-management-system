@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 public interface JpaSprintMemberRepository
     extends JpaRepository<SprintMemberJpaEntity, String> {
     boolean existsBySprintBackLog_IdAndUser_Id(String sprintId, String userId);
+
+    void deleteByUser_EmailAndSprintBackLog_Id(String email, String sprintId);
 }

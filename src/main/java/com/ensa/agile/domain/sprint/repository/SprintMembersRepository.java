@@ -7,4 +7,6 @@ public interface SprintMembersRepository
     extends BaseDomainRepository<SprintMember, String> {
 
     boolean existsBySprintBackLogIdAndUserId(String sprintId, String userId);
+    void deleteByUserEmailAndSprintBackLogId(String userEmail,
+                                             String sprintBackLogId);
 }
