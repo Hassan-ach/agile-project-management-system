@@ -28,15 +28,15 @@ public class TaskUpdateRequest {
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
-        if (id == null || !ValidationUtil.isValidUUID(id)) {
-            throw new ValidationException("id cannot be null or invalid");
+        if (id == null) {
+            throw new ValidationException("id cannot be null");
         }
-        if (sprintId == null || !ValidationUtil.isValidUUID(sprintId)) {
-            throw new ValidationException("sprintId cannot be null or invalid");
+        if (sprintId == null) {
+            throw new ValidationException("sprintId cannot be null");
         }
-        if (userStoryId == null || !ValidationUtil.isValidUUID(userStoryId)) {
+        if (userStoryId == null ) {
             throw new ValidationException(
-                "userStoryId cannot be null or invalid");
+                "userStoryId cannot be null");
         }
 
         if (req.title == null && req.description == null &&

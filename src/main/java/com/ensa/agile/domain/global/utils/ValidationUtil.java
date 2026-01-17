@@ -1,6 +1,5 @@
 package com.ensa.agile.domain.global.utils;
 
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class ValidationUtil {
@@ -27,9 +26,9 @@ public class ValidationUtil {
         return true;
     }
 
-    public static boolean isValidUUID(UUID uuid) {
-        String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-"
-                              + "[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-        return patternMatches(uuid.toString(), UUID_PATTERN);
-    }
+    // public static boolean isValidUUID(UUID uuid) {
+    //     String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-"
+    //                           + "[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+    //     return patternMatches(uuid.toString(), UUID_PATTERN);
+    // }
 }

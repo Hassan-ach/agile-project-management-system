@@ -40,8 +40,8 @@ public class InviteRequest {
         if (!ValidationUtil.isValidEmail(email)) {
             throw new ValidationException("Email format is invalid");
         }
-        if (productId == null || !ValidationUtil.isValidUUID(productId)) {
-            throw new ValidationException("Product ID cannot be null or empty");
+        if (productId == null) {
+            throw new ValidationException("Product ID cannot be null ");
         }
     }
 }

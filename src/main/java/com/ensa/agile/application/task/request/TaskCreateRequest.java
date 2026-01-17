@@ -26,12 +26,12 @@ public class TaskCreateRequest {
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
-        if (sprintId == null || !ValidationUtil.isValidUUID(sprintId)) {
-            throw new ValidationException("sprintId cannot be null or blank");
+        if (sprintId == null) {
+            throw new ValidationException("sprintId cannot be null");
         }
-        if (userStoryId == null || !ValidationUtil.isValidUUID(userStoryId)) {
+        if (userStoryId == null ) {
             throw new ValidationException(
-                "userStoryId cannot be null or blank");
+                "userStoryId cannot be null");
         }
         if (req.getTitle() == null || req.getTitle().isBlank()) {
             throw new ValidationException("title cannot be null or blank");

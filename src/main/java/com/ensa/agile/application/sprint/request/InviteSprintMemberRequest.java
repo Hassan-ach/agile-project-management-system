@@ -2,7 +2,6 @@ package com.ensa.agile.application.sprint.request;
 
 import com.ensa.agile.application.common.request.InviteRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
-import com.ensa.agile.domain.global.utils.ValidationUtil;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,8 +26,8 @@ public class InviteSprintMemberRequest extends InviteRequest {
 
     public void validate() {
         super.validate();
-        if (sprintId == null || !ValidationUtil.isValidUUID(sprintId)) {
-            throw new ValidationException("Sprint ID cannot be null or empty");
+        if (sprintId == null) {
+            throw new ValidationException("Sprint ID cannot be null");
         }
     }
 }

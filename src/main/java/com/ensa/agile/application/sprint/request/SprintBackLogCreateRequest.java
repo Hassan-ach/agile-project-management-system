@@ -27,9 +27,9 @@ public class SprintBackLogCreateRequest {
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
-        if (productId == null || !ValidationUtil.isValidUUID(productId)) {
+        if (productId == null) {
             throw new ValidationException(
-                "productId cannot be null or invalid");
+                "productId cannot be null");
         }
         if (req.getName() == null || req.getName().isBlank()) {
             throw new ValidationException("name cannot be null or blank");

@@ -27,7 +27,7 @@ public class SprintBackLogUpdateRequest {
             throw new ValidationException("request cannot be null");
         }
 
-        if (id == null || !ValidationUtil.isValidUUID(id)) {
+        if (id == null) {
             throw new ValidationException("ID cannot be null or blank");
         }
 

@@ -1,7 +1,6 @@
 package com.ensa.agile.application.product.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
-import com.ensa.agile.domain.global.utils.ValidationUtil;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -47,8 +46,8 @@ public class ProductBackLogUpdateRequest {
             }
         }
 
-        if (id == null || !ValidationUtil.isValidUUID( id)) {
-            throw new ValidationException("ID cannot be null or blank");
+        if (id == null ) {
+            throw new ValidationException("ID cannot be null");
         }
 
         this.id = id;

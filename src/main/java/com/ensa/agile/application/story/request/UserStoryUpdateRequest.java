@@ -1,7 +1,6 @@
 package com.ensa.agile.application.story.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
-import com.ensa.agile.domain.global.utils.ValidationUtil;
 import com.ensa.agile.domain.story.enums.MoscowType;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -32,7 +31,7 @@ public class UserStoryUpdateRequest {
             throw new ValidationException("request cannot be null");
         }
 
-        if (id == null || !ValidationUtil.isValidUUID(id)) {
+        if (id == null) {
             throw new ValidationException("id cannot be null or blank");
         }
 
@@ -43,11 +42,7 @@ public class UserStoryUpdateRequest {
                 "At least one field must be provided for update");
         }
         if (req.getSprintId() != null) {
-            if (!ValidationUtil.isValidUUID(req.getSprintId())) {
-                throw new ValidationException("sprintId cannot be blank");
-            } else {
                 this.sprintId = req.getSprintId();
-            }
         }
 
         if (req.getTitle() != null) {
