@@ -60,7 +60,7 @@ public class SprintBackLogJpaEntity extends BaseJpaEntity {
     @Column(nullable = false) private String goal;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinFormula("SELECT sh.id FROM sprint_backlogs_history sh WHERE "
-                 + "sh.sprint_id = id ORDER BY sh.created_at DESC LIMIT 1 ")
+    @JoinFormula("(SELECT sh.id FROM sprint_histories sh WHERE "
+                 + "sh.sprint_backlog_id = id ORDER BY sh.created_date DESC LIMIT 1)")
     private SprintHistoryJpaEntity status;
 }

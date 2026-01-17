@@ -61,7 +61,7 @@ public class TaskJpaEntity extends BaseJpaEntity {
     @Column(name = "actual_hours", nullable = true) private Double actualHours;
 
     @ManyToOne
-    @JoinFormula("SELECT th.id FROM task_histories th WHERE "
-                 + "th.task_id = id ORDER BY th.created_at DESC LIMIT 1 ")
+    @JoinFormula("(SELECT th.id FROM task_histories th WHERE "
+                 + "th.task_id = id ORDER BY th.created_date DESC LIMIT 1)")
     private TaskHistoryJpaEntity status;
 }

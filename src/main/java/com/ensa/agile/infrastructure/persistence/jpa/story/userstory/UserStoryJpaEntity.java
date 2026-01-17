@@ -70,8 +70,8 @@ public class UserStoryJpaEntity extends BaseJpaEntity {
     private SprintBackLogJpaEntity sprintBackLog;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinFormula("SELECT ush.id FROM user_stories_history ush WHERE "
+    @JoinFormula("(SELECT ush.id FROM user_story_histories ush WHERE "
                  +
-                 "ush.user_story_id = id ORDER BY ush.created_at DESC LIMIT 1 ")
+                 "ush.user_story_id = id ORDER BY ush.created_date DESC LIMIT 1)")
     private UserStoryHistoryJpaEntity status;
 }
