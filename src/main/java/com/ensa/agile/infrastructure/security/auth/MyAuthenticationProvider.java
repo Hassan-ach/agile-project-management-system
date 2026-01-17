@@ -1,13 +1,8 @@
 package com.ensa.agile.infrastructure.security.auth;
 
-import com.ensa.agile.application.user.exception.AuthenticationFailureException;
-import com.ensa.agile.application.user.exception.InvalidCredentialsException;
-import com.ensa.agile.application.user.security.IPasswordEncoder;
-import com.ensa.agile.application.user.usecase.GetUserInfoUseCase;
-import com.ensa.agile.domain.user.entity.User;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,10 +11,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import com.ensa.agile.application.user.exception.AuthenticationFailureException;
+import com.ensa.agile.application.user.exception.InvalidCredentialsException;
+import com.ensa.agile.application.user.security.IPasswordEncoder;
+import com.ensa.agile.domain.user.entity.User;
+import com.ensa.agile.domain.user.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
 @RequiredArgsConstructor
 @Component
 public class MyAuthenticationProvider implements AuthenticationProvider {
-    private final GetUserInfoUseCase userInfoUseCase;
+    private final UserRepository userRepository;
     private final IPasswordEncoder passwordEncoder;
 
     @Override
@@ -27,7 +30,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         throws AuthenticationFailureException {
 
         String email = authentication.getName();
-        User u = userInfoUseCase.execute(email);
+        User u = userRepository.findByEmail(email);
         String rawPassword = authentication.getCredentials().toString();
 
         if (!passwordEncoder.matches(rawPassword, u.getPassword())) {
