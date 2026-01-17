@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 
 import com.ensa.agile.application.user.exception.InvalidCredentialsException;
 import com.ensa.agile.application.user.security.IPasswordEncoder;
-import com.ensa.agile.application.user.usecase.GetUserInfoUseCase;
 import com.ensa.agile.domain.user.entity.User;
+import com.ensa.agile.domain.user.repository.UserRepository;
 import com.ensa.agile.testfactory.TestUserFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ import org.springframework.security.core.Authentication;
 @ExtendWith(MockitoExtension.class)
 class MyAuthenticationProviderTest {
 
-    @Mock private GetUserInfoUseCase userInfoUseCase;
+    @Mock private UserRepository userRepository;
 
     @Mock private IPasswordEncoder passwordEncoder;
 
@@ -45,7 +45,7 @@ class MyAuthenticationProviderTest {
         Authentication inputAuth =
             new UsernamePasswordAuthenticationToken(email, "raw_password");
 
-        when(userInfoUseCase.execute(email)).thenReturn(mockUser);
+        when(userRepository.findByEmail(email)).thenReturn(mockUser);
         when(passwordEncoder.matches("raw_password", password))
             .thenReturn(true);
 
@@ -63,7 +63,7 @@ class MyAuthenticationProviderTest {
         Authentication inputAuth = new UsernamePasswordAuthenticationToken(
             "test2@gmil.com", "wrong_pass");
 
-        when(userInfoUseCase.execute(anyString())).thenReturn(mockUser);
+        when(userRepository.findByEmail(anyString())).thenReturn(mockUser);
         when(passwordEncoder.matches("wrong_pass", mockUser.getPassword()))
             .thenReturn(false);
 

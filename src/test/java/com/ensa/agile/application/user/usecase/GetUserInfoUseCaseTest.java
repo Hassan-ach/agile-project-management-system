@@ -33,7 +33,7 @@ public class GetUserInfoUseCaseTest {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
 
         // When
-        User result = getUserInfoUseCase.execute(user.getEmail());
+        var result = getUserInfoUseCase.execute(user.getEmail());
 
         // Then
         assertNotNull(result);

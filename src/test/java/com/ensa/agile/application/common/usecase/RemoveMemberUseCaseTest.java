@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,11 +48,11 @@ public class RemoveMemberUseCaseTest {
     @Test
     void execute_ShouldRemoveProjectMember_WhenDataIsValid() {
         RemoveRequest request =
-            new RemoveRequest(UUID.randomUUID(), "test@gmail.com");
+            new RemoveRequest(UUID.randomUUID(),UUID.randomUUID());
 
-        when(userRepository.existsByEmail(anyString())).thenReturn(true);
-        when(projectMemberRepository.existsByUserEmailAndProductBackLogId(
-                 anyString(), any(UUID.class)))
+        when(userRepository.existsById(any(UUID.class))).thenReturn(true);
+        when(projectMemberRepository.existsByUserIdAndProductBackLogId(
+                 any(UUID.class), any(UUID.class)))
             .thenReturn(true);
 
         RemoveResponse response = removeMemberUseCase.execute(request);
@@ -61,18 +60,18 @@ public class RemoveMemberUseCaseTest {
         assertNotNull(response);
         assertEquals(true, response.isSuccess());
 
-        verify(userRepository).existsByEmail(request.getEmail());
+        verify(userRepository).existsById(request.getUserId());
         verify(projectMemberRepository)
-            .existsByUserEmailAndProductBackLogId(request.getEmail(),
+            .existsByUserIdAndProductBackLogId(request.getUserId(),
                                                   request.getProductId());
     }
 
     @Test
     void execute_ShouldThrowException_WhenUserNotFound() {
         RemoveRequest request =
-            new RemoveRequest(UUID.randomUUID(), "test@gmail.com");
+            new RemoveRequest(UUID.randomUUID(),UUID.randomUUID());
 
-        when(userRepository.existsByEmail(anyString())).thenReturn(false);
+        when(userRepository.existsById(any(UUID.class))).thenReturn(false);
 
         assertThrows(UserNotFoundException.class,
                      () -> removeMemberUseCase.execute(request));
@@ -82,12 +81,12 @@ public class RemoveMemberUseCaseTest {
     void execute_ShouldFail_WhenUserNotMemberOrRoleMisMatch() {
 
         RemoveRequest request =
-            new RemoveRequest(UUID.randomUUID(), "test@gmail.com");
+            new RemoveRequest(UUID.randomUUID(), UUID.randomUUID());
 
-        when(userRepository.existsByEmail(anyString())).thenReturn(true);
+        when(userRepository.existsById(any(UUID.class))).thenReturn(true);
         when(
-            projectMemberRepository.existsByUserEmailAndProductBackLogIdAndRole(
-                anyString(), any(UUID.class), any(RoleType.class)))
+            projectMemberRepository.existsByUserIdAndProductBackLogIdAndRole(
+                any(UUID.class), any(UUID.class), any(RoleType.class)))
             .thenReturn(false);
 
         RemoveResponse response = removeMemberUseCase.testRemoveUserWithRole(
@@ -96,9 +95,9 @@ public class RemoveMemberUseCaseTest {
         assertNotNull(response);
         assertEquals(false, response.isSuccess());
 
-        verify(userRepository).existsByEmail(request.getEmail());
+        verify(userRepository).existsById(request.getUserId());
         verify(projectMemberRepository)
-            .existsByUserEmailAndProductBackLogIdAndRole(
-                request.getEmail(), request.getProductId(), RoleType.DEVELOPER);
+            .existsByUserIdAndProductBackLogIdAndRole(
+                request.getUserId(), request.getProductId(), RoleType.DEVELOPER);
     }
 }
