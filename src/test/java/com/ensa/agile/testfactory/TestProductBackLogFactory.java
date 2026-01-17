@@ -1,7 +1,13 @@
 package com.ensa.agile.testfactory;
 
-import com.ensa.agile.domain.product.entity.ProductBackLog;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
+
+import com.ensa.agile.domain.product.entity.ProductBackLog;
+import com.ensa.agile.infrastructure.persistence.jpa.product.backlog.ProductBackLogJpaEntity;
+import com.ensa.agile.infrastructure.persistence.jpa.user.UserJpaEntity;
 
 public final class TestProductBackLogFactory {
     public static ProductBackLog validProduct() {
@@ -18,5 +24,20 @@ public final class TestProductBackLogFactory {
             .name("Test Product")
             .description("This is a test product backlog.")
             .build();
+    }
+
+    public static ProductBackLogJpaEntity validJpaProduct(UserJpaEntity logedUser) {
+        return ProductBackLogJpaEntity.builder()
+            .name("Test Product")
+            .description("This is a test product backlog.")
+        .createdBy(logedUser.getId())
+        .createdDate(LocalDateTime.now())
+            .build();
+    }
+
+    public static List<ProductBackLogJpaEntity> multipleJpaProducts(UserJpaEntity logedUser, Integer count) {
+        return IntStream.range(0, count)
+            .mapToObj(i -> validJpaProduct(logedUser))
+            .toList();
     }
 }
