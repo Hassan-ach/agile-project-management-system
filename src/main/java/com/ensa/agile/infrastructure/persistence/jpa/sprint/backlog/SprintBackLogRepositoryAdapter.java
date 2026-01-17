@@ -2,7 +2,6 @@ package com.ensa.agile.infrastructure.persistence.jpa.sprint.backlog;
 
 import com.ensa.agile.application.sprint.exception.SprintBackLogNotFoundException;
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
-import com.ensa.agile.domain.sprint.enums.SprintStatus;
 import com.ensa.agile.domain.sprint.repository.SprintBackLogRepository;
 import java.util.List;
 import java.util.UUID;
@@ -44,11 +43,6 @@ public class SprintBackLogRepositoryAdapter implements SprintBackLogRepository {
     @Override
     public boolean existsById(UUID s) {
         return this.jpaSprintBackLogRepository.existsById(s);
-    }
-
-    @Override
-    public boolean existsByStatus(SprintStatus status) {
-        return this.jpaSprintBackLogRepository.existsByStatus(status);
     }
 
     @Override
