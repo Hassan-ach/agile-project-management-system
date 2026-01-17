@@ -1,11 +1,15 @@
 package com.ensa.agile.infrastructure.persistence.jpa.user;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Repository;
+
 import com.ensa.agile.application.user.exception.UserNotFoundException;
 import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.domain.user.repository.UserRepository;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,19 +43,19 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public User findById(String id) {
+    public User findById(UUID id) {
         return jpaUserRepository.findById(id)
             .map(UserJpaMapper::toDomainEntity)
             .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(UUID id) {
         jpaUserRepository.deleteById(id);
     }
 
     @Override
-    public boolean existsById(String id) {
+    public boolean existsById(UUID id) {
         return jpaUserRepository.existsById(id);
     }
 }

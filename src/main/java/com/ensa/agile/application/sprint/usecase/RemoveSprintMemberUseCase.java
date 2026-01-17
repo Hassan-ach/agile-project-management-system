@@ -28,12 +28,12 @@ public class RemoveSprintMemberUseCase
 
     @Override
     public RemoveResponse execute(RemoveSprintMemberRequest request) {
-        if (!userRepository.existsByEmail(request.getEmail())) {
+        if (!userRepository.existsById(request.getUserId())) {
             throw new UserNotFoundException();
         }
 
-        sprintMembersRepository.deleteByUserEmailAndSprintBackLogId(
-            request.getEmail(), request.getSprintId());
+        sprintMembersRepository.deleteByUserIdAndSprintBackLogId(
+            request.getUserId(), request.getSprintId());
 
         return RemoveResponse.builder()
             .message("Sprint member removed successfully")

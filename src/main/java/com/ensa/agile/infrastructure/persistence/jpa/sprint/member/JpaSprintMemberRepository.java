@@ -10,4 +10,5 @@ public interface JpaSprintMemberRepository
     boolean existsBySprintBackLog_IdAndUser_Id(UUID sprintId, UUID userId);
 
     void deleteByUser_EmailAndSprintBackLog_Id(String email, UUID sprintId);
+    void deleteByUser_IdAndSprintBackLog_Id(UUID userId, UUID sprintId);
 }

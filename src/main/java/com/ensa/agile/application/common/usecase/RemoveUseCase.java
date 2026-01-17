@@ -32,21 +32,20 @@ public abstract class RemoveUseCase
 
     public RemoveResponse removeUserWithRole(RemoveRequest request,
                                              RoleType role) {
-        String email = request.getEmail();
 
-        if (!isUserExists(request.getEmail())) {
-            throw new UserNotFoundException(email);
+        if (!isUserExists(request.getUserId())) {
+            throw new UserNotFoundException();
         }
 
-        if (!hasRole(email, request.getProductId(), role)) {
+        if (!hasRole(request.getUserId(), request.getProductId(), role)) {
             return RemoveResponse.builder()
                 .message("User is not a member of the project")
                 .success(false)
                 .build();
         }
 
-        projectMemberRepository.deleteByUserEmailAndProductBackLogId(
-            email, request.getProductId());
+        projectMemberRepository.deleteByUserIdAndProductBackLogId(
+            request.getUserId(), request.getProductId());
 
         return RemoveResponse.builder()
             .message("User removed successfully")
@@ -54,19 +53,19 @@ public abstract class RemoveUseCase
             .build();
     }
 
-    private boolean isUserExists(String userEmail) {
-        return userRepository.existsByEmail(userEmail);
+    private boolean isUserExists(UUID userId) {
+        return userRepository.existsById(userId);
     }
 
-    private boolean hasRole(String userEmail, UUID projectId, RoleType role) {
+    private boolean hasRole(UUID userId, UUID projectId, RoleType role) {
 
         if (role == RoleType.MEMBER) {
-            return projectMemberRepository.existsByUserEmailAndProductBackLogId(
-                userEmail, projectId);
+            return projectMemberRepository.existsByUserIdAndProductBackLogId(
+                userId, projectId);
         }
 
         return projectMemberRepository
-            .existsByUserEmailAndProductBackLogIdAndRole(userEmail, projectId,
+            .existsByUserIdAndProductBackLogIdAndRole(userId, projectId,
                                                          role);
     }
 }

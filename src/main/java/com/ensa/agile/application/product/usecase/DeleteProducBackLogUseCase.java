@@ -7,6 +7,9 @@ import com.ensa.agile.application.product.exception.ProductBackLogNotFoundExcept
 import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DeleteProducBackLogUseCase
     extends BaseUseCase<UUID, RemoveResponse> {
     private ProductBackLogRepository productBackLogRepository;

@@ -21,6 +21,8 @@ public interface JpaProjectMemberRepository
                                                           UUID productBackLogId,
                                                           RoleType role);
 
+    void deleteByUser_IdAndProductBackLog_Id(UUID userId,
+                                                UUID productBackLogId);
     void deleteByUser_EmailAndProductBackLog_Id(String userEmail,
                                                 UUID productBackLogId);
 

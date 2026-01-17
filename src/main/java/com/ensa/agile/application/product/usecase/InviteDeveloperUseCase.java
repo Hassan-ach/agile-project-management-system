@@ -1,5 +1,7 @@
 package com.ensa.agile.application.product.usecase;
 
+import org.springframework.stereotype.Component;
+
 import com.ensa.agile.application.common.request.InviteRequest;
 import com.ensa.agile.application.common.response.InviteResponse;
 import com.ensa.agile.application.common.usecase.InviteUseCase;
@@ -10,6 +12,7 @@ import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
 import com.ensa.agile.domain.product.repository.ProjectMemberRepository;
 import com.ensa.agile.domain.user.repository.UserRepository;
 
+@Component
 public class InviteDeveloperUseCase extends InviteUseCase {
 
     public InviteDeveloperUseCase(

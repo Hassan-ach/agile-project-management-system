@@ -54,6 +54,13 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
     }
 
     @Override
+    public boolean existsByUserIdAndProductBackLogId(UUID userId,
+                                                        UUID productBackLogId) {
+        return jpaProjectMemberRepository
+            .existsByUser_IdAndProductBackLog_Id(userId,
+                                                    productBackLogId);
+    }
+    @Override
     public boolean existsByUserEmailAndProductBackLogId(String userEmail,
                                                         UUID productBackLogId) {
         return jpaProjectMemberRepository
@@ -68,6 +75,14 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
         return jpaProjectMemberRepository
             .existsByUser_IdAndProductBackLog_IdAndRole(userId,
                                                         productBackLogId, role);
+    }
+
+    @Override
+    public void deleteByUserIdAndProductBackLogId(UUID userId,
+                                                     UUID productBackLogId) {
+
+        jpaProjectMemberRepository.deleteByUser_IdAndProductBackLog_Id(
+            userId, productBackLogId);
     }
 
     @Override
@@ -95,4 +110,5 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
                 .findByUser_IdAndProductBackLog_Id(userId, productBackLogId)
                 .orElseThrow(ProjectMemberNotFoundException::new));
     }
+
 }

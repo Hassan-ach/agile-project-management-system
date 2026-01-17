@@ -61,4 +61,11 @@ public class SprintMemberRepositoryAdapter implements SprintMembersRepository {
         this.jpaSprintMemberRepository.deleteByUser_EmailAndSprintBackLog_Id(
             email, sprintId);
     }
+
+    @Override
+    public void deleteByUserIdAndSprintBackLogId(UUID userId,
+                                                    UUID sprintId) {
+        this.jpaSprintMemberRepository.deleteByUser_IdAndSprintBackLog_Id(
+            userId, sprintId);
+    }
 }

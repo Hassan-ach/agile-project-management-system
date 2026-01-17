@@ -10,4 +10,6 @@ public interface SprintMembersRepository
     boolean existsBySprintBackLogIdAndUserId(UUID sprintId, UUID userId);
     void deleteByUserEmailAndSprintBackLogId(String userEmail,
                                              UUID sprintBackLogId);
+    void deleteByUserIdAndSprintBackLogId(UUID userId,
+                                             UUID sprintBackLogId);
 }

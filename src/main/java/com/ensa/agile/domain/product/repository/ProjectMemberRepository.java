@@ -13,6 +13,9 @@ public interface ProjectMemberRepository
     boolean existsByUserEmailAndProductBackLogId(String userEmail,
                                                  UUID productBackLogId);
 
+    boolean existsByUserIdAndProductBackLogId(UUID userId,
+                                                 UUID productBackLogId);
+
     boolean existsByUserIdAndProductBackLogIdAndRole(UUID userId,
                                                      UUID productBackLogId,
                                                      RoleType role);
@@ -21,6 +24,9 @@ public interface ProjectMemberRepository
                                                         UUID productBackLogId,
                                                         RoleType role);
     void deleteByUserEmailAndProductBackLogId(String userEmail,
+                                              UUID productBackLogId);
+
+    void deleteByUserIdAndProductBackLogId(UUID userId,
                                               UUID productBackLogId);
 
     ProjectMember findByUserIdAndProductBackLogId(UUID userId,
