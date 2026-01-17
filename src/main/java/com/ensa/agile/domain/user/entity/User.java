@@ -39,7 +39,7 @@ public class User {
         this.locked = locked == null ? false : locked;
         this.credentialsExpired =
             credentialsExpired == null ? false : credentialsExpired;
-        this.createdDate = createdDate;
+        this.createdDate = createdDate == null ? LocalDate.now() : createdDate;
 
         validate();
     }
