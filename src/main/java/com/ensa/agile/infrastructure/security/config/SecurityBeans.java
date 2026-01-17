@@ -2,21 +2,19 @@ package com.ensa.agile.infrastructure.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.ensa.agile.application.user.security.IPasswordEncoder;
+import com.ensa.agile.infrastructure.security.utils.PasswordEncoderImpl;
+
 @Configuration
+@Profile("!dev")
 public class SecurityBeans {
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
-    public AuthenticationManager
-    authenticationManager(final AuthenticationConfiguration config)
-        throws Exception {
-        return config.getAuthenticationManager();
+    public IPasswordEncoder passwordEncoderImpl(){
+        return new PasswordEncoderImpl(new BCryptPasswordEncoder());
     }
+
 }
