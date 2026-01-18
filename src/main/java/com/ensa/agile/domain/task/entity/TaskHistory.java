@@ -59,4 +59,8 @@ public class TaskHistory extends BaseDomainEntity {
             throw new ValidationException("Invalid status transition.");
         }
     }
+
+    public TaskStatus unassignStatus() {
+        return TaskStatus.NEW;
+    }
 }

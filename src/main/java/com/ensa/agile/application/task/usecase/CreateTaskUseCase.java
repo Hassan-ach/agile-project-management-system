@@ -47,7 +47,9 @@ public class CreateTaskUseCase
         UserStory userStory =
             this.userStoryRepository.findById(request.getUserStoryId());
         SprintBackLog sp =
-            this.sprintBackLogRepository.findById(request.getSprintId());
+            this.sprintBackLogRepository.findById(
+            userStoryRepository.getSprintBackLogIdByUserStoryId(request.getUserStoryId())
+        );
 
         Task task = this.taskRepository.save(
             Task.builder()

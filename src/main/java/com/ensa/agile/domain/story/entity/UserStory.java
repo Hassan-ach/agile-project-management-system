@@ -49,6 +49,38 @@ public class UserStory extends BaseDomainEntity {
         validate();
     }
 
+    public void unlinkEpic() {
+        this.epic = null;
+    }
+    public void linkEpic(Epic epic) {
+        this.epic = epic;
+    }
+
+
+    public void unlinkSprint() {
+        this.sprintBackLog = null;
+    }
+    public void linkSprint(SprintBackLog sprintBackLog) {
+        this.sprintBackLog = sprintBackLog;
+    }
+    public void updatePriority(MoscowType priority) {
+        this.priority = priority;
+    }
+
+    public void makeMustHave() {
+        this.priority = MoscowType.MUST_HAVE;
+    }
+    public void makeShouldHave() {
+        this.priority = MoscowType.SHOULD_HAVE;
+    }
+    public void makeCouldHave() {
+        this.priority = MoscowType.COULD_HAVE;
+    }
+    public void makeWontHave() {
+        this.priority = MoscowType.WONT_HAVE;
+    }
+
+
     public void validate() {
         if (title == null || title.isEmpty() || title.isBlank()) {
             throw new ValidationException("Title cannot be null or empty");

@@ -4,6 +4,7 @@ import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.infrastructure.persistence.jpa.epic.EpicJpaMapper;
 import com.ensa.agile.infrastructure.persistence.jpa.product.backlog.ProductBackLogJpaMapper;
 import com.ensa.agile.infrastructure.persistence.jpa.sprint.backlog.SprintBackLogJpaMapper;
+import com.ensa.agile.infrastructure.persistence.jpa.story.history.UserStoryHistoryJpaMapper;
 
 public class UserStoryJpaMapper {
 
@@ -34,24 +35,6 @@ public class UserStoryJpaMapper {
     }
 
     public static UserStory toDomainEntity(UserStoryJpaEntity jpaEntity) {
-        // var us = new UserStory(
-        //     jpaEntity.getId(), jpaEntity.getTitle(),
-        //     jpaEntity.getDescription(), jpaEntity.getPriority(),
-        //     jpaEntity.getStatus(), jpaEntity.getStoryPoints(),
-        //     jpaEntity.getAcceptanceCriteria(),
-        //     ProductBackLogJpaMapper.toDomainEntity(
-        //         jpaEntity.getProductBackLog()),
-        //     jpaEntity.getCreatedDate(), jpaEntity.getCreatedBy(),
-        //     jpaEntity.getLastModifiedDate(), jpaEntity.getLastModifiedBy());
-        //
-        // if (jpaEntity.getEpic() != null) {
-        //     us.setEpic(EpicJpaMapper.toDomainEntity(jpaEntity.getEpic()));
-        // }
-        // if (jpaEntity.getSprintBackLog() != null) {
-        //     us.setSprintBackLog(SprintBackLogJpaMapper.toDomainEntity(
-        //         jpaEntity.getSprintBackLog()));
-        // }
-        // return us;
         return UserStory.builder()
             .id(jpaEntity.getId())
             .title(jpaEntity.getTitle())
@@ -59,8 +42,8 @@ public class UserStoryJpaMapper {
             .priority(jpaEntity.getPriority())
             .storyPoints(jpaEntity.getStoryPoints())
             .acceptanceCriteria(jpaEntity.getAcceptanceCriteria())
-            // .status(
-            //     UserStoryHistoryJpaMapper.toDomainEntity(jpaEntity.getStatus()))
+            .status(
+                UserStoryHistoryJpaMapper.toDomainEntity(jpaEntity.getStatus()))
             .productBackLog(ProductBackLogJpaMapper.toDomainEntity(
                 jpaEntity.getProductBackLog()))
             .epic(jpaEntity.getEpic() != null
@@ -70,6 +53,24 @@ public class UserStoryJpaMapper {
                                ? SprintBackLogJpaMapper.toDomainEntity(
                                      jpaEntity.getSprintBackLog())
                                : null)
+            .createdDate(jpaEntity.getCreatedDate())
+            .createdBy(jpaEntity.getCreatedBy())
+            .lastModifiedDate(jpaEntity.getLastModifiedDate())
+            .lastModifiedBy(jpaEntity.getLastModifiedBy())
+            .build();
+    }
+
+    public static UserStory toDomainEntityPartial(
+        UserStoryJpaEntity jpaEntity) {
+        return UserStory.builder()
+            .id(jpaEntity.getId())
+            .title(jpaEntity.getTitle())
+            .description(jpaEntity.getDescription())
+            .priority(jpaEntity.getPriority())
+            .storyPoints(jpaEntity.getStoryPoints())
+            .acceptanceCriteria(jpaEntity.getAcceptanceCriteria())
+            .status(
+                UserStoryHistoryJpaMapper.toDomainEntity(jpaEntity.getStatus()))
             .createdDate(jpaEntity.getCreatedDate())
             .createdBy(jpaEntity.getCreatedBy())
             .lastModifiedDate(jpaEntity.getLastModifiedDate())

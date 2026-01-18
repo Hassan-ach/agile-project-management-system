@@ -43,4 +43,12 @@ public class UserStoryHistory extends BaseDomainEntity {
             throw new ValidationException("Invalid status transition.");
         }
     }
+
+    public boolean isDone() {
+        return this.status == StoryStatus.DONE;
+    }
+
+    public boolean isInProgress() {
+        return this.status == StoryStatus.IN_PROGRESS;
+    }
 }

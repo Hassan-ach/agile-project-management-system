@@ -3,6 +3,7 @@ package com.ensa.agile.infrastructure.persistence.jpa.story.history;
 import com.ensa.agile.domain.story.enums.StoryStatus;
 import com.ensa.agile.infrastructure.persistence.jpa.global.entity.BaseJpaEntity;
 import com.ensa.agile.infrastructure.persistence.jpa.story.userstory.UserStoryJpaEntity;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,6 +30,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class UserStoryHistoryJpaEntity extends BaseJpaEntity {
+    
     @ManyToOne
     @JoinColumn(name = "user_story_id", nullable = false)
     private UserStoryJpaEntity userStory;

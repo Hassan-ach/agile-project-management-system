@@ -40,6 +40,15 @@ public class Task extends BaseDomainEntity {
         this.status = b.status;
         validate();
     }
+
+    public void assignUser(User user) {
+        this.assignee = user;
+    }
+
+    public void unassignUser() {
+        this.assignee = null;
+    }
+
     public void validate() {
         if (title == null || title.isEmpty()) {
             throw new ValidationException("Title cannot be null or empty");
@@ -59,9 +68,6 @@ public class Task extends BaseDomainEntity {
         }
         if (sprintBackLog == null) {
             throw new ValidationException("Sprint Backlog cannot be null");
-        }
-        if (assignee == null) {
-            throw new ValidationException("Assignee cannot be null");
         }
     }
     public void updateMetadata(String title, String description,

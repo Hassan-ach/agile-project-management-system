@@ -1,8 +1,13 @@
 package com.ensa.agile.application.sprint.usecase;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Component;
+
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
-import com.ensa.agile.application.sprint.mapper.SprintBacklogResponseMapper;
+import com.ensa.agile.application.sprint.mapper.SprintBackLogResponseMapper;
 import com.ensa.agile.application.sprint.request.SprintBackLogCreateRequest;
 import com.ensa.agile.application.sprint.response.SprintBackLogResponse;
 import com.ensa.agile.application.story.exception.UserStoryNotFoundException;
@@ -15,9 +20,6 @@ import com.ensa.agile.domain.sprint.repository.SprintBackLogRepository;
 import com.ensa.agile.domain.sprint.repository.SprintHistoryRepository;
 import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.story.repository.UserStoryRepository;
-import java.util.List;
-import java.util.UUID;
-import org.springframework.stereotype.Component;
 
 @Component
 public class CreateSprintBackLogUseCase
@@ -68,7 +70,7 @@ public class CreateSprintBackLogUseCase
         this.userStoryRepository.assignToSprint(request.getUserStoriesIds(),
                                                 sprint);
 
-        return SprintBacklogResponseMapper.toResponse(sprint, userStories,
+        return SprintBackLogResponseMapper.toResponse(sprint, userStories,
                                                       status);
     }
 

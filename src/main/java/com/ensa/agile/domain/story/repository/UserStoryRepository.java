@@ -13,4 +13,6 @@ public interface UserStoryRepository
     void assignToSprint(List<UUID> userStoryIds, SprintBackLog sprintBackLog);
     UUID getSprintBackLogIdByUserStoryId(UUID userStoryId);
     UUID getProductBackLogIdByUserStoryId(UUID userStoryId);
+
+    List<UserStory> findAllBySprintId(UUID sprintId);
 }

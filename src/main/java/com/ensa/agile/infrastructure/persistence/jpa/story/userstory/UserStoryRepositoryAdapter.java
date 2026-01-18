@@ -84,4 +84,12 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
             .getProductBackLogIdByUserStoryId(userStoryId)
             .orElseThrow(UserStoryNotFoundException::new);
     }
+
+    @Override
+    public List<UserStory> findAllBySprintId(UUID sprintId) {
+        return this.jpaUserStoryRepository.findAllBySprintBackLog_Id(sprintId)
+            .stream()
+            .map(UserStoryJpaMapper::toDomainEntityPartial)
+            .toList();
+    }
 }

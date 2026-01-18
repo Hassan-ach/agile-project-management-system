@@ -56,6 +56,24 @@ public class TaskJpaMapper {
             .build();
     }
 
+    public static Task  toDomainEntityPartial(TaskJpaEntity taskJpaEntity) {
+        if (taskJpaEntity == null) {
+            return null;
+        }
+        return Task.builder()
+            .id(taskJpaEntity.getId())
+            .title(taskJpaEntity.getTitle())
+            .description(taskJpaEntity.getDescription())
+            .estimatedHours(taskJpaEntity.getEstimatedHours())
+            .actualHours(taskJpaEntity.getActualHours())
+            .assignee(UserJpaMapper.toDomainEntity(taskJpaEntity.getAssignee()))
+            .createdBy(taskJpaEntity.getCreatedBy())
+            .createdDate(taskJpaEntity.getCreatedDate())
+            .lastModifiedBy(taskJpaEntity.getLastModifiedBy())
+            .lastModifiedDate(taskJpaEntity.getLastModifiedDate())
+            .build();
+    }
+
     public static Task toDomainEntity(TaskJpaEntity task,
                                       List<TaskHistoryJpaEntity> histories) {
         Task domainTask = toDomainEntity(task);

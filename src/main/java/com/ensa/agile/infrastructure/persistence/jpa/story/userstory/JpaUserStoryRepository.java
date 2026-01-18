@@ -16,6 +16,8 @@ public interface JpaUserStoryRepository
 
     List<UserStoryJpaEntity> findAllByEpic_Id(UUID epicId);
 
+    List<UserStoryJpaEntity> findAllBySprintBackLog_Id(UUID sprintId);
+
     @Query(""" 
             SELECT u FROM UserStoryJpaEntity u
             WHERE u.id IN :ids
