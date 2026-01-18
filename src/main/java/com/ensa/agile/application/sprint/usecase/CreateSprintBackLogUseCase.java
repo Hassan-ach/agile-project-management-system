@@ -12,36 +12,64 @@ import com.ensa.agile.application.sprint.request.SprintBackLogCreateRequest;
 import com.ensa.agile.application.sprint.response.SprintBackLogResponse;
 import com.ensa.agile.application.story.exception.UserStoryNotFoundException;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import com.ensa.agile.domain.product.enums.RoleType;
 import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
+import com.ensa.agile.domain.product.repository.ProjectMemberRepository;
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
 import com.ensa.agile.domain.sprint.entity.SprintHistory;
+import com.ensa.agile.domain.sprint.entity.SprintMember;
 import com.ensa.agile.domain.sprint.enums.SprintStatus;
 import com.ensa.agile.domain.sprint.repository.SprintBackLogRepository;
 import com.ensa.agile.domain.sprint.repository.SprintHistoryRepository;
+import com.ensa.agile.domain.sprint.repository.SprintMembersRepository;
 import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.story.repository.UserStoryRepository;
+import com.ensa.agile.domain.user.entity.User;
+import com.ensa.agile.domain.user.repository.UserRepository;
 
 @Component
 public class CreateSprintBackLogUseCase
     extends BaseUseCase<SprintBackLogCreateRequest, SprintBackLogResponse> {
     private final SprintBackLogRepository sprintBackLogRepository;
+    private final SprintMembersRepository sprintMembersRepository;
     private final ProductBackLogRepository productBackLogRepository;
+    private final ProjectMemberRepository projectMemberRepository;
     private final UserStoryRepository userStoryRepository;
+    private final UserRepository userRepository;
     private final SprintHistoryRepository sprintHistoryRepository;
 
     public CreateSprintBackLogUseCase(ITransactionalWrapper tr,
                                       SprintBackLogRepository sblr,
+                                      SprintMembersRepository smr,
+                                      UserRepository ur,
                                       ProductBackLogRepository pbr,
+                                      ProjectMemberRepository pmr,
                                       UserStoryRepository usr,
                                       SprintHistoryRepository shr) {
         super(tr);
         this.sprintBackLogRepository = sblr;
         this.productBackLogRepository = pbr;
+        this.projectMemberRepository = pmr;
         this.userStoryRepository = usr;
         this.sprintHistoryRepository = shr;
+        this.sprintMembersRepository = smr;
+        this.userRepository = ur;
     }
 
     public SprintBackLogResponse execute(SprintBackLogCreateRequest request) {
+
+        User user = this.userRepository.findByEmail(
+            request.getScrumMasterEmail());
+        
+        if(!this.projectMemberRepository
+        .existsByUserIdAndProductBackLogIdAndRole(user.getId(),
+            request.getProductId(), 
+            RoleType.SCRUM_MASTER)) {
+
+            throw new ValidationException("The user with email " + 
+                request.getScrumMasterEmail() + 
+                " is not a member of the project associated with the product backlog.");
+        }
 
         List<UserStory> userStories =
             this.userStoryRepository.findByBatch(request.getUserStoriesIds());
@@ -54,6 +82,7 @@ public class CreateSprintBackLogUseCase
                 .name(request.getName())
                 .productBackLog(this.productBackLogRepository.findById(
                     request.getProductId()))
+                .scrumMaster(user)
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .goal(request.getGoal())
@@ -69,6 +98,14 @@ public class CreateSprintBackLogUseCase
 
         this.userStoryRepository.assignToSprint(request.getUserStoriesIds(),
                                                 sprint);
+
+        this.sprintMembersRepository.save(
+            SprintMember.builder()
+            .sprintBackLog(sprint)
+            .user(user)
+            .build()
+        );
+
 
         return SprintBackLogResponseMapper.toResponse(sprint, userStories,
                                                       status);
