@@ -10,17 +10,13 @@ import lombok.Data;
 @Builder
 @Data
 public class EpicUpdateRequest {
-    private UUID productId;
     private UUID id;
     private String title;
     private String description;
 
-    public EpicUpdateRequest(UUID productId, UUID id, EpicUpdateRequest req) {
+    public EpicUpdateRequest(UUID id, EpicUpdateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
-        }
-        if (productId == null) {
-            throw new ValidationException("productId cannot be null");
         }
         if (id == null) {
             throw new ValidationException("id cannot be null");
@@ -44,7 +40,6 @@ public class EpicUpdateRequest {
             }
         }
 
-        this.productId = productId;
         this.id = id;
     }
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 @Data
-public class AssignTaskResponse {
+public class UpdateAssignTaskResponse {
     private TaskResponse task;
     private boolean assigned;
     private String message;

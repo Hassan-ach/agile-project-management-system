@@ -19,15 +19,11 @@ public class TaskCreateRequest {
     private String assigneeEmail;
 
     private UUID userStoryId;
-    private UUID sprintId;
 
-    public TaskCreateRequest(UUID sprintId, UUID userStoryId,
+    public TaskCreateRequest(UUID userStoryId,
                              TaskCreateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
-        }
-        if (sprintId == null) {
-            throw new ValidationException("sprintId cannot be null");
         }
         if (userStoryId == null ) {
             throw new ValidationException(
@@ -57,6 +53,5 @@ public class TaskCreateRequest {
         this.estimatedHours = req.getEstimatedHours();
         this.assigneeEmail = req.getAssigneeEmail();
         this.userStoryId = userStoryId;
-        this.sprintId = sprintId;
     }
 }

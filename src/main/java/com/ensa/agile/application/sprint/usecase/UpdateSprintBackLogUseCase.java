@@ -1,14 +1,15 @@
 package com.ensa.agile.application.sprint.usecase;
 
+import org.springframework.stereotype.Component;
+
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
-import com.ensa.agile.application.sprint.mapper.SprintBacklogResponseMapper;
+import com.ensa.agile.application.sprint.mapper.SprintBackLogResponseMapper;
 import com.ensa.agile.application.sprint.request.SprintBackLogUpdateRequest;
 import com.ensa.agile.application.sprint.response.SprintBackLogResponse;
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
 import com.ensa.agile.domain.sprint.repository.SprintBackLogRepository;
 import com.ensa.agile.domain.user.repository.UserRepository;
-import org.springframework.stereotype.Component;
 
 @Component
 public class UpdateSprintBackLogUseCase
@@ -42,6 +43,6 @@ public class UpdateSprintBackLogUseCase
 
         SprintBackLog newSprint = this.sprintBackLogRepository.save(sp);
 
-        return SprintBacklogResponseMapper.toResponse(newSprint);
+        return SprintBackLogResponseMapper.toResponse(newSprint);
     }
 }

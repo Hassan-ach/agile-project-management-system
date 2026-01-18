@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 public class UserStoryUpdateRequest {
 
     private UUID id;
-    private UUID productId;
     private String title;
     private String description;
     private MoscowType priority;
@@ -25,7 +24,7 @@ public class UserStoryUpdateRequest {
     private UUID epicId;
 
     // This constructor is for validation purposes
-    public UserStoryUpdateRequest(UUID productId, UUID id,
+    public UserStoryUpdateRequest(UUID id,
                                   UserStoryUpdateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
@@ -84,7 +83,6 @@ public class UserStoryUpdateRequest {
         }
 
         this.id = id;
-        this.productId = productId;
         this.epicId = req.getEpicId();
     }
 }

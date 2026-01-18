@@ -8,7 +8,7 @@ import com.ensa.agile.domain.story.entity.UserStory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SprintBacklogResponseMapper {
+public class SprintBackLogResponseMapper {
 
     public static SprintBackLogResponse toResponse(SprintBackLog sprint,
                                                    List<UserStory> userStories,
