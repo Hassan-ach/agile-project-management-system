@@ -11,7 +11,7 @@ public class GetRequestTest {
     @Test
     void shouldCreateEpicGetRequestSuccessfully() {
         assertDoesNotThrow(() -> {
-            new EpicGetRequest(UUID.randomUUID(), UUID.randomUUID(), null);
+            new EpicGetRequest(UUID.randomUUID(), null);
         });
     }
 }

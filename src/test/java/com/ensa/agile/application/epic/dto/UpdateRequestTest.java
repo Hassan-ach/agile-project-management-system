@@ -13,7 +13,7 @@ public class UpdateRequestTest {
     @Test
     void shouldCreateEpicUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new EpicUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
+            new EpicUpdateRequest(UUID.randomUUID(),
                                   EpicUpdateRequest.builder()
                                       .title("New Title")
                                       .description("New Description")
@@ -24,7 +24,7 @@ public class UpdateRequestTest {
     @Test
     void shouldThrowValidationException_whenBothTitleAndDescriptionAreNull() {
         assertThrows(ValidationException.class, () -> {
-            new EpicUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
+            new EpicUpdateRequest(UUID.randomUUID(),
                                   EpicUpdateRequest.builder()
                                       .title(null)
                                       .description(null)
@@ -36,7 +36,7 @@ public class UpdateRequestTest {
     void shouldUpdateOnlyTitleSuccessfully_whenDescriptionIsNull() {
         assertDoesNotThrow(() -> {
             new EpicUpdateRequest(
-                UUID.randomUUID(), UUID.randomUUID(),
+              UUID.randomUUID(),
                 EpicUpdateRequest.builder().title("Updated Title").build());
         });
     }
@@ -45,7 +45,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenTitleIsBlank() {
         assertThrows(ValidationException.class, () -> {
             new EpicUpdateRequest(
-                UUID.randomUUID(), UUID.randomUUID(),
+               UUID.randomUUID(),
                 EpicUpdateRequest.builder().title("").build());
         });
     }

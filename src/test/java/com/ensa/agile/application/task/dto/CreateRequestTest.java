@@ -13,8 +13,7 @@ public class CreateRequestTest {
     @Test
     void shouldCreateTaskCreateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new TaskCreateRequest(
-                UUID.randomUUID(), UUID.randomUUID(),
+            new TaskCreateRequest(UUID.randomUUID(),
                 TaskCreateRequest.builder()
                     .title("Fix Bug")
                     .description("Fix the login timeout issue")
@@ -27,7 +26,7 @@ public class CreateRequestTest {
     @Test
     void shouldThrowValidationException_whenEstimatedHoursIsZeroOrNegative() {
         assertThrows(ValidationException.class, () -> {
-            new TaskCreateRequest(UUID.randomUUID(), UUID.randomUUID(),
+            new TaskCreateRequest(UUID.randomUUID(),
                                   TaskCreateRequest.builder()
                                       .title("Task")
                                       .description("Desc")
@@ -40,7 +39,7 @@ public class CreateRequestTest {
     @Test
     void shouldThrowValidationException_whenEmailFormatIsInvalid() {
         assertThrows(ValidationException.class, () -> {
-            new TaskCreateRequest(UUID.randomUUID(), UUID.randomUUID(),
+            new TaskCreateRequest(UUID.randomUUID(),
                                   TaskCreateRequest.builder()
                                       .title("Task")
                                       .description("Desc")
@@ -53,7 +52,7 @@ public class CreateRequestTest {
     @Test
     void shouldThrowValidationException_whenRequestIsNull() {
         assertThrows(ValidationException.class, () -> {
-            new TaskCreateRequest(UUID.randomUUID(), UUID.randomUUID(), null);
+            new TaskCreateRequest(UUID.randomUUID(), null);
         });
     }
 }

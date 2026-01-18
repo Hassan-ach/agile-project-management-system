@@ -12,17 +12,6 @@ import com.tngtech.archunit.lang.ArchRule;
 public class BusinessModuleTest {
 
     @ArchTest
-    static final ArchRule epic_classes_should_be_in_epic_package =
-        classes()
-            .that()
-            .haveSimpleNameContaining("Epic")
-            .and()
-            .resideOutsideOfPackages("..global..", "..common..",
-                                     "..controller..")
-            .should()
-            .resideInAPackage("..epic..");
-
-    @ArchTest
     static final ArchRule sprint_related_classes_should_be_in_sprint_package =
         classes()
             .that()

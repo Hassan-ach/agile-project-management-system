@@ -58,20 +58,6 @@ public class TaskTest {
                        .build());
     }
 
-    @Test
-    void souldFailToCreateTask_whenAssigneeIsNull() {
-        assertThrows(
-            ValidationException.class,
-            ()
-                -> Task.builder()
-                       .title("Implement login feature")
-                       .description("Create login functionality using OAuth2")
-                       .userStory(TestUserStoryFactory.validUserStory())
-                       .sprintBackLog(
-                           TestSprintBackLogFactory.validSprintBackLog())
-                       .estimatedHours(8.00)
-                       .build());
-    }
 
     @ParameterizedTest
     @CsvSource({

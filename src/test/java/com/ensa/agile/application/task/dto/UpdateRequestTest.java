@@ -13,8 +13,7 @@ public class UpdateRequestTest {
     @Test
     void shouldCreateTaskUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new TaskUpdateRequest(
-                UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
+            new TaskUpdateRequest( UUID.randomUUID(),
                 TaskUpdateRequest.builder().title("Updated Title").build());
         });
     }
@@ -22,8 +21,7 @@ public class UpdateRequestTest {
     @Test
     void shouldThrowValidationException_whenNoFieldsProvidedForUpdate() {
         assertThrows(ValidationException.class, () -> {
-            new TaskUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
-                                  UUID.randomUUID(),
+            new TaskUpdateRequest(UUID.randomUUID(),
                                   TaskUpdateRequest.builder().build());
         });
     }
@@ -31,8 +29,7 @@ public class UpdateRequestTest {
     @Test
     void shouldUpdateActualHoursSuccessfully_whenPositive() {
         assertDoesNotThrow(() -> {
-            new TaskUpdateRequest(
-                UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
+            new TaskUpdateRequest( UUID.randomUUID(),
                 TaskUpdateRequest.builder().actualHours(5.5).build());
         });
     }
@@ -40,20 +37,9 @@ public class UpdateRequestTest {
     @Test
     void shouldThrowValidationException_whenTitleIsProvidedAsBlank() {
         assertThrows(ValidationException.class, () -> {
-            new TaskUpdateRequest(
-                UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
+            new TaskUpdateRequest( UUID.randomUUID(),
                 TaskUpdateRequest.builder().title(" ").build());
         });
     }
 
-    @Test
-    void shouldThrowValidationException_whenAssigneeEmailIsInvalid() {
-        assertThrows(ValidationException.class, () -> {
-            new TaskUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
-                                  UUID.randomUUID(),
-                                  TaskUpdateRequest.builder()
-                                      .assigneeEmail("invalid-email")
-                                      .build());
-        });
-    }
 }

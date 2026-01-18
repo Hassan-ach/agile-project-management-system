@@ -12,7 +12,6 @@ public class EpicRequestTest {
     void shouldCreateEpicRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
             new EpicRequest(
-                UUID.randomUUID(),
                 EpicRequest.builder().epicId(UUID.randomUUID()).build());
         });
     }

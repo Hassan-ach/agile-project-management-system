@@ -13,7 +13,7 @@ public class UpdateRequestTest {
     @Test
     void shouldCreateUserStoryUpdateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new UserStoryUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
+            new UserStoryUpdateRequest(UUID.randomUUID(),
                                        UserStoryUpdateRequest.builder()
                                            .title("Updated Title")
                                            .storyPoints(8)
@@ -24,8 +24,7 @@ public class UpdateRequestTest {
     @Test
     void shouldThrowValidationException_whenIdIsNull() {
         assertThrows(ValidationException.class, () -> {
-            new UserStoryUpdateRequest(
-                UUID.randomUUID(), null,
+            new UserStoryUpdateRequest( null,
                 UserStoryUpdateRequest.builder().title("Title").build());
         });
     }
@@ -33,8 +32,7 @@ public class UpdateRequestTest {
     @Test
     void shouldThrowValidationException_whenNoFieldsProvidedForUpdate() {
         assertThrows(ValidationException.class, () -> {
-            new UserStoryUpdateRequest(
-                UUID.randomUUID(), UUID.randomUUID(),
+            new UserStoryUpdateRequest(UUID.randomUUID(),
                 UserStoryUpdateRequest.builder().build());
         });
     }
@@ -42,8 +40,7 @@ public class UpdateRequestTest {
     @Test
     void shouldThrowValidationException_whenStoryPointsIsInvalidInUpdate() {
         assertThrows(ValidationException.class, () -> {
-            new UserStoryUpdateRequest(
-                UUID.randomUUID(), UUID.randomUUID(),
+            new UserStoryUpdateRequest(UUID.randomUUID(),
                 UserStoryUpdateRequest.builder().storyPoints(0).build());
         });
     }
@@ -51,7 +48,7 @@ public class UpdateRequestTest {
     @Test
     void shouldUpdateOnlyAcceptanceCriteriaSuccessfully() {
         assertDoesNotThrow(() -> {
-            new UserStoryUpdateRequest(UUID.randomUUID(), UUID.randomUUID(),
+            new UserStoryUpdateRequest(UUID.randomUUID(),
                                        UserStoryUpdateRequest.builder()
                                            .acceptanceCriteria("New criteria")
                                            .build());
@@ -62,7 +59,7 @@ public class UpdateRequestTest {
     void shouldThrowValidationException_whenTitleIsProvidedAsBlank() {
         assertThrows(ValidationException.class, () -> {
             new UserStoryUpdateRequest(
-                UUID.randomUUID(), UUID.randomUUID(),
+            UUID.randomUUID(),
                 UserStoryUpdateRequest.builder().title(" ").build());
         });
     }
