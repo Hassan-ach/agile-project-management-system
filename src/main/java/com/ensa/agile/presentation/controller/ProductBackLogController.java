@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/api/v1/projects")
 public class ProductBackLogController {
 
     private final CreateProductBackLogUseCase createProductBacklogUseCase;

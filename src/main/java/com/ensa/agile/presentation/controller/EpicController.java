@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class EpicController {
 
     private final CreateEpicUseCase createEpicUseCase;

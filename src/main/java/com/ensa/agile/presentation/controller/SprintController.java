@@ -44,7 +44,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class SprintController {
     private final CreateSprintBackLogUseCase createSprintBackLogUseCase;
     private final UpdateSprintBackLogUseCase updateSprintBackLogUseCase;

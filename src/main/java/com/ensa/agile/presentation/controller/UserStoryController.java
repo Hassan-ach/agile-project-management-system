@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/v1")
 public class UserStoryController {
 
     private final CreateUserStoryUseCase createUserStoryUseCase;
