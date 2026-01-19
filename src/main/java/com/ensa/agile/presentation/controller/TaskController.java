@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -54,6 +55,7 @@ public class TaskController {
     private final GetUserTasksUseCase getUserTasksUseCase;
 
     @PostMapping("/stories/{storyId}/tasks")
+    @PreAuthorize("@abacService.canAccessTask(#storyId, null, 'CREATE')")
     public ResponseEntity<TaskResponse>
     createTask(@PathVariable UUID storyId,
                @RequestBody TaskCreateRequest request) {
@@ -64,6 +66,7 @@ public class TaskController {
     }
 
     @GetMapping("/tasks/{id}")
+    @PreAuthorize("@abacService.canAccessTask(null, #id, 'VIEW')")
     public ResponseEntity<TaskResponse>
     getTask(@PathVariable UUID id,
             @RequestParam(name = "with", required = false) String with) {
@@ -75,6 +78,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@abacService.canAccessTask(null, #id, 'UPDATE')")
     public ResponseEntity<TaskResponse>
     updateTask( @PathVariable UUID id, @RequestBody TaskUpdateRequest request) {
         TaskResponse response = updateTaskUseCase.executeTransactionally(
@@ -84,6 +88,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@abacService.canAccessTask(null, #id, 'DELETE')")
     public ResponseEntity<DeleteResponse> deleteTask(@PathVariable UUID id) {
         deleteTaskUseCase.executeTransactionally(id);
 
@@ -91,6 +96,7 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}/assignee")
+    @PreAuthorize("@abacService.canAccessTask(null, #id, 'ASSIGN')")
     public ResponseEntity<UpdateAssignTaskResponse>
     assignTask(@PathVariable UUID id, @RequestBody UpdateAssignTaskRequest request) {
 
@@ -106,6 +112,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}/assignee")
+    @PreAuthorize("@abacService.canAccessTask(null, #id, 'UNASSIGN')")
     public ResponseEntity<UpdateAssignTaskResponse>
     unAssignTask(@PathVariable UUID id, @RequestBody UpdateAssignTaskRequest request) {
         var req = UpdateAssignTaskRequest.builder()
@@ -120,6 +127,7 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("@abacService.canAccessTask(null, #id, 'UPDATE_STATUS')")
     public ResponseEntity<UpdateStatusResponse<TaskHistory>>
     updateTaskStatus(@PathVariable UUID id,
                      @RequestBody UpdateStatusRequest<TaskStatus> request) {
@@ -138,6 +146,7 @@ public class TaskController {
     }
 
     @GetMapping("/stories/{storyId}/tasks")
+    @PreAuthorize("@abacService.canAccessTask(null, #storyId, 'VIEW')")
     public ResponseEntity<List<TaskResponse>>
     getAllTasks(@PathVariable UUID storyId) {
         List<TaskResponse> response =

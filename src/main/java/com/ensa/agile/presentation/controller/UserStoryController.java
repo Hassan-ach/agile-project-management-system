@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -55,6 +56,7 @@ public class UserStoryController {
     private final GetUserStoryHistoryUseCase getUserStoryHistoryUseCase;
 
     @PostMapping("/projects/{projectId}/stories")
+    @PreAuthorize("@abacService.canAccessStory(#projectId, null, 'CREATE')")
     public ResponseEntity<UserStoryResponse>
     createUserStory(@RequestBody UserStoryCreateRequest request,
                     @PathVariable UUID projectId) {
@@ -65,6 +67,7 @@ public class UserStoryController {
     }
 
     @GetMapping("/stories/{id}")
+    @PreAuthorize("@abacService.canAccessStory(null, #id, 'VIEW')")
     public ResponseEntity<UserStoryResponse> getUserStoryById(@PathVariable UUID id,
         @RequestParam(name = "with", required = false) String with) {
 
@@ -74,6 +77,7 @@ public class UserStoryController {
     }
 
     @PutMapping("/stories/{id}")
+    @PreAuthorize("@abacService.canAccessStory(null, #id, 'UPDATE')")
     public ResponseEntity<UserStoryResponse>
     updateUserStory(@PathVariable UUID id,
                     @RequestBody UserStoryUpdateRequest request) {
@@ -84,6 +88,7 @@ public class UserStoryController {
     }
 
     @DeleteMapping("/stories/{id}")
+    @PreAuthorize("@abacService.canAccessStory(null, #id, 'DELETE')")
     public ResponseEntity<DeleteResponse>
     deleteUserStory(@PathVariable UUID id) {
         deleteUserStoryUseCase.executeTransactionally(id);
@@ -91,6 +96,7 @@ public class UserStoryController {
     }
 
     @PatchMapping("/stories/{id}/status")
+    @PreAuthorize("@abacService.canAccessStory(null, #id, 'UPDATE_STATUS')")
     public ResponseEntity<UpdateStatusResponse<UserStoryHistory>>
     updateUserStoryStatus( @PathVariable UUID id,
                           @RequestBody UpdateStatusRequest<StoryStatus> request) {
@@ -107,6 +113,7 @@ public class UserStoryController {
     }
 
     @PatchMapping("/stories/{id}/epic/{epicId}")
+    @PreAuthorize("@abacService.canAccessStory(null, #id, 'LINK_TO_EPIC')")
     public ResponseEntity<UserStoryResponse>
     linkUserStoryToEpic(@PathVariable UUID id,
                         @PathVariable UUID epicId) {
@@ -121,6 +128,7 @@ public class UserStoryController {
     }
 
     @DeleteMapping("/stories/{id}/epic/{epicId}")
+    @PreAuthorize("@abacService.canAccessStory(null, #id, 'UNLINK_TO_EPIC')")
     public ResponseEntity<UserStoryResponse>
     unLinkUserStoryToEpic(@PathVariable UUID id,
                           @PathVariable UUID epicId) {
@@ -134,6 +142,7 @@ public class UserStoryController {
     }
 
     @PatchMapping("/stories/{id}/priority")
+    @PreAuthorize("@abacService.canAccessStory(null, #id, 'UPDATE_PRIORITY')")
     public ResponseEntity<UserStoryResponse>
     updateStoryPriority(@RequestBody UserStoryUpdatePriorityRequest request) {
         var req = UserStoryUpdatePriorityRequest.builder()
@@ -147,6 +156,7 @@ public class UserStoryController {
     }
 
     @GetMapping("/stories/{id}/history")
+    @PreAuthorize("@abacService.canAccessStory(null, #id, 'VIEW_HISTORY')")
     public ResponseEntity<List<UserStoryHistory>>
     getUserStoryHistory(@PathVariable UUID id) {
 

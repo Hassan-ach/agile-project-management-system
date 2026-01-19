@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class EpicController {
     private final GetAllEpicsUseCase getAllEpicsUseCase;
 
     @PostMapping("/projects/{projectId}/epics")
+    @PreAuthorize("@abacService.canAccessEpic(#projectId, null, 'CREATE')")
     public ResponseEntity<EpicResponse>
     createEpic(@PathVariable UUID projectId,
                @RequestBody EpicCreateRequest request) {
@@ -51,6 +53,7 @@ public class EpicController {
     }
 
     @GetMapping("/projects/{projectId}/epics")
+    @PreAuthorize("@abacService.canAccessEpic(null, #projectId, 'VIEW')")
     public ResponseEntity<List<EpicResponse>>
     getAllEpics(@PathVariable UUID projectId) {
 
@@ -59,6 +62,7 @@ public class EpicController {
     }
 
     @GetMapping("/epics/{id}")
+    @PreAuthorize("@abacService.canAccessEpic(null, #id, 'VIEW')")
     public ResponseEntity<EpicResponse>
     getEpicById(@PathVariable UUID id,
                 @RequestParam(name = "with", required = false) String with) {
@@ -69,6 +73,7 @@ public class EpicController {
     }
 
     @PutMapping("/epics/{id}")
+    @PreAuthorize("@abacService.canAccessEpic(null, #id, 'UPDATE')")
     public ResponseEntity<EpicResponse>
     updateEpic(@PathVariable UUID id,
                @RequestBody EpicUpdateRequest request) {
@@ -79,6 +84,7 @@ public class EpicController {
     }
 
     @DeleteMapping("/epics/{id}")
+    @PreAuthorize("@abacService.canAccessEpic(null, #id, 'DELETE')")
     public ResponseEntity<DeleteResponse>
     deleteEpic(@PathVariable UUID id) {
 

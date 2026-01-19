@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -48,6 +49,7 @@ public class ProductBackLogController {
     private final DeleteProducBackLogUseCase deleteProducBackLogUseCase;
 
     @PostMapping
+    @PreAuthorize("@abacService.canAccessProject(null, 'CREATE')")
     public ResponseEntity<ProductBackLogResponse>
     createProductBacklog(@RequestBody ProductBackLogCreateRequest request) {
 
@@ -56,6 +58,7 @@ public class ProductBackLogController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@abacService.canAccessProject(#id, 'VIEW')")
     public ResponseEntity<ProductBackLogResponse> getProjectById(
         @PathVariable UUID id) {
 
@@ -65,6 +68,7 @@ public class ProductBackLogController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@abacService.canAccessProject(#id, 'DELETE')")
     public ResponseEntity<RemoveResponse>
     deleteProjectById(@PathVariable UUID id) {
 
@@ -73,6 +77,7 @@ public class ProductBackLogController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("@abacService.canAccessProject(#id, 'UPDATE')")
     public ResponseEntity<ProductBackLogResponse>
     updateProductBacklog(@PathVariable UUID id,
                          @RequestBody ProductBackLogUpdateRequest request) {
@@ -83,6 +88,7 @@ public class ProductBackLogController {
     }
 
     @PostMapping("/{id}/members/developers")
+    @PreAuthorize("@abacService.canAccessProject(#id, 'INVITE_DEVELOPER')")
     public ResponseEntity<InviteResponse>
     inviteDeveloper(@RequestBody InviteRequest request,
                       @PathVariable UUID id) {
@@ -93,6 +99,7 @@ public class ProductBackLogController {
     }
 
     @DeleteMapping("/{id}/members/developers/{userId}")
+    @PreAuthorize("@abacService.canAccessProject(#id, 'REMOVE_DEVELOPER)")
     public ResponseEntity<RemoveResponse>
     removeDeveloper(@RequestBody RemoveRequest request,
                     @PathVariable UUID id, @PathVariable UUID userId) {
@@ -103,6 +110,7 @@ public class ProductBackLogController {
     }
 
     @PostMapping("/members/scrum-masters")
+    @PreAuthorize("@abacService.canAccessProject(#id, 'INVITE_SCRUM_MASTER')")
     public ResponseEntity<InviteResponse>
     inviteScrumMaster(@RequestBody InviteRequest request,
                       @PathVariable UUID id) {
@@ -113,6 +121,7 @@ public class ProductBackLogController {
     }
 
     @DeleteMapping("/{id}/members/scrum-masters/{userId}")
+    @PreAuthorize("@abacService.canAccessProject(#id, 'REMOVE_SCRUM_MASTER')")
     public ResponseEntity<RemoveResponse>
     removeScrumeMaster(@RequestBody RemoveRequest request,
                     @PathVariable UUID id, @PathVariable UUID userId) {
@@ -123,6 +132,7 @@ public class ProductBackLogController {
     }
 
     @GetMapping("/{id}/backlog")
+    @PreAuthorize("@abacService.canAccessProject(#id, 'VIEW_BACKLOG')")
     public ResponseEntity<ProductBackLogResponse> getProductBacklogById(
         @PathVariable UUID id,
         @RequestParam(name = "with", required = false) String with) {
@@ -130,6 +140,12 @@ public class ProductBackLogController {
         return ResponseEntity.status(HttpStatus.OK)
             .body(getProductBackLogUseCase.execute(
                 new ProductBackLogGetRequest(id, with)));
+    }
+
+    @GetMapping("/{id}/report")
+    @PreAuthorize("@abacService.canViewReport(#id, null, 'PROJECT')")
+    public ResponseEntity<?> getProductReport(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body("Product report data");
     }
 
 }

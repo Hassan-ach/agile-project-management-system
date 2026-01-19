@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -57,6 +58,7 @@ public class SprintController {
     private final GetSprintProgressUseCase getSprintProgressUseCase;
 
     @PostMapping("/projects/{projectId}/sprints")
+    @PreAuthorize("@abacService.canAccessSprint(#projectId, null, 'CREATE')")
     public ResponseEntity<SprintBackLogResponse>
     createSprint(@PathVariable UUID projectId, @RequestBody SprintBackLogCreateRequest request) {
 
@@ -68,6 +70,7 @@ public class SprintController {
     }
 
     @GetMapping("/sprints/{id}")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'VIEW')")
     public ResponseEntity<SprintBackLogResponse>
     getSprint(@PathVariable UUID id,
               @RequestParam(name = "with", required = false) String with) {
@@ -80,6 +83,7 @@ public class SprintController {
     }
 
     @PutMapping("/sprints/{id}")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'UPDATE')")
     public ResponseEntity<SprintBackLogResponse>
     updateSprint(@PathVariable UUID id,
                  @RequestBody SprintBackLogUpdateRequest request) {
@@ -92,6 +96,7 @@ public class SprintController {
     }
 
     @DeleteMapping("/sprints/{id}")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'DELETE')")
     public ResponseEntity<DeleteResponse>
     deleteSprint(@PathVariable UUID id) {
 
@@ -101,6 +106,7 @@ public class SprintController {
     }
 
     @PatchMapping("/sprints/{id}/status")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'UPDATE_STATUS')")
     public ResponseEntity<UpdateStatusResponse<SprintHistory>>
     updateSprintStatus(@PathVariable UUID id,
                        @RequestBody UpdateStatusRequest<SprintStatus> request) {
@@ -116,6 +122,7 @@ public class SprintController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     @PostMapping("/sprints/{id}/stories/{storyId}")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'MANAGE_STORIES')")
     public ResponseEntity<SprintBackLogResponse>
     addStoryToSprint(@PathVariable UUID id,
                      @PathVariable UUID storyId) {
@@ -131,6 +138,7 @@ public class SprintController {
     }
 
     @DeleteMapping("/sprints/{id}/stories/{storyId}")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'MANAGE_STORIES')")
     public ResponseEntity<SprintBackLogResponse>
     removeStoryFromSprint(@PathVariable UUID id,
                           @PathVariable UUID storyId) {
@@ -147,6 +155,7 @@ public class SprintController {
     }
 
     @GetMapping("/sprints/{id}/backlog")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'VIEW_BACKLOG')")
     public ResponseEntity<SprintBackLogResponse>
     getSprintBacklog(@PathVariable UUID id) {
 
@@ -158,6 +167,7 @@ public class SprintController {
     }
 
     @GetMapping("/sprints/{id}/history")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'VIEW_HISTORY')")
     public ResponseEntity<List<SprintHistory>>
     getSprintHistory(@PathVariable UUID id) {
 
@@ -168,6 +178,7 @@ public class SprintController {
     }
 
     @GetMapping("/sprints/{id}/burndown")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'VIEW_BURNDOWN')")
     public ResponseEntity<SprintBurndownChartResponse> getSprintBurndownChart(@PathVariable UUID id) {
 
         var response = getSprintBurndownChartUseCase.executeTransactionally(id);
@@ -176,10 +187,17 @@ public class SprintController {
     }
 
     @GetMapping("/sprints/{id}/progress")
+    @PreAuthorize("@abacService.canAccessSprint(null, #id, 'VIEW_PROGRESS')")
     public ResponseEntity<SprintBackLogProgressResponse> getSprintProgress(@PathVariable UUID id) {
         var response = getSprintProgressUseCase.executeTransactionally(id);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("sprints/{id}/report")
+    @PreAuthorize("@abacService.canViewReport(null, #id, 'SPRINT')")
+    public ResponseEntity<?> getSprintReport(@PathVariable UUID id) {
+        return ResponseEntity.ok("Sprint report generation is not implemented yet.");
     }
 
 }
