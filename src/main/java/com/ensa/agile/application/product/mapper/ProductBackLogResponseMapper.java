@@ -13,6 +13,9 @@ public class ProductBackLogResponseMapper {
 
     public static ProductBackLogResponse
     toResponse(ProductBackLog productBackLog) {
+        if (productBackLog == null) {
+            return new ProductBackLogResponse();
+        }
         return ProductBackLogResponse.builder()
             .id(productBackLog.getId())
             .name(productBackLog.getName())
@@ -23,26 +26,35 @@ public class ProductBackLogResponseMapper {
     public static ProductBackLogResponse
     toResponseWithEpics(ProductBackLog productBackLog,
                         List<EpicResponse> epics) {
+        if (productBackLog == null) {
+            return new ProductBackLogResponse();
+        }
         return ProductBackLogResponse.builder()
             .id(productBackLog.getId())
             .name(productBackLog.getName())
             .description(productBackLog.getDescription())
-            .epics(epics)
+            .epics(epics == null ? new ArrayList<>() : epics)
             .build();
     }
     public static ProductBackLogResponse
     toResponseWithUserStories(ProductBackLog productBackLog,
                               List<UserStoryResponse> UserStories) {
+        if (productBackLog == null) {
+            return new ProductBackLogResponse();
+        }
         return ProductBackLogResponse.builder()
             .id(productBackLog.getId())
             .name(productBackLog.getName())
             .description(productBackLog.getDescription())
-            .userStories(UserStories)
+            .userStories(UserStories == null ? new ArrayList<>() : UserStories)
             .build();
     }
 
     public static ProductBackLogResponse
     toResponseWithEpicsAndUserStories(ProductBackLog productBackLog) {
+        if (productBackLog == null) {
+            return new ProductBackLogResponse();
+        }
         return ProductBackLogResponse.builder()
             .id(productBackLog.getId())
             .name(productBackLog.getName())

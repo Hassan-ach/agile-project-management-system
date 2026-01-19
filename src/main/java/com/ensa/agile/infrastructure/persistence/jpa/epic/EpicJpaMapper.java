@@ -5,7 +5,9 @@ import com.ensa.agile.infrastructure.persistence.jpa.product.backlog.ProductBack
 
 public class EpicJpaMapper {
     public static EpicJpaEntity toJpaEntity(Epic epic) {
-
+        if (epic == null) {
+            return null;
+        }
         return EpicJpaEntity.builder()
             .id(epic.getId())
             .title(epic.getTitle())
@@ -21,6 +23,9 @@ public class EpicJpaMapper {
 
     public static Epic toDomainEntity(EpicJpaEntity epic) {
 
+        if (epic == null) {
+            return null;
+        }
         return Epic.builder()
             .id(epic.getId())
             .title(epic.getTitle())

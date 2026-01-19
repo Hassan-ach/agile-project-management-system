@@ -5,6 +5,9 @@ import com.ensa.agile.domain.user.entity.User;
 
 public class UserInfoResponseMapper {
     public static UserInfoResponse toResponse(User user) {
+        if(user == null) {
+            return new UserInfoResponse();
+        }
         return UserInfoResponse.builder()
             .id(user.getId())
             .firstName(user.getFirstName())

@@ -5,9 +5,13 @@ import com.ensa.agile.infrastructure.persistence.jpa.sprint.backlog.SprintBackLo
 
 public class SprintHistoryJpaMapper {
     public static SprintHistoryJpaEntity toJpaEntity(SprintHistory domain) {
+        if (domain == null) {
+            return null;
+        }
         return SprintHistoryJpaEntity.builder()
             .id(domain.getId())
-            .sprint(SprintBackLogJpaMapper.toJpaEntity(domain.getSprint()))
+            .sprint(domain.getSprint() == null ? null :
+            SprintBackLogJpaMapper.toJpaEntity(domain.getSprint()))
             .status(domain.getStatus())
             .note(domain.getNote())
             .createdBy(domain.getCreatedBy())
@@ -19,9 +23,12 @@ public class SprintHistoryJpaMapper {
 
     public static SprintHistory
     toDomainEntity(SprintHistoryJpaEntity jpaEntity) {
+        if (jpaEntity == null) {
+            return null;
+        }
         return SprintHistory.builder()
             .id(jpaEntity.getId())
-            .sprint(
+            .sprint(jpaEntity.getSprint() == null ? null :
                 SprintBackLogJpaMapper.toDomainEntity(jpaEntity.getSprint()))
             .status(jpaEntity.getStatus())
             .note(jpaEntity.getNote())

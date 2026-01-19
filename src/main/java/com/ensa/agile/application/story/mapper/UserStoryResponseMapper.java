@@ -6,6 +6,9 @@ import com.ensa.agile.domain.story.entity.UserStoryHistory;
 public class UserStoryResponseMapper {
 
     public static UserStoryResponse toResponse(UserStory userStory) {
+        if (userStory == null) {
+            return new UserStoryResponse();
+        }
         return UserStoryResponse.builder()
             .id(userStory.getId())
             .title(userStory.getTitle())
@@ -19,6 +22,9 @@ public class UserStoryResponseMapper {
 
     public static UserStoryResponse toResponse(UserStory userStory,
                                                UserStoryHistory status) {
+        if (userStory == null) {
+            return new UserStoryResponse();
+        }
         return UserStoryResponse.builder()
             .id(userStory.getId())
             .title(userStory.getTitle())

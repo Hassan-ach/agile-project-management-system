@@ -8,24 +8,31 @@ public class ProjectMemberJpaMapper {
 
     public static ProjectMemberJpaEntity
     toJpaEntity(ProjectMember projectMember) {
-        ProjectMemberJpaEntity jpaEntity =
-            ProjectMemberJpaEntity.builder()
+        if (projectMember == null) {
+            return null;
+        }
+        return ProjectMemberJpaEntity.builder()
                 .id(projectMember.getId())
-                .user(UserJpaMapper.toJpaEntity(projectMember.getUser()))
-                .productBackLog(ProductBackLogJpaMapper.toJpaEntity(
+                .user( projectMember.getUser() == null ? null :
+                UserJpaMapper.toJpaEntity(projectMember.getUser()))
+                .productBackLog( projectMember.getProductBackLog() == null ? null :
+                ProductBackLogJpaMapper.toJpaEntity(
                     projectMember.getProductBackLog()))
                 .role(projectMember.getRole())
                 .status(projectMember.getStatus())
                 .build();
-        return jpaEntity;
     }
     public static ProjectMember
     toDomainEntity(ProjectMemberJpaEntity jpaEntity) {
-
+        if (jpaEntity == null) {
+            return null;
+        }
         return ProjectMember.builder()
             .id(jpaEntity.getId())
-            .user(UserJpaMapper.toDomainEntity(jpaEntity.getUser()))
-            .productBackLog(ProductBackLogJpaMapper.toDomainEntity(
+            .user(jpaEntity.getUser() == null ? null :
+            UserJpaMapper.toDomainEntity(jpaEntity.getUser()))
+            .productBackLog(jpaEntity.getProductBackLog() == null ? null :
+            ProductBackLogJpaMapper.toDomainEntity(
                 jpaEntity.getProductBackLog()))
             .role(jpaEntity.getRole())
             .status(jpaEntity.getStatus())

@@ -7,14 +7,16 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Data
 public class EpicResponse {
     private UUID id;
-    private final String title;
-    private final String description;
+    private String title;
+    private String description;
 
     private UUID createdBy;
     private LocalDateTime createdDate;

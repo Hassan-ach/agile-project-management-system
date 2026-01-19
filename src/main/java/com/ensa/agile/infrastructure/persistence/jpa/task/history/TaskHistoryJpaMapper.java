@@ -5,6 +5,9 @@ import com.ensa.agile.infrastructure.persistence.jpa.task.task.TaskJpaMapper;
 
 public class TaskHistoryJpaMapper {
     public static TaskHistoryJpaEntity toJpaEntity(TaskHistory entity) {
+        if (entity == null) {
+            return null;
+        }
         return TaskHistoryJpaEntity.builder()
             .id(entity.getId())
             .task(TaskJpaMapper.toJpaEntity(entity.getTask()))
@@ -18,6 +21,9 @@ public class TaskHistoryJpaMapper {
     }
 
     public static TaskHistory toDomainEntity(TaskHistoryJpaEntity jpaEntity) {
+        if (jpaEntity == null) {
+            return null;
+        }
         return TaskHistory.builder()
             .id(jpaEntity.getId())
             .task(TaskJpaMapper.toDomainEntity(jpaEntity.getTask()))

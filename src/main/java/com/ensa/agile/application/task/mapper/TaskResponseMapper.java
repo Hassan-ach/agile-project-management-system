@@ -6,6 +6,9 @@ import com.ensa.agile.domain.task.entity.Task;
 public class TaskResponseMapper {
 
     public static TaskResponse toResponse(Task task) {
+        if (task == null) {
+            return new TaskResponse();
+        }
         return TaskResponse.builder()
             .id(task.getId())
             .title(task.getTitle())
@@ -21,6 +24,9 @@ public class TaskResponseMapper {
             .build();
     }
     public static TaskResponse toResponse(Task task, String assigneeEmail) {
+        if (task == null) {
+            return new TaskResponse();
+        }
         return TaskResponse.builder()
             .id(task.getId())
             .title(task.getTitle())

@@ -21,7 +21,7 @@ public final class FetchPlan {
         if (FetchField.isAll(fetchFields)) {
             p.members = p.sprints = p.sprintMembers = true;
             p.sprintStories = p.sprintStoryTasks = true;
-            p.epics = p.epicStories = true;
+            p.epics = p.epicStories = p.epicStoryTasks = true;
             p.orphanStories = p.orphanStoryTasks = true;
             return p;
         }

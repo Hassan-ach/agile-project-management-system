@@ -9,6 +9,9 @@ import com.ensa.agile.infrastructure.persistence.jpa.story.history.UserStoryHist
 public class UserStoryJpaMapper {
 
     public static UserStoryJpaEntity toJpaEntity(UserStory entity) {
+        if (entity == null) {
+            return null;
+        }
         var us = UserStoryJpaEntity.builder()
                      .id(entity.getId())
                      .title(entity.getTitle())
@@ -16,7 +19,7 @@ public class UserStoryJpaMapper {
                      .priority(entity.getPriority())
                      .storyPoints(entity.getStoryPoints())
                      .acceptanceCriteria(entity.getAcceptanceCriteria())
-                     .productBackLog(ProductBackLogJpaMapper.toJpaEntity(
+                     .productBackLog(entity.getProductBackLog() == null? null : ProductBackLogJpaMapper.toJpaEntity(
                          entity.getProductBackLog()))
                      .createdDate(entity.getCreatedDate())
                      .createdBy(entity.getCreatedBy())
@@ -35,6 +38,9 @@ public class UserStoryJpaMapper {
     }
 
     public static UserStory toDomainEntity(UserStoryJpaEntity jpaEntity) {
+        if (jpaEntity == null) {
+            return null;
+        }
         return UserStory.builder()
             .id(jpaEntity.getId())
             .title(jpaEntity.getTitle())
@@ -42,9 +48,10 @@ public class UserStoryJpaMapper {
             .priority(jpaEntity.getPriority())
             .storyPoints(jpaEntity.getStoryPoints())
             .acceptanceCriteria(jpaEntity.getAcceptanceCriteria())
-            .status(
+            .status( jpaEntity.getStatus() == null ? null :
                 UserStoryHistoryJpaMapper.toDomainEntity(jpaEntity.getStatus()))
-            .productBackLog(ProductBackLogJpaMapper.toDomainEntity(
+            .productBackLog( jpaEntity.getProductBackLog() == null ? null :
+            ProductBackLogJpaMapper.toDomainEntity(
                 jpaEntity.getProductBackLog()))
             .epic(jpaEntity.getEpic() != null
                       ? EpicJpaMapper.toDomainEntity(jpaEntity.getEpic())
@@ -62,6 +69,9 @@ public class UserStoryJpaMapper {
 
     public static UserStory toDomainEntityPartial(
         UserStoryJpaEntity jpaEntity) {
+        if (jpaEntity == null) {
+            return null;
+        }
         return UserStory.builder()
             .id(jpaEntity.getId())
             .title(jpaEntity.getTitle())
@@ -69,7 +79,7 @@ public class UserStoryJpaMapper {
             .priority(jpaEntity.getPriority())
             .storyPoints(jpaEntity.getStoryPoints())
             .acceptanceCriteria(jpaEntity.getAcceptanceCriteria())
-            .status(
+            .status( jpaEntity.getStatus() == null ? null :
                 UserStoryHistoryJpaMapper.toDomainEntity(jpaEntity.getStatus()))
             .createdDate(jpaEntity.getCreatedDate())
             .createdBy(jpaEntity.getCreatedBy())

@@ -13,13 +13,17 @@ public class SprintBackLogResponseMapper {
     public static SprintBackLogResponse toResponse(SprintBackLog sprint,
                                                    List<UserStory> userStories,
                                                    SprintHistory status) {
+        if(sprint==null){
+            return new SprintBackLogResponse();
+        }
+
         return SprintBackLogResponse.builder()
             .id(sprint.getId())
             .name(sprint.getName())
             .status(sprint.getStatus())
             .startDate(sprint.getStartDate())
             .endDate(sprint.getEndDate())
-            .userStories(userStories.stream()
+            .userStories(userStories == null? new ArrayList<>() : userStories.stream()
                              .map(UserStoryResponseMapper::toResponse)
                              .toList())
             .status(status)
@@ -33,13 +37,17 @@ public class SprintBackLogResponseMapper {
     }
     public static SprintBackLogResponse
     toResponse(SprintBackLog sprint, List<UserStory> userStories) {
+        if(sprint==null){
+            return new SprintBackLogResponse();
+        }
+
         return SprintBackLogResponse.builder()
             .id(sprint.getId())
             .name(sprint.getName())
             .status(sprint.getStatus())
             .startDate(sprint.getStartDate())
             .endDate(sprint.getEndDate())
-            .userStories(userStories.stream()
+            .userStories(userStories == null? new ArrayList<>(): userStories.stream()
                              .map(UserStoryResponseMapper::toResponse)
                              .toList())
             .createdBy(sprint.getCreatedBy())
@@ -52,6 +60,10 @@ public class SprintBackLogResponseMapper {
     }
 
     public static SprintBackLogResponse toResponse(SprintBackLog sprint) {
+        if(sprint==null){
+            return new SprintBackLogResponse();
+        }
+
         return SprintBackLogResponse.builder()
             .id(sprint.getId())
             .name(sprint.getName())
@@ -68,6 +80,10 @@ public class SprintBackLogResponseMapper {
     }
     public static SprintBackLogResponse toResponse(SprintBackLog sprint,
                                                    SprintHistory status) {
+        if(sprint==null){
+            return new SprintBackLogResponse();
+        }
+
         return SprintBackLogResponse.builder()
             .id(sprint.getId())
             .name(sprint.getName())

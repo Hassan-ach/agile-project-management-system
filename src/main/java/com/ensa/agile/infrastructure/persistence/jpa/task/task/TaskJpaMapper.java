@@ -1,12 +1,14 @@
 package com.ensa.agile.infrastructure.persistence.jpa.task.task;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ensa.agile.domain.task.entity.Task;
 import com.ensa.agile.infrastructure.persistence.jpa.sprint.backlog.SprintBackLogJpaMapper;
 import com.ensa.agile.infrastructure.persistence.jpa.story.userstory.UserStoryJpaMapper;
 import com.ensa.agile.infrastructure.persistence.jpa.task.history.TaskHistoryJpaEntity;
 import com.ensa.agile.infrastructure.persistence.jpa.task.history.TaskHistoryJpaMapper;
 import com.ensa.agile.infrastructure.persistence.jpa.user.UserJpaMapper;
-import java.util.List;
 
 public class TaskJpaMapper {
 
@@ -76,11 +78,16 @@ public class TaskJpaMapper {
 
     public static Task toDomainEntity(TaskJpaEntity task,
                                       List<TaskHistoryJpaEntity> histories) {
+        if (task == null) {
+            return null;
+        }
+
         Task domainTask = toDomainEntity(task);
-        domainTask.setTaskHistories(
+        domainTask.setTaskHistories( histories == null? new ArrayList<>():
             histories.stream()
                 .map(TaskHistoryJpaMapper::toDomainEntity)
                 .toList());
+
         return domainTask;
     }
 }

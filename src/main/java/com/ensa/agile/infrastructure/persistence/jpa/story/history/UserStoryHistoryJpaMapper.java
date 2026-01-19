@@ -6,9 +6,13 @@ import com.ensa.agile.infrastructure.persistence.jpa.story.userstory.UserStoryJp
 public class UserStoryHistoryJpaMapper {
     public static UserStoryHistoryJpaEntity
     toJpaEntity(UserStoryHistory domain) {
+        if (domain == null) {
+            return null;
+        }
         return UserStoryHistoryJpaEntity.builder()
             .id(domain.getId())
-            .userStory(UserStoryJpaMapper.toJpaEntity(domain.getUserStory()))
+            .userStory(domain.getUserStory() == null ? null :
+            UserStoryJpaMapper.toJpaEntity(domain.getUserStory()))
             .status(domain.getStatus())
             .note(domain.getNote())
             .createdBy(domain.getCreatedBy())
@@ -20,9 +24,12 @@ public class UserStoryHistoryJpaMapper {
 
     public static UserStoryHistory
     toDomainEntity(UserStoryHistoryJpaEntity jpaEntity) {
+        if (jpaEntity == null) {
+            return null;
+        }
         return UserStoryHistory.builder()
             .id(jpaEntity.getId())
-            .userStory(
+            .userStory(jpaEntity.getUserStory() == null ? null :
                 UserStoryJpaMapper.toDomainEntity(jpaEntity.getUserStory()))
             .status(jpaEntity.getStatus())
             .note(jpaEntity.getNote())

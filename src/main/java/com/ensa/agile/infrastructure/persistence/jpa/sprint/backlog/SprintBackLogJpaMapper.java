@@ -2,6 +2,7 @@ package com.ensa.agile.infrastructure.persistence.jpa.sprint.backlog;
 
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
 import com.ensa.agile.infrastructure.persistence.jpa.product.backlog.ProductBackLogJpaMapper;
+import com.ensa.agile.infrastructure.persistence.jpa.sprint.history.SprintHistoryJpaMapper;
 import com.ensa.agile.infrastructure.persistence.jpa.user.UserJpaMapper;
 
 public class SprintBackLogJpaMapper {
@@ -10,30 +11,18 @@ public class SprintBackLogJpaMapper {
         if (sprintBacklogJpaEntity == null) {
             return null;
         }
-        // return new SprintBackLog(
-        //     sprintBacklogJpaEntity.getId(), sprintBacklogJpaEntity.getName(),
-        //     ProductBackLogJpaMapper.toDomainEntity(
-        //         sprintBacklogJpaEntity.getProductBackLog()),
-        //     UserJpaMapper.toDomainEntity(
-        //         sprintBacklogJpaEntity.getScrumMaster()),
-        //     sprintBacklogJpaEntity.getStatus(),
-        //     sprintBacklogJpaEntity.getStartDate(),
-        //     sprintBacklogJpaEntity.getEndDate(),
-        //     sprintBacklogJpaEntity.getGoal(),
-        //     sprintBacklogJpaEntity.getCreatedDate(),
-        //     sprintBacklogJpaEntity.getCreatedBy(),
-        //     sprintBacklogJpaEntity.getLastModifiedDate(),
-        //     sprintBacklogJpaEntity.getLastModifiedBy());
-
         return SprintBackLog.builder()
             .id(sprintBacklogJpaEntity.getId())
             .name(sprintBacklogJpaEntity.getName())
-            .productBackLog(ProductBackLogJpaMapper.toDomainEntity(
+            .productBackLog(sprintBacklogJpaEntity.getProductBackLog() == null ? null :
+            ProductBackLogJpaMapper.toDomainEntity(
                 sprintBacklogJpaEntity.getProductBackLog()))
-            .scrumMaster(UserJpaMapper.toDomainEntity(
+            .scrumMaster(sprintBacklogJpaEntity.getScrumMaster() == null ? null :
+            UserJpaMapper.toDomainEntity(
                 sprintBacklogJpaEntity.getScrumMaster()))
-            // .status(SprintBackLogHistoryJpaMapper.toDomainEntity(
-            //     sprintBacklogJpaEntity.getStatus()))
+            .status(sprintBacklogJpaEntity.getStatus() == null ? null :
+            SprintHistoryJpaMapper.toDomainEntity(
+                sprintBacklogJpaEntity.getStatus()))
             .startDate(sprintBacklogJpaEntity.getStartDate())
             .endDate(sprintBacklogJpaEntity.getEndDate())
             .goal(sprintBacklogJpaEntity.getGoal())
@@ -52,12 +41,14 @@ public class SprintBackLogJpaMapper {
         return SprintBackLogJpaEntity.builder()
             .id(sprintBackLog.getId())
             .name(sprintBackLog.getName())
-            .productBackLog(ProductBackLogJpaMapper.toJpaEntity(
+            .productBackLog(sprintBackLog.getProductBackLog() == null ? null :
+            ProductBackLogJpaMapper.toJpaEntity(
                 sprintBackLog.getProductBackLog()))
-            .scrumMaster(
+            .scrumMaster(sprintBackLog.getScrumMaster() == null ? null :
                 UserJpaMapper.toJpaEntity(sprintBackLog.getScrumMaster()))
-            // .status(SprintBackLogHistoryJpaMapper.toJpaEntity(
-            //     sprintBackLog.getStatus()))
+            .status(sprintBackLog.getStatus() == null ? null :
+            SprintHistoryJpaMapper.toJpaEntity(
+                sprintBackLog.getStatus()))
             .startDate(sprintBackLog.getStartDate())
             .endDate(sprintBackLog.getEndDate())
             .goal(sprintBackLog.getGoal())
