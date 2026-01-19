@@ -33,8 +33,6 @@ import com.ensa.agile.domain.global.exception.DomainException;
 import com.ensa.agile.domain.global.exception.NotFoundException;
 import com.ensa.agile.domain.global.exception.UnauthenticatedException;
 import com.ensa.agile.domain.global.exception.ValidationException;
-import com.ensa.agile.infrastructure.security.exception.JwtCreationException;
-import com.ensa.agile.infrastructure.security.exception.JwtValidationException;
 
 
 @RestControllerAdvice
@@ -57,7 +55,6 @@ public class GlobalExceptionHandler {
         AuthenticationFailureException.class,
         InvalidCredentialsException.class,
         UnauthenticatedException.class,
-        JwtValidationException.class
     })
     public ResponseEntity<Map<String, String>> handleAuthExceptions(Exception ex) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -66,8 +63,8 @@ public class GlobalExceptionHandler {
     // --- 403 Forbidden ---
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<Map<String, String>> handleForbidException(AccessDeniedException ex) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.FORBIDDEN);
-        // return buildErrorResponse("Access Denied: You do not have permission to perform this action.", HttpStatus.FORBIDDEN);
+        // return buildErrorResponse(ex.getMessage(), HttpStatus.FORBIDDEN);
+        return buildErrorResponse("Access Denied: You do not have permission to perform this action.", HttpStatus.FORBIDDEN);
     }
 
     // --- 404 Not Found ---
@@ -113,7 +110,6 @@ public class GlobalExceptionHandler {
         DataBasePersistenceException.class,
         DataBaseTransactionException.class,
         ApplicationException.class,
-        JwtCreationException.class
     })
     public ResponseEntity<Map<String, String>> handleKnownInternalExceptions(Exception ex) {
         // Log the full stack trace internally
