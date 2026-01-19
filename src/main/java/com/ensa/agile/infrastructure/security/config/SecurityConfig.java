@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
-import com.ensa.agile.infrastructure.security.filter.FilterChainExceptionHanlder;
+import com.ensa.agile.infrastructure.security.filter.FilterChainExceptionHandler;
 import com.ensa.agile.infrastructure.security.filter.JwtFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -25,12 +25,13 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
-    private final FilterChainExceptionHanlder filterChainExceptionHanlder;
+    private final FilterChainExceptionHandler filterChainExceptionHandler;
     private static final String[] PUBLIC_URLS = {
-        "/api/auth/login",
-        "/api/auth/register",
-        "/api/auth/refresh",
-        "/error",
+        "/api/v1/auth/**",
+        "/v3/api-docs/**",
+        "/swagger-ui/**",        
+        "/swagger-ui.html",      
+        "/error"
     };
 
     @Bean
@@ -46,7 +47,7 @@ public class SecurityConfig {
                                           .authenticated())
             .addFilterBefore(this.jwtFilter,
                              UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(this.filterChainExceptionHanlder,
+            .addFilterBefore(this.filterChainExceptionHandler,
                              LogoutFilter.class)
             .build();
     }
