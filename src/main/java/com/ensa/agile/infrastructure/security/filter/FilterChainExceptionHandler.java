@@ -12,11 +12,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Component
-public class FilterChainExceptionHanlder extends OncePerRequestFilter {
+public class FilterChainExceptionHandler extends OncePerRequestFilter {
 
     private HandlerExceptionResolver resolver;
 
-    public FilterChainExceptionHanlder(@Qualifier("handlerExceptionResolver")
+    public FilterChainExceptionHandler(@Qualifier("handlerExceptionResolver")
                                        HandlerExceptionResolver resolver) {
         this.resolver = resolver;
     }
