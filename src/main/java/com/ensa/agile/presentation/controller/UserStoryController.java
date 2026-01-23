@@ -25,6 +25,7 @@ import com.ensa.agile.application.story.request.UserStoryEpicUpdateRequest;
 import com.ensa.agile.application.story.request.UserStoryGetRequest;
 import com.ensa.agile.application.story.request.UserStoryUpdatePriorityRequest;
 import com.ensa.agile.application.story.request.UserStoryUpdateRequest;
+import com.ensa.agile.application.story.response.UserStoryHistoryResponse;
 import com.ensa.agile.application.story.response.UserStoryResponse;
 import com.ensa.agile.application.story.usecase.CreateUserStoryUseCase;
 import com.ensa.agile.application.story.usecase.DeleteUserStoryUseCase;
@@ -35,7 +36,6 @@ import com.ensa.agile.application.story.usecase.UnLinkStoryToEpicUseCase;
 import com.ensa.agile.application.story.usecase.UpdateUserStoryPriorityUseCase;
 import com.ensa.agile.application.story.usecase.UpdateUserStoryStatusUseCase;
 import com.ensa.agile.application.story.usecase.UpdateUserStoryUseCase;
-import com.ensa.agile.domain.story.entity.UserStoryHistory;
 import com.ensa.agile.domain.story.enums.StoryStatus;
 
 import lombok.RequiredArgsConstructor;
@@ -68,7 +68,8 @@ public class UserStoryController {
 
     @GetMapping("/stories/{id}")
     @PreAuthorize("@abacService.canAccessStory(null, #id, 'VIEW')")
-    public ResponseEntity<UserStoryResponse> getUserStoryById(@PathVariable UUID id,
+    public ResponseEntity<UserStoryResponse> getUserStoryById(
+        @PathVariable UUID id,
         @RequestParam(name = "with", required = false) String with) {
 
         return ResponseEntity.ok().body(
@@ -97,16 +98,16 @@ public class UserStoryController {
 
     @PatchMapping("/stories/{id}/status")
     @PreAuthorize("@abacService.canAccessStory(null, #id, 'UPDATE_STATUS')")
-    public ResponseEntity<UpdateStatusResponse<UserStoryHistory>>
-    updateUserStoryStatus( @PathVariable UUID id,
-                          @RequestBody UpdateStatusRequest<StoryStatus> request) {
+    public ResponseEntity<UpdateStatusResponse<UserStoryHistoryResponse>>
+    updateUserStoryStatus(
+        @PathVariable UUID id,
+        @RequestBody UpdateStatusRequest<StoryStatus> request) {
 
-        var req =
-        UpdateStatusRequest.<StoryStatus>builder()
-           .id(id)
-           .status(request.getStatus())
-           .note(request.getNote())
-           .build();
+        var req = UpdateStatusRequest.<StoryStatus>builder()
+                      .id(id)
+                      .status(request.getStatus())
+                      .note(request.getNote())
+                      .build();
 
         return ResponseEntity.ok().body(
             updateUserStoryStatusUseCase.executeTransactionally(req));
@@ -115,13 +116,10 @@ public class UserStoryController {
     @PatchMapping("/stories/{id}/epic/{epicId}")
     @PreAuthorize("@abacService.canAccessStory(null, #id, 'LINK_TO_EPIC')")
     public ResponseEntity<UserStoryResponse>
-    linkUserStoryToEpic(@PathVariable UUID id,
-                        @PathVariable UUID epicId) {
+    linkUserStoryToEpic(@PathVariable UUID id, @PathVariable UUID epicId) {
 
-            var req = UserStoryEpicUpdateRequest.builder()
-                .id(id)
-                .epicId(epicId)
-                .build();
+        var req =
+            UserStoryEpicUpdateRequest.builder().id(id).epicId(epicId).build();
 
         return ResponseEntity.ok().body(
             linkStoryToEpicUseCase.executeTransactionally(req));
@@ -130,12 +128,9 @@ public class UserStoryController {
     @DeleteMapping("/stories/{id}/epic/{epicId}")
     @PreAuthorize("@abacService.canAccessStory(null, #id, 'UNLINK_TO_EPIC')")
     public ResponseEntity<UserStoryResponse>
-    unLinkUserStoryToEpic(@PathVariable UUID id,
-                          @PathVariable UUID epicId) {
-        var req = UserStoryEpicUpdateRequest.builder()
-            .id(id)
-            .epicId(epicId)
-            .build();
+    unLinkUserStoryToEpic(@PathVariable UUID id, @PathVariable UUID epicId) {
+        var req =
+            UserStoryEpicUpdateRequest.builder().id(id).epicId(epicId).build();
 
         return ResponseEntity.ok().body(
             unLinkStoryToEpicUseCase.executeTransactionally(req));
@@ -144,26 +139,24 @@ public class UserStoryController {
     @PatchMapping("/stories/{id}/priority")
     @PreAuthorize("@abacService.canAccessStory(null, #id, 'UPDATE_PRIORITY')")
     public ResponseEntity<UserStoryResponse>
-    updateStoryPriority(@RequestBody UserStoryUpdatePriorityRequest request) {
+    updateStoryPriority(@PathVariable UUID id,
+                        @RequestBody UserStoryUpdatePriorityRequest request) {
         var req = UserStoryUpdatePriorityRequest.builder()
-            .id(request.getId())
-            .priority(request.getPriority())
-            .build();
+                      .id(id)
+                      .priority(request.getPriority())
+                      .build();
 
         return ResponseEntity.ok().body(
-            updateUserStoryPriorityUseCase.executeTransactionally(req)
-        );
+            updateUserStoryPriorityUseCase.executeTransactionally(req));
     }
 
     @GetMapping("/stories/{id}/history")
     @PreAuthorize("@abacService.canAccessStory(null, #id, 'VIEW_HISTORY')")
-    public ResponseEntity<List<UserStoryHistory>>
+    public ResponseEntity<List<UserStoryHistoryResponse>>
     getUserStoryHistory(@PathVariable UUID id) {
 
-        List<UserStoryHistory> history =
-            getUserStoryHistoryUseCase.executeTransactionally(id);
+        var history = getUserStoryHistoryUseCase.executeTransactionally(id);
 
         return ResponseEntity.ok().body(history);
     }
-
 }

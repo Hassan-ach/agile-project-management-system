@@ -1,20 +1,5 @@
 package com.ensa.agile.presentation.controller;
 
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ensa.agile.application.common.request.InviteRequest;
 import com.ensa.agile.application.common.request.RemoveRequest;
 import com.ensa.agile.application.common.response.InviteResponse;
@@ -31,8 +16,20 @@ import com.ensa.agile.application.product.usecase.InviteScrumMasterUseCase;
 import com.ensa.agile.application.product.usecase.RemoveDeveloperUseCase;
 import com.ensa.agile.application.product.usecase.RemoveScrumMasterUseCase;
 import com.ensa.agile.application.product.usecase.UpdateProductBackLogInfoUseCase;
-
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
@@ -59,11 +56,11 @@ public class ProductBackLogController {
 
     @GetMapping("/{id}")
     @PreAuthorize("@abacService.canAccessProject(#id, 'VIEW')")
-    public ResponseEntity<ProductBackLogResponse> getProjectById(
-        @PathVariable UUID id) {
+    public ResponseEntity<ProductBackLogResponse>
+    getProjectById(@PathVariable UUID id) {
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(getProductBackLogUseCase.execute(
+            .body(getProductBackLogUseCase.executeTransactionally(
                 new ProductBackLogGetRequest(id, "")));
     }
 
@@ -90,19 +87,17 @@ public class ProductBackLogController {
     @PostMapping("/{id}/members/developers")
     @PreAuthorize("@abacService.canAccessProject(#id, 'INVITE_DEVELOPER')")
     public ResponseEntity<InviteResponse>
-    inviteDeveloper(@RequestBody InviteRequest request,
-                      @PathVariable UUID id) {
+    inviteDeveloper(@RequestBody InviteRequest request, @PathVariable UUID id) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(inviteDeveloperUseCase.executeTransactionally(
-                new InviteRequest(id, request)));
+                new InviteRequest(id, request.getEmail())));
     }
 
     @DeleteMapping("/{id}/members/developers/{userId}")
-    @PreAuthorize("@abacService.canAccessProject(#id, 'REMOVE_DEVELOPER)")
+    @PreAuthorize("@abacService.canAccessProject(#id, 'REMOVE_DEVELOPER')")
     public ResponseEntity<RemoveResponse>
-    removeDeveloper(@RequestBody RemoveRequest request,
-                    @PathVariable UUID id, @PathVariable UUID userId) {
+    removeDeveloper(@PathVariable UUID id, @PathVariable UUID userId) {
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(removeDeveloperUseCase.executeTransactionally(
@@ -117,14 +112,13 @@ public class ProductBackLogController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(inviteScrumMasterUseCase.executeTransactionally(
-                new InviteRequest(id, request)));
+                new InviteRequest(id, request.getEmail())));
     }
 
     @DeleteMapping("/{id}/members/scrum-masters/{userId}")
     @PreAuthorize("@abacService.canAccessProject(#id, 'REMOVE_SCRUM_MASTER')")
     public ResponseEntity<RemoveResponse>
-    removeScrumeMaster(@RequestBody RemoveRequest request,
-                    @PathVariable UUID id, @PathVariable UUID userId) {
+    removeScrumeMaster(@PathVariable UUID id, @PathVariable UUID userId) {
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(removeScrumMasterUseCase.executeTransactionally(
@@ -147,5 +141,4 @@ public class ProductBackLogController {
     public ResponseEntity<?> getProductReport(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body("Product report data");
     }
-
 }

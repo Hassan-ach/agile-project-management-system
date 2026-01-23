@@ -1,8 +1,13 @@
 package com.ensa.agile.infrastructure.security.auth;
 
+import com.ensa.agile.application.user.exception.AuthenticationFailureException;
+import com.ensa.agile.application.user.exception.InvalidCredentialsException;
+import com.ensa.agile.application.user.security.IPasswordEncoder;
+import com.ensa.agile.domain.user.entity.User;
+import com.ensa.agile.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,14 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import com.ensa.agile.application.user.exception.AuthenticationFailureException;
-import com.ensa.agile.application.user.exception.InvalidCredentialsException;
-import com.ensa.agile.application.user.security.IPasswordEncoder;
-import com.ensa.agile.domain.user.entity.User;
-import com.ensa.agile.domain.user.repository.UserRepository;
-
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component

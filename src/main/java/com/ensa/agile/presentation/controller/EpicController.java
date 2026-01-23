@@ -1,8 +1,19 @@
 package com.ensa.agile.presentation.controller;
 
+import com.ensa.agile.application.common.response.DeleteResponse;
+import com.ensa.agile.application.epic.request.EpicCreateRequest;
+import com.ensa.agile.application.epic.request.EpicGetRequest;
+import com.ensa.agile.application.epic.request.EpicRequest;
+import com.ensa.agile.application.epic.request.EpicUpdateRequest;
+import com.ensa.agile.application.epic.response.EpicResponse;
+import com.ensa.agile.application.epic.usecase.CreateEpicUseCase;
+import com.ensa.agile.application.epic.usecase.DeleteEpicUseCase;
+import com.ensa.agile.application.epic.usecase.GetAllEpicsUseCase;
+import com.ensa.agile.application.epic.usecase.GetEpicUseCase;
+import com.ensa.agile.application.epic.usecase.UpdateEpicUseCase;
 import java.util.List;
 import java.util.UUID;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,20 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.ensa.agile.application.common.response.DeleteResponse;
-import com.ensa.agile.application.epic.request.EpicCreateRequest;
-import com.ensa.agile.application.epic.request.EpicGetRequest;
-import com.ensa.agile.application.epic.request.EpicRequest;
-import com.ensa.agile.application.epic.request.EpicUpdateRequest;
-import com.ensa.agile.application.epic.response.EpicResponse;
-import com.ensa.agile.application.epic.usecase.CreateEpicUseCase;
-import com.ensa.agile.application.epic.usecase.DeleteEpicUseCase;
-import com.ensa.agile.application.epic.usecase.GetAllEpicsUseCase;
-import com.ensa.agile.application.epic.usecase.GetEpicUseCase;
-import com.ensa.agile.application.epic.usecase.UpdateEpicUseCase;
-
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,7 +50,7 @@ public class EpicController {
     }
 
     @GetMapping("/projects/{projectId}/epics")
-    @PreAuthorize("@abacService.canAccessEpic(null, #projectId, 'VIEW')")
+    @PreAuthorize("@abacService.canAccessEpic(#projectId, null, 'VIEW_ALL')")
     public ResponseEntity<List<EpicResponse>>
     getAllEpics(@PathVariable UUID projectId) {
 
@@ -75,21 +72,18 @@ public class EpicController {
     @PutMapping("/epics/{id}")
     @PreAuthorize("@abacService.canAccessEpic(null, #id, 'UPDATE')")
     public ResponseEntity<EpicResponse>
-    updateEpic(@PathVariable UUID id,
-               @RequestBody EpicUpdateRequest request) {
+    updateEpic(@PathVariable UUID id, @RequestBody EpicUpdateRequest request) {
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(updateEpicUseCase.executeTransactionally(
-                new EpicUpdateRequest( id, request)));
+                new EpicUpdateRequest(id, request)));
     }
 
     @DeleteMapping("/epics/{id}")
     @PreAuthorize("@abacService.canAccessEpic(null, #id, 'DELETE')")
-    public ResponseEntity<DeleteResponse>
-    deleteEpic(@PathVariable UUID id) {
+    public ResponseEntity<DeleteResponse> deleteEpic(@PathVariable UUID id) {
 
-        deleteEpicUseCase.executeTransactionally(
-            new EpicRequest(id));
+        deleteEpicUseCase.executeTransactionally(new EpicRequest(id));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
