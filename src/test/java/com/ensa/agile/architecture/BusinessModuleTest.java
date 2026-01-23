@@ -17,7 +17,7 @@ public class BusinessModuleTest {
             .that()
             .haveNameMatching(".*Sprint(BackLog|History|Member).*")
             .and()
-            .resideOutsideOfPackages("..global..", "..common..",
+            .resideOutsideOfPackages("..global..", "..common..", "..service..",
                                      "..controller..")
             .should()
             .resideInAPackage("..sprint..");
@@ -28,7 +28,7 @@ public class BusinessModuleTest {
             .that()
             .haveSimpleNameContaining("UserStory")
             .and()
-            .resideOutsideOfPackages("..global..", "..common..",
+            .resideOutsideOfPackages("..global..", "..common..", "..service..",
                                      "..controller..")
             .should()
             .resideInAPackage("..story..");
@@ -41,7 +41,7 @@ public class BusinessModuleTest {
             .and()
             .haveSimpleNameNotContaining("UserStory")
             .and()
-            .resideOutsideOfPackages("..global..", "..common..",
+            .resideOutsideOfPackages("..global..", "..common..", "..service..",
                                      "..controller..")
             .should()
             .resideInAPackage("..task..");
