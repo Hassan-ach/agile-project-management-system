@@ -10,6 +10,8 @@ import com.ensa.agile.domain.product.repository.ProjectMemberRepository;
 import com.ensa.agile.domain.user.repository.UserRepository;
 import java.util.UUID;
 
+import com.ensa.agile.domain.global.annotation.Loggable;
+@Loggable
 public abstract class RemoveUseCase
     extends BaseUseCase<RemoveRequest, RemoveResponse> {
 

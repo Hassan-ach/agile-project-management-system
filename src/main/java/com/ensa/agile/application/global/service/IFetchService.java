@@ -9,6 +9,8 @@ import com.ensa.agile.application.sprint.response.SprintBackLogResponse;
 import com.ensa.agile.application.story.request.UserStoryGetRequest;
 import com.ensa.agile.application.story.response.UserStoryResponse;
 
+import com.ensa.agile.domain.global.annotation.Loggable;
+@Loggable
 public interface IFetchService {
     ProductBackLogResponse getResponse(ProductBackLogGetRequest req);
     SprintBackLogResponse getResponse(SprintBackLogGetRequest req);

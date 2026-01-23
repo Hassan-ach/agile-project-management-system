@@ -2,6 +2,8 @@ package com.ensa.agile.application.global.service;
 
 import com.ensa.agile.domain.user.entity.User;
 
+import com.ensa.agile.domain.global.annotation.Loggable;
+@Loggable
 public interface ICurrentUserService {
   User getCurrentUser();
 }

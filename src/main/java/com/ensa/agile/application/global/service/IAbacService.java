@@ -2,6 +2,8 @@ package com.ensa.agile.application.global.service;
 
 import java.util.UUID;
 
+import com.ensa.agile.domain.global.annotation.Loggable;
+@Loggable
 public interface IAbacService {
     boolean canAccessProject(UUID projectId, String action);
     boolean canAccessEpic(UUID projectId, UUID epicId, String action);

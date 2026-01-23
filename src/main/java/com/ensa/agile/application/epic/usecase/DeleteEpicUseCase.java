@@ -21,7 +21,7 @@ public class DeleteEpicUseCase
     @Override
     public DeleteResponse execute(EpicRequest request) {
 
-        if (this.epicRepository.existsById(request.getEpicId())) {
+        if (!this.epicRepository.existsById(request.getEpicId())) {
             throw new EpicNotFoundException();
         }
 
