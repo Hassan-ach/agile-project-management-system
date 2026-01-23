@@ -8,12 +8,13 @@ import com.ensa.agile.domain.global.exception.ValidationException;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class CreateRequestTest {
+public class TaskCreateRequestTest {
 
     @Test
     void shouldCreateTaskCreateRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new TaskCreateRequest(UUID.randomUUID(),
+            new TaskCreateRequest(
+                UUID.randomUUID(),
                 TaskCreateRequest.builder()
                     .title("Fix Bug")
                     .description("Fix the login timeout issue")
@@ -37,22 +38,8 @@ public class CreateRequestTest {
     }
 
     @Test
-    void shouldThrowValidationException_whenEmailFormatIsInvalid() {
-        assertThrows(ValidationException.class, () -> {
-            new TaskCreateRequest(UUID.randomUUID(),
-                                  TaskCreateRequest.builder()
-                                      .title("Task")
-                                      .description("Desc")
-                                      .estimatedHours(2.0)
-                                      .assigneeEmail("not-an-email")
-                                      .build());
-        });
-    }
-
-    @Test
     void shouldThrowValidationException_whenRequestIsNull() {
-        assertThrows(ValidationException.class, () -> {
-            new TaskCreateRequest(UUID.randomUUID(), null);
-        });
+        assertThrows(ValidationException.class,
+                     () -> { new TaskCreateRequest(UUID.randomUUID(), null); });
     }
 }

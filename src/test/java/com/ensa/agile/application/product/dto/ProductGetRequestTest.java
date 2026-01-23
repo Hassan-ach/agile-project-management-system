@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import com.ensa.agile.application.product.request.ProductBackLogGetRequest;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-public class GetRequestTest {
+public class ProductGetRequestTest {
 
     @Test
     void shouldCreateGetRequestSuccessfully_whenWithIsNull() {

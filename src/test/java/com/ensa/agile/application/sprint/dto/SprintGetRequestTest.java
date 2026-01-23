@@ -6,7 +6,7 @@ import com.ensa.agile.application.sprint.request.SprintBackLogGetRequest;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class GetRequestTest {
+public class SprintGetRequestTest {
 
     @Test
     void shouldCreateGetRequestSuccessfully_whenWithIsNull() {

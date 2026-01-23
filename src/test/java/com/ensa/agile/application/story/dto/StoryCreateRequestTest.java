@@ -9,7 +9,7 @@ import com.ensa.agile.domain.story.enums.MoscowType;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class CreateRequestTest {
+public class StoryCreateRequestTest {
 
     @Test
     void shouldCreateUserStoryCreateRequestSuccessfully_whenValidInput() {

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class UpdateRequestTest {
+public class SprintUpdateRequestTest {
 
     @Test
     void shouldCreateSprintBackLogUpdateRequestSuccessfully_whenValidInput() {

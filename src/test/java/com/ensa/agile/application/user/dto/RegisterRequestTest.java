@@ -12,50 +12,47 @@ public class RegisterRequestTest {
     @Test
     void shouldCreateRegisterRequestSuccessfully_whenValidInput() {
         assertDoesNotThrow(() -> {
-            new RegisterRequest(
-                RegisterRequest.builder()
-                    .firstName("John")
-                    .lastName("Doe")
-                    .email("john.doe@ensa.ma")
-                    .password("securePassword123")
-                    .build());
+            new RegisterRequest(RegisterRequest.builder()
+                                    .firstName("John")
+                                    .lastName("Doe")
+                                    .email("john.doe@ensa.ma")
+                                    .password("securePassword123")
+                                    .passwordConfirm("securePassword123")
+                                    .build());
         });
     }
 
     @Test
     void shouldThrowValidationException_whenFirstNameIsTooShort() {
         assertThrows(ValidationException.class, () -> {
-            new RegisterRequest(
-                RegisterRequest.builder()
-                    .firstName("Jo")
-                    .lastName("Doe")
-                    .email("john@ensa.ma")
-                    .build());
+            new RegisterRequest(RegisterRequest.builder()
+                                    .firstName("Jo")
+                                    .lastName("Doe")
+                                    .email("john@ensa.ma")
+                                    .build());
         });
     }
 
     @Test
     void shouldThrowValidationException_whenPasswordIsTooShort() {
         assertThrows(ValidationException.class, () -> {
-            new RegisterRequest(
-                RegisterRequest.builder()
-                    .firstName("John")
-                    .lastName("Doe")
-                    .email("john@ensa.ma")
-                    .password("short")
-                    .build());
+            new RegisterRequest(RegisterRequest.builder()
+                                    .firstName("John")
+                                    .lastName("Doe")
+                                    .email("john@ensa.ma")
+                                    .password("short")
+                                    .build());
         });
     }
 
     @Test
     void shouldThrowValidationException_whenEmailIsBlank() {
         assertThrows(ValidationException.class, () -> {
-            new RegisterRequest(
-                RegisterRequest.builder()
-                    .firstName("John")
-                    .lastName("Doe")
-                    .email(" ")
-                    .build());
+            new RegisterRequest(RegisterRequest.builder()
+                                    .firstName("John")
+                                    .lastName("Doe")
+                                    .email(" ")
+                                    .build());
         });
     }
 }

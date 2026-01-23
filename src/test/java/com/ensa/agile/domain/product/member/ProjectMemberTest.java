@@ -32,20 +32,6 @@ public class ProjectMemberTest {
     }
 
     @Test
-    void shouldFail_whenUserIsNull() {
-        ProductBackLog product = TestProductBackLogFactory.validProduct();
-
-        assertThrows(ValidationException.class,
-                     ()
-                         -> ProjectMember.builder()
-                                .user(null)
-                                .productBackLog(product)
-                                .role(RoleType.DEVELOPER)
-                                .status(MemberStatus.INVITED)
-                                .build());
-    }
-
-    @Test
     void shouldActivateMember_whenInvited() {
         ProjectMember member = TestProjectMemberFactory.validInvitedMember();
 

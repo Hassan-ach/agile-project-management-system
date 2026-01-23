@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.ensa.agile.application.product.request.ProductBackLogCreateRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
 import org.junit.jupiter.api.Test;
-public class CreateRequestTest {
+public class ProductCreateRequestTest {
 
     @Test
     void shouldCreateProductBackLogCreateRequestSuccessfully_whenValidInput() {

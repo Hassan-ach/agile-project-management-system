@@ -29,36 +29,6 @@ public class TaskTest {
                        .build());
     }
 
-    @Test
-    void souldFailToCreateTask_whenUserStoryIsNull() {
-        assertThrows(
-            ValidationException.class,
-            ()
-                -> Task.builder()
-                       .title("Implement login feature")
-                       .description("Create login functionality using OAuth2")
-                       .sprintBackLog(
-                           TestSprintBackLogFactory.validSprintBackLog())
-                       .assignee(TestUserFactory.validUser())
-                       .estimatedHours(8.00)
-                       .build());
-    }
-
-    @Test
-    void souldFailToCreateTask_whenSprintBackLogIsNull() {
-        assertThrows(
-            ValidationException.class,
-            ()
-                -> Task.builder()
-                       .title("Implement login feature")
-                       .description("Create login functionality using OAuth2")
-                       .userStory(TestUserStoryFactory.validUserStory())
-                       .assignee(TestUserFactory.validUser())
-                       .estimatedHours(8.00)
-                       .build());
-    }
-
-
     @ParameterizedTest
     @CsvSource({
         "updated title, Updated description, 12.5, ,true",

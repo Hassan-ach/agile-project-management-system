@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
+import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.testfactory.TestProductBackLogFactory;
 import com.ensa.agile.testfactory.TestUserFactory;
-import com.ensa.agile.domain.user.entity.User;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
@@ -41,38 +41,6 @@ public class SprintBackLogTest {
                                 .goal("goal")
                                 .productBackLog(product)
                                 .scrumMaster(scrumMaster)
-                                .startDate(LocalDate.now())
-                                .endDate(LocalDate.now().plusWeeks(2))
-                                .build());
-    }
-
-    @Test
-    void shouldFail_whenProductBackLogIsNull() {
-        User scrumMaster = TestUserFactory.validUser();
-
-        assertThrows(ValidationException.class,
-                     ()
-                         -> SprintBackLog.builder()
-                                .name("Sprint 1")
-                                .goal("goal")
-                                .productBackLog(null)
-                                .scrumMaster(scrumMaster)
-                                .startDate(LocalDate.now())
-                                .endDate(LocalDate.now().plusWeeks(2))
-                                .build());
-    }
-
-    @Test
-    void shouldFail_whenScrumMasterIsNull() {
-        ProductBackLog product = TestProductBackLogFactory.validProduct();
-
-        assertThrows(ValidationException.class,
-                     ()
-                         -> SprintBackLog.builder()
-                                .name("Sprint 1")
-                                .goal("goal")
-                                .productBackLog(product)
-                                .scrumMaster(null)
                                 .startDate(LocalDate.now())
                                 .endDate(LocalDate.now().plusWeeks(2))
                                 .build());

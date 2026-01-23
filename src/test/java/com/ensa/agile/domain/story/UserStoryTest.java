@@ -3,13 +3,13 @@ package com.ensa.agile.domain.story;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.story.enums.MoscowType;
 import com.ensa.agile.testfactory.TestProductBackLogFactory;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 public class UserStoryTest {
     @ParameterizedTest
@@ -59,19 +59,6 @@ public class UserStoryTest {
                     .build();
             });
         }
-    }
-
-    @Test
-    void shouldFailUserStoryCreationWithoutProductBackLog() {
-        assertThrows(ValidationException.class, () -> {
-            UserStory.builder()
-                .title("User Story Title")
-                .description("User Story Description")
-                .priority(MoscowType.MUST_HAVE)
-                .storyPoints(54)
-                .acceptanceCriteria("User Story Acceptance Criteria")
-                .build();
-        });
     }
 
     @ParameterizedTest

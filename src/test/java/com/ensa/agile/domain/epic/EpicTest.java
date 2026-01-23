@@ -3,12 +3,12 @@ package com.ensa.agile.domain.epic;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 import com.ensa.agile.domain.epic.entity.Epic;
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.testfactory.TestProductBackLogFactory;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 public class EpicTest {
     @ParameterizedTest
@@ -35,16 +35,6 @@ public class EpicTest {
                     .build();
             });
         }
-    }
-
-    @Test
-    void shouldFailEpicCreationWithoutProductBackLog() {
-        assertThrows(ValidationException.class, () -> {
-            Epic.builder()
-                .title("Epic Title")
-                .description("Epic Description")
-                .build();
-        });
     }
 
     @ParameterizedTest

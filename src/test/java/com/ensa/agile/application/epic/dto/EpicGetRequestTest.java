@@ -6,7 +6,7 @@ import com.ensa.agile.application.epic.request.EpicGetRequest;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class GetRequestTest {
+public class EpicGetRequestTest {
 
     @Test
     void shouldCreateEpicGetRequestSuccessfully() {

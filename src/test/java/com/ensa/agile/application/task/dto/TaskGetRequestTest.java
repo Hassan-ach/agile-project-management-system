@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ensa.agile.application.task.request.TaskGetRequest;
 
-public class GetRequestTest {
+public class TaskGetRequestTest {
 
     @Test
     void shouldCreateTaskGetRequestSuccessfully() {

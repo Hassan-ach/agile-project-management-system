@@ -35,8 +35,8 @@ class RegisterUseCaseTest {
     @Test
     void execute_ShouldSuccessfullyRegisterUser_WhenEmailDoesNotExist() {
         // Given
-        RegisterRequest request =
-            new RegisterRequest("John", "Doe", "test@gmail.com", "Password123");
+        RegisterRequest request = new RegisterRequest(
+            "John", "Doe", "test@gmail.com", "Password123", "Password123");
 
         String encodedPassword = "EncodedPassword123";
         String jwtToken = "jwt_token";
@@ -65,8 +65,8 @@ class RegisterUseCaseTest {
     @Test
     void execute_ShouldThrowException_WhenEmailAlreadyInUse() {
         // Given
-        RegisterRequest request =
-            new RegisterRequest("John", "Doe", "test@gmail.com", "Password123");
+        RegisterRequest request = new RegisterRequest(
+            "John", "Doe", "test@gmail.com", "Password123", "Password123");
 
         // When
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);

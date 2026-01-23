@@ -6,7 +6,7 @@ import com.ensa.agile.application.story.request.UserStoryGetRequest;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class GetRequestTest {
+public class StoryGetRequestTest {
 
     @Test
     void shouldCreateGetRequestSuccessfully() {

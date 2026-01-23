@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class CreateRequestTest {
+public class SprintCreateRequestTest {
 
     @Test
     void shouldCreateSprintBackLogCreateRequestSuccessfully_whenValidInput() {

@@ -8,7 +8,7 @@ import com.ensa.agile.domain.global.exception.ValidationException;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class CreateRequestTest {
+public class EpicCreateRequestTest {
 
     @Test
     void shouldCreateEpicCreateRequestSuccessfully_whenValidInput() {
