@@ -4,20 +4,15 @@ import java.util.List;
 public enum FetchField {
 
     ALL,
-
+    PRODUCT,
     MEMBERS,
 
     SPRINTS,
     SPRINTS_MEMBERS,
-    SPRINTS_USER_STORIES,
-    SPRINTS_USER_STORIES_TASKS,
 
     EPICS,
-    EPICS_USER_STORIES,
-    EPICS_USER_STORIES_TASKS,
 
     USER_STORIES,
-    USER_STORIES_TASKS,
 
     TASKS;
 
