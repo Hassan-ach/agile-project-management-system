@@ -1,7 +1,6 @@
 package com.ensa.agile.application.task.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
-import com.ensa.agile.domain.global.utils.ValidationUtil;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,14 +19,12 @@ public class TaskCreateRequest {
 
     private UUID userStoryId;
 
-    public TaskCreateRequest(UUID userStoryId,
-                             TaskCreateRequest req) {
+    public TaskCreateRequest(UUID userStoryId, TaskCreateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
-        if (userStoryId == null ) {
-            throw new ValidationException(
-                "userStoryId cannot be null");
+        if (userStoryId == null) {
+            throw new ValidationException("userStoryId cannot be null");
         }
         if (req.getTitle() == null || req.getTitle().isBlank()) {
             throw new ValidationException("title cannot be null or blank");
@@ -41,11 +38,6 @@ public class TaskCreateRequest {
         if (req.getEstimatedHours() == null || req.getEstimatedHours() <= 0) {
             throw new ValidationException(
                 "estimatedHours must be greater than zero");
-        }
-
-        if (req.getAssigneeEmail() == null ||
-            !ValidationUtil.isValidEmail(req.getAssigneeEmail())) {
-            throw new ValidationException("Invalid assignee email format");
         }
 
         this.title = req.getTitle();

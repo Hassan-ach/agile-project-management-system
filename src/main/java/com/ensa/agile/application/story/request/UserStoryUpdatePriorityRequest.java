@@ -1,10 +1,8 @@
 package com.ensa.agile.application.story.request;
 
-import java.util.UUID;
-
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.story.enums.MoscowType;
-
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,19 +20,16 @@ public class UserStoryUpdatePriorityRequest {
         this.priority = priority;
         validate();
     }
-    public UserStoryUpdatePriorityRequest(UUID id, UserStoryUpdatePriorityRequest request) {
+    public UserStoryUpdatePriorityRequest(
+        UUID id, UserStoryUpdatePriorityRequest request) {
         this.id = id;
         this.priority = request.getPriority();
         validate();
     }
 
     public void validate() {
-        if (id == null) {
-            throw new ValidationException("Story ID cannot be null");
-        }
         if (priority == null) {
             throw new ValidationException("Epic ID cannot be null");
         }
     }
-    
 }

@@ -8,17 +8,19 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Builder
 public class SprintBackLogCreateRequest {
-    private final String name;
-    private final String scrumMasterEmail;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final String goal;
-    private final List<UUID> userStoriesIds;
+    private String name;
+    private String scrumMasterEmail;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String goal;
+    private List<UUID> userStoriesIds;
     private UUID productId;
 
     // This constructor is for validation purposes
@@ -28,8 +30,7 @@ public class SprintBackLogCreateRequest {
             throw new ValidationException("request cannot be null");
         }
         if (productId == null) {
-            throw new ValidationException(
-                "productId cannot be null");
+            throw new ValidationException("productId cannot be null");
         }
         if (req.getName() == null || req.getName().isBlank()) {
             throw new ValidationException("name cannot be null or blank");

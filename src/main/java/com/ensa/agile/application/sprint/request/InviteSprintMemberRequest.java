@@ -1,15 +1,19 @@
 package com.ensa.agile.application.sprint.request;
 
+import java.util.UUID;
+
 import com.ensa.agile.application.common.request.InviteRequest;
 import com.ensa.agile.domain.global.exception.ValidationException;
-import java.util.UUID;
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Setter
 @Getter
 @SuperBuilder
+@NoArgsConstructor
 public class InviteSprintMemberRequest extends InviteRequest {
     private UUID sprintId;
 

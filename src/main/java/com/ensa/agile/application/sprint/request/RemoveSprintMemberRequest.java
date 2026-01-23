@@ -1,11 +1,15 @@
 package com.ensa.agile.application.sprint.request;
 
-import com.ensa.agile.application.common.request.RemoveRequest;
 import java.util.UUID;
+
+import com.ensa.agile.application.common.request.RemoveRequest;
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+@NoArgsConstructor
 @SuperBuilder
 @Getter
 @Setter

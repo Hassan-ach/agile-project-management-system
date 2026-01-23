@@ -14,12 +14,6 @@ public class InviteRequest {
     private UUID productId;
     private String email;
 
-    public InviteRequest(UUID productId, InviteRequest req) {
-        this.productId = productId;
-        this.email = req.getEmail();
-        validate();
-    }
-
     public InviteRequest(UUID productId, String email) {
         this.productId = productId;
         this.email = email;
@@ -27,11 +21,7 @@ public class InviteRequest {
         validate();
     }
 
-    public InviteRequest(String email) {
-        this.email = email;
-        this.productId = null;
-        validate();
-    }
+    public InviteRequest(String email) { this.email = email; }
 
     public void validate() {
         if (email == null || email.isBlank()) {

@@ -1,9 +1,7 @@
 package com.ensa.agile.application.product.request;
 
-import java.util.UUID;
-
 import com.ensa.agile.application.common.request.GetRequest;
-
+import java.util.UUID;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder

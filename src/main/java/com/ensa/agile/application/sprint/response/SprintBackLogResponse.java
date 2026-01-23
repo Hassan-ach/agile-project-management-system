@@ -1,7 +1,7 @@
 package com.ensa.agile.application.sprint.response;
 
 import com.ensa.agile.application.story.response.UserStoryResponse;
-import com.ensa.agile.domain.sprint.entity.SprintHistory;
+import com.ensa.agile.domain.sprint.enums.SprintStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,11 +19,12 @@ public class SprintBackLogResponse {
     private UUID id;
     private String name;
     private String scrumMasterEmail;
-    private SprintHistory status;
     private LocalDate startDate;
     private LocalDate endDate;
     private String goal;
-    private List<SprintHistory> sprintHistories;
+    private SprintHistoryResponse latestHistory;
+    private SprintStatus status;
+    private List<SprintHistoryResponse> sprintHistories;
 
     private UUID createdBy;
     private LocalDateTime createdDate;

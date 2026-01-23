@@ -20,12 +20,9 @@ public class UserStoryUpdateRequest {
     private MoscowType priority;
     private Integer storyPoints;
     private String acceptanceCriteria;
-    private UUID sprintId;
-    private UUID epicId;
 
     // This constructor is for validation purposes
-    public UserStoryUpdateRequest(UUID id,
-                                  UserStoryUpdateRequest req) {
+    public UserStoryUpdateRequest(UUID id, UserStoryUpdateRequest req) {
         if (req == null) {
             throw new ValidationException("request cannot be null");
         }
@@ -36,12 +33,9 @@ public class UserStoryUpdateRequest {
 
         if (req.getTitle() == null && req.getDescription() == null &&
             req.getPriority() == null && req.getStoryPoints() == null &&
-            req.getAcceptanceCriteria() == null && req.getSprintId() == null) {
+            req.getAcceptanceCriteria() == null) {
             throw new ValidationException(
                 "At least one field must be provided for update");
-        }
-        if (req.getSprintId() != null) {
-                this.sprintId = req.getSprintId();
         }
 
         if (req.getTitle() != null) {
@@ -83,6 +77,5 @@ public class UserStoryUpdateRequest {
         }
 
         this.id = id;
-        this.epicId = req.getEpicId();
     }
 }

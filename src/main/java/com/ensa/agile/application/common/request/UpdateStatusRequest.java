@@ -1,9 +1,7 @@
 package com.ensa.agile.application.common.request;
 
-import java.util.UUID;
-
 import com.ensa.agile.domain.global.exception.ValidationException;
-
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +22,6 @@ public class UpdateStatusRequest<T> {
     }
 
     void validate() {
-        if (id == null) {
-            throw new ValidationException("ID cannot be null");
-        }
         if (status == null) {
             throw new ValidationException("Status cannot be null");
         }

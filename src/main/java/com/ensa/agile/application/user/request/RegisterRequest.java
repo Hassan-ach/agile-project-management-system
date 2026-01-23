@@ -2,14 +2,12 @@ package com.ensa.agile.application.user.request;
 
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.global.utils.ValidationUtil;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
 
@@ -17,37 +15,55 @@ public class RegisterRequest {
     private String lastName;
     private String email;
     private String password;
+    private String passwordConfirm;
 
     // This constructor is for validation purposes
     public RegisterRequest(RegisterRequest req) {
-        if (req == null) {
-            throw new ValidationException("Request cannot be null");
-        }
-
-        if (req.firstName == null || req.firstName.trim().isBlank() ||
-            req.firstName.length() < 3) {
-            throw new ValidationException(
-                "First name must be at least 3 characters long and cannot be "
-                + "blank");
-        }
-        if (req.lastName == null || req.lastName.trim().isBlank() ||
-            req.lastName.length() < 3) {
-            throw new ValidationException(
-                "Last name must be at least 3 characters long and cannot be "
-                + "blank");
-        }
-        if (req.email == null || req.email.trim().isBlank() ||
-            !ValidationUtil.isValidEmail(req.email)) {
-            throw new ValidationException("Email must be valid and cannot be "
-                                          + "blank");
-        }
-        if (req.password == null || req.password.length() < 8) {
-            throw new ValidationException(
-                "Password must be at least 8 characters long if provided");
-        }
         this.firstName = req.firstName;
         this.lastName = req.lastName;
         this.email = req.email;
         this.password = req.password;
+        this.passwordConfirm = req.passwordConfirm;
+        validate();
+    }
+
+    public RegisterRequest(String firstName, String lastName, String email,
+                           String password, String passwordConfirm) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.passwordConfirm = passwordConfirm;
+        validate();
+    }
+
+    public void validate() throws ValidationException {
+
+        if (firstName == null || firstName.trim().isBlank() ||
+            firstName.length() < 3) {
+            throw new ValidationException(
+                "First name must be at least 3 characters long and cannot be "
+                + "blank");
+        }
+        if (lastName == null || lastName.trim().isBlank() ||
+            lastName.length() < 3) {
+            throw new ValidationException(
+                "Last name must be at least 3 characters long and cannot be "
+                + "blank");
+        }
+        if (email == null || email.trim().isBlank() ||
+            !ValidationUtil.isValidEmail(email)) {
+            throw new ValidationException("Email must be valid and cannot be "
+                                          + "blank");
+        }
+        if (password == null || password.length() < 8) {
+            throw new ValidationException(
+                "Password must be at least 8 characters long if provided");
+        }
+        if (passwordConfirm == null || !passwordConfirm.equals(password)) {
+            throw new ValidationException(
+                "Password confirmation does not match "
+                + "the password");
+        }
     }
 }
