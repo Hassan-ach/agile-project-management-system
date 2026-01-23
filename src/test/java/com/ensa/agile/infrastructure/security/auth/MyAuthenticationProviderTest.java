@@ -13,6 +13,7 @@ import com.ensa.agile.application.user.security.IPasswordEncoder;
 import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.domain.user.repository.UserRepository;
 import com.ensa.agile.testfactory.TestUserFactory;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 
 @ExtendWith(MockitoExtension.class)
+@Transactional
 class MyAuthenticationProviderTest {
 
     @Mock private UserRepository userRepository;
@@ -79,4 +81,3 @@ class MyAuthenticationProviderTest {
         assertFalse(authProvider.supports(AnonymousAuthenticationToken.class));
     }
 }
-

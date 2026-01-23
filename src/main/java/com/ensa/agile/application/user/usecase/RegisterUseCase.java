@@ -42,9 +42,13 @@ public class RegisterUseCase
         User u = RegisterRequestMapper.toUser(registerRequest, hashedPassword);
 
         userRepository.save(u);
+        String accessToken = authenticationService.generateToken(u.getEmail());
+
+        String refreshToken =
+            authenticationService.generateRefreshToken(accessToken);
 
         // for now, we return an empty refresh token
-        return AuthenticationResponseMapper.toResponse(
-            authenticationService.generateToken(u.getEmail()), "");
+        return AuthenticationResponseMapper.toResponse(accessToken,
+                                                       refreshToken);
     }
 }
