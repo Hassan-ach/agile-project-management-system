@@ -4,15 +4,17 @@ import com.ensa.agile.domain.global.entity.BaseDomainEntity;
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.sprint.enums.SprintStatus;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Getter
+@Setter
 public class SprintHistory extends BaseDomainEntity {
 
-    private final SprintBackLog sprint;
-    private final SprintStatus status;
-    private final String note;
+    private SprintBackLog sprint;
+    private SprintStatus status;
+    private String note;
 
     protected SprintHistory(SprintHistoryBuilder<?, ?> b) {
         super(b);
@@ -24,11 +26,6 @@ public class SprintHistory extends BaseDomainEntity {
     }
 
     public void validate() {
-        if (this.sprint == null) {
-            throw new ValidationException(
-                "SprintHistory must be associated with a SprintBackLog.");
-        }
-
         if (this.status == null) {
             throw new ValidationException(
                 "SprintHistory must have a valid status.");

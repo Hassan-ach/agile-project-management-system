@@ -50,10 +50,5 @@ public class Epic extends BaseDomainEntity {
             throw new ValidationException(
                 "Epic description cannot be null or empty");
         }
-
-        if (productBackLog == null) {
-            throw new ValidationException(
-                "Epic must be associated with a Product Backlog");
-        }
     }
 }

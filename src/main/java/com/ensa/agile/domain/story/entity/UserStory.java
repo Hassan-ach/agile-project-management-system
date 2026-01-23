@@ -49,17 +49,10 @@ public class UserStory extends BaseDomainEntity {
         validate();
     }
 
-    public void unlinkEpic() {
-        this.epic = null;
-    }
-    public void linkEpic(Epic epic) {
-        this.epic = epic;
-    }
+    public void unlinkEpic() { this.epic = null; }
+    public void linkEpic(Epic epic) { this.epic = epic; }
 
-
-    public void unlinkSprint() {
-        this.sprintBackLog = null;
-    }
+    public void unlinkSprint() { this.sprintBackLog = null; }
     public void linkSprint(SprintBackLog sprintBackLog) {
         this.sprintBackLog = sprintBackLog;
     }
@@ -67,22 +60,13 @@ public class UserStory extends BaseDomainEntity {
         this.priority = priority;
     }
 
-    public void makeMustHave() {
-        this.priority = MoscowType.MUST_HAVE;
-    }
-    public void makeShouldHave() {
-        this.priority = MoscowType.SHOULD_HAVE;
-    }
-    public void makeCouldHave() {
-        this.priority = MoscowType.COULD_HAVE;
-    }
-    public void makeWontHave() {
-        this.priority = MoscowType.WONT_HAVE;
-    }
-
+    public void makeMustHave() { this.priority = MoscowType.MUST_HAVE; }
+    public void makeShouldHave() { this.priority = MoscowType.SHOULD_HAVE; }
+    public void makeCouldHave() { this.priority = MoscowType.COULD_HAVE; }
+    public void makeWontHave() { this.priority = MoscowType.WONT_HAVE; }
 
     public void validate() {
-        if (title == null || title.isEmpty() || title.isBlank()) {
+        if (title == null || title.isBlank()) {
             throw new ValidationException("Title cannot be null or empty");
         }
         if (description == null || description.isEmpty() ||
@@ -101,11 +85,6 @@ public class UserStory extends BaseDomainEntity {
             acceptanceCriteria.isBlank()) {
             throw new ValidationException(
                 "Acceptance criteria cannot be null or empty");
-        }
-
-        if (productBackLog == null) {
-            throw new ValidationException(
-                "User story must be associated with a product backlog.");
         }
     }
 

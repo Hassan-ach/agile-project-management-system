@@ -85,14 +85,5 @@ public class SprintBackLog extends BaseDomainEntity {
         if (goal.isBlank()) {
             throw new ValidationException("Sprint goal must not be empty");
         }
-
-        if (scrumMaster == null) {
-            throw new ValidationException("Scrum master must be assigned");
-        }
-
-        if (productBackLog == null) {
-            throw new ValidationException(
-                "Sprint must be associated with a Product Backlog");
-        }
     }
 }

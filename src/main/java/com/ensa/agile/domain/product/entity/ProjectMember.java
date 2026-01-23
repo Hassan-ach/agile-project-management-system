@@ -5,7 +5,6 @@ import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.product.enums.MemberStatus;
 import com.ensa.agile.domain.product.enums.RoleType;
 import com.ensa.agile.domain.user.entity.User;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -15,8 +14,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ProjectMember extends BaseDomainEntity {
 
-    private final User user;
-    private final ProductBackLog productBackLog;
+    private User user;
+    private ProductBackLog productBackLog;
     private RoleType role;
     private MemberStatus status;
 
@@ -41,14 +40,6 @@ public class ProjectMember extends BaseDomainEntity {
     }
 
     public void validate() {
-        if (this.user == null) {
-            throw new ValidationException(
-                "Project member must be associated with a user.");
-        }
-        if (this.productBackLog == null) {
-            throw new ValidationException(
-                "Project member must be associated with a product backlog.");
-        }
         if (this.role == null) {
             throw new ValidationException(
                 "Project member must have a role assigned.");

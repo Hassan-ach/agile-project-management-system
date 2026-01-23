@@ -4,21 +4,19 @@ import com.ensa.agile.domain.global.entity.BaseDomainEntity;
 import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.story.enums.StoryStatus;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Getter
+@Setter
 public class UserStoryHistory extends BaseDomainEntity {
 
-    private final UserStory userStory;
-    private final StoryStatus status;
-    private final String note;
+    private UserStory userStory;
+    private StoryStatus status;
+    private String note;
 
     public void validate() {
-        if (this.userStory == null) {
-            throw new ValidationException(
-                "UserStoryHistory must be associated with a UserStory.");
-        }
         if (this.status == null) {
             throw new ValidationException(
                 "UserStoryHistory must have a valid status.");
@@ -44,9 +42,7 @@ public class UserStoryHistory extends BaseDomainEntity {
         }
     }
 
-    public boolean isDone() {
-        return this.status == StoryStatus.DONE;
-    }
+    public boolean isDone() { return this.status == StoryStatus.DONE; }
 
     public boolean isInProgress() {
         return this.status == StoryStatus.IN_PROGRESS;

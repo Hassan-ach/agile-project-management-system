@@ -41,13 +41,9 @@ public class Task extends BaseDomainEntity {
         validate();
     }
 
-    public void assignUser(User user) {
-        this.assignee = user;
-    }
+    public void assignUser(User user) { this.assignee = user; }
 
-    public void unassignUser() {
-        this.assignee = null;
-    }
+    public void unassignUser() { this.assignee = null; }
 
     public void validate() {
         if (title == null || title.isEmpty()) {
@@ -62,12 +58,6 @@ public class Task extends BaseDomainEntity {
         }
         if (actualHours != null && actualHours < 0) {
             throw new ValidationException("Actual hours cannot be negative");
-        }
-        if (userStory == null) {
-            throw new ValidationException("User Story cannot be null");
-        }
-        if (sprintBackLog == null) {
-            throw new ValidationException("Sprint Backlog cannot be null");
         }
     }
     public void updateMetadata(String title, String description,
