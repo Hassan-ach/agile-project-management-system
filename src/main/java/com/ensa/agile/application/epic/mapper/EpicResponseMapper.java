@@ -3,32 +3,58 @@ package com.ensa.agile.application.epic.mapper;
 import com.ensa.agile.application.epic.response.EpicResponse;
 import com.ensa.agile.application.story.mapper.UserStoryResponseMapper;
 import com.ensa.agile.domain.epic.entity.Epic;
+import java.util.function.BiConsumer;
 
 public class EpicResponseMapper {
 
-    public static EpicResponse toResponse(Epic epic) {
-        if (epic == null) {
-            return new EpicResponse();
-        }
+    // ========================================================================
+    // DOMAIN -> RESPONSE
+    // ========================================================================
+
+    /**
+     * 1. Base Mapper: Maps strict metadata only.
+     */
+    public static EpicResponse toResponse(Epic domain) {
+        if (domain == null)
+            return null;
+
         return EpicResponse.builder()
-            .id(epic.getId())
-            .title(epic.getTitle())
-            .description(epic.getDescription())
+            .id(domain.getId())
+            .title(domain.getTitle())
+            .description(domain.getDescription())
+            // Audit Metadata
+            .createdBy(domain.getCreatedBy())
+            .createdDate(domain.getCreatedDate())
+            .lastModifiedBy(domain.getLastModifiedBy())
+            .lastModifiedDate(domain.getLastModifiedDate())
             .build();
     }
 
-    public static EpicResponse toResponseWithUserStories(Epic epic) {
-        if (epic == null) {
-            return new EpicResponse();
+    /**
+     * 2. Orchestrator: Map metadata + specific relationships.
+     * Usage: EpicResponseMapper.toResponse(epic,
+     * EpicResponseMapper::attachUserStories);
+     */
+    @SafeVarargs
+    public static EpicResponse
+    toResponse(Epic domain, BiConsumer<EpicResponse, Epic>... enrichers) {
+        EpicResponse response = toResponse(domain);
+        if (response != null && enrichers != null) {
+            for (BiConsumer<EpicResponse, Epic> enricher : enrichers) {
+                enricher.accept(response, domain);
+            }
         }
-        return EpicResponse.builder()
-            .id(epic.getId())
-            .title(epic.getTitle())
-            .description(epic.getDescription())
-            .userStories(epic.getUserStories()
-                             .stream()
-                             .map(UserStoryResponseMapper::toResponse)
-                             .toList())
-            .build();
+        return response;
+    }
+
+    // 3. Attachers
+    public static void attachUserStories(EpicResponse response, Epic domain) {
+        if (domain.getUserStories() != null) {
+            response.setUserStories(
+                domain.getUserStories()
+                    .stream()
+                    .map(UserStoryResponseMapper::toResponse)
+                    .toList());
+        }
     }
 }

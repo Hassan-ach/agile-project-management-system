@@ -16,22 +16,21 @@ public class EpicRepositoryAdapter implements EpicRepository {
 
     @Override
     public Epic save(Epic entity) {
-        return EpicJpaMapper.toDomainEntity(
+        return EpicJpaMapper.toDomain(
             jpaEpicRepository.save(EpicJpaMapper.toJpaEntity(entity)));
     }
 
     @Override
     public Epic findById(UUID s) {
-        return EpicJpaMapper.toDomainEntity(
-            jpaEpicRepository.findById(s).orElseThrow(
-                EpicNotFoundException::new));
+        return EpicJpaMapper.toDomain(jpaEpicRepository.findById(s).orElseThrow(
+            EpicNotFoundException::new));
     }
 
     @Override
     public List<Epic> findAll() {
         return jpaEpicRepository.findAll()
             .stream()
-            .map(EpicJpaMapper::toDomainEntity)
+            .map(EpicJpaMapper::toDomain)
             .toList();
     }
 
@@ -49,7 +48,7 @@ public class EpicRepositoryAdapter implements EpicRepository {
     public List<Epic> findAllByProductBackLogId(UUID projectId) {
         return jpaEpicRepository.findAllByProductBackLog_Id(projectId)
             .stream()
-            .map(EpicJpaMapper::toDomainEntity)
+            .map(EpicJpaMapper::toDomain)
             .toList();
     }
 

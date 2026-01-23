@@ -18,23 +18,27 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
 
     @Override
     public UserStory save(UserStory entity) {
-        return UserStoryJpaMapper.toDomainEntity(
+        return UserStoryJpaMapper.toDomain(
             this.jpaUserStoryRepository.save(
-                UserStoryJpaMapper.toJpaEntity(entity)));
+                UserStoryJpaMapper.toJpaEntity(entity)),
+            UserStoryJpaMapper::attachStatus);
     }
 
     @Override
     public UserStory findById(UUID s) {
-        return UserStoryJpaMapper.toDomainEntity(
+        return UserStoryJpaMapper.toDomain(
             this.jpaUserStoryRepository.findById(s).orElseThrow(
-                UserStoryNotFoundException::new));
+                UserStoryNotFoundException::new),
+            UserStoryJpaMapper::attachStatus);
     }
 
     @Override
     public List<UserStory> findAll() {
         return this.jpaUserStoryRepository.findAll()
             .stream()
-            .map(UserStoryJpaMapper::toDomainEntity)
+            .map(u
+                 -> UserStoryJpaMapper.toDomain(
+                     u, UserStoryJpaMapper::attachStatus))
             .toList();
     }
 
@@ -52,7 +56,9 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
     public List<UserStory> findAllByEpicId(UUID epicId) {
         return this.jpaUserStoryRepository.findAllByEpic_Id(epicId)
             .stream()
-            .map(UserStoryJpaMapper::toDomainEntity)
+            .map(u
+                 -> UserStoryJpaMapper.toDomain(
+                     u, UserStoryJpaMapper::attachStatus))
             .toList();
     }
 
@@ -60,7 +66,9 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
     public List<UserStory> findByBatch(List<UUID> ids) {
         return this.jpaUserStoryRepository.findByBatch(ids)
             .stream()
-            .map(UserStoryJpaMapper::toDomainEntity)
+            .map(u
+                 -> UserStoryJpaMapper.toDomain(
+                     u, UserStoryJpaMapper::attachStatus))
             .toList();
     }
 
@@ -89,7 +97,19 @@ public class UserStoryRepositoryAdapter implements UserStoryRepository {
     public List<UserStory> findAllBySprintId(UUID sprintId) {
         return this.jpaUserStoryRepository.findAllBySprintBackLog_Id(sprintId)
             .stream()
-            .map(UserStoryJpaMapper::toDomainEntityPartial)
+            .map(u
+                 -> UserStoryJpaMapper.toDomain(
+                     u, UserStoryJpaMapper::attachStatus))
+            .toList();
+    }
+
+    @Override
+    public List<UserStory> findAllByProductBackLogId(UUID productId) {
+        return this.jpaUserStoryRepository.findAllByProductBackLog_Id(productId)
+            .stream()
+            .map(u
+                 -> UserStoryJpaMapper.toDomain(
+                     u, UserStoryJpaMapper::attachStatus))
             .toList();
     }
 }

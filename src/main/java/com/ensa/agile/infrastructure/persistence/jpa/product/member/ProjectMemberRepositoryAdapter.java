@@ -16,14 +16,13 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
 
     @Override
     public ProjectMember save(ProjectMember projectMember) {
-        return ProjectMemberJpaMapper.toDomainEntity(
-            jpaProjectMemberRepository.save(
-                ProjectMemberJpaMapper.toJpaEntity(projectMember)));
+        return ProjectMemberJpaMapper.toDomain(jpaProjectMemberRepository.save(
+            ProjectMemberJpaMapper.toJpaEntity(projectMember)));
     }
 
     @Override
     public ProjectMember findById(UUID id) {
-        return ProjectMemberJpaMapper.toDomainEntity(
+        return ProjectMemberJpaMapper.toDomain(
             jpaProjectMemberRepository.findById(id).orElseThrow(
                 ProjectMemberNotFoundException::new));
     }
@@ -32,7 +31,7 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
     public List<ProjectMember> findAll() {
         return jpaProjectMemberRepository.findAll()
             .stream()
-            .map(ProjectMemberJpaMapper::toDomainEntity)
+            .map(ProjectMemberJpaMapper::toDomain)
             .toList();
     }
 
@@ -55,10 +54,9 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
 
     @Override
     public boolean existsByUserIdAndProductBackLogId(UUID userId,
-                                                        UUID productBackLogId) {
-        return jpaProjectMemberRepository
-            .existsByUser_IdAndProductBackLog_Id(userId,
-                                                    productBackLogId);
+                                                     UUID productBackLogId) {
+        return jpaProjectMemberRepository.existsByUser_IdAndProductBackLog_Id(
+            userId, productBackLogId);
     }
     @Override
     public boolean existsByUserEmailAndProductBackLogId(String userEmail,
@@ -79,7 +77,7 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
 
     @Override
     public void deleteByUserIdAndProductBackLogId(UUID userId,
-                                                     UUID productBackLogId) {
+                                                  UUID productBackLogId) {
 
         jpaProjectMemberRepository.deleteByUser_IdAndProductBackLog_Id(
             userId, productBackLogId);
@@ -105,10 +103,17 @@ public class ProjectMemberRepositoryAdapter implements ProjectMemberRepository {
     @Override
     public ProjectMember
     findByUserIdAndProductBackLogId(UUID userId, UUID productBackLogId) {
-        return ProjectMemberJpaMapper.toDomainEntity(
+        return ProjectMemberJpaMapper.toDomain(
             jpaProjectMemberRepository
                 .findByUser_IdAndProductBackLog_Id(userId, productBackLogId)
                 .orElseThrow(ProjectMemberNotFoundException::new));
     }
 
+    @Override
+    public List<ProjectMember> findAllByProductBackLogId(UUID productId) {
+        return jpaProjectMemberRepository.findAllByProductBackLog_Id(productId)
+            .stream()
+            .map(ProjectMemberJpaMapper::toDomain)
+            .toList();
+    }
 }

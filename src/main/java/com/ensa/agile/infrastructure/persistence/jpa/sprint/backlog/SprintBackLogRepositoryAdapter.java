@@ -15,15 +15,20 @@ public class SprintBackLogRepositoryAdapter implements SprintBackLogRepository {
 
     @Override
     public SprintBackLog save(SprintBackLog entity) {
-        return SprintBackLogJpaMapper.toDomainEntity(
+        return SprintBackLogJpaMapper.toDomain(
             this.jpaSprintBackLogRepository.save(
-                SprintBackLogJpaMapper.toJpaEntity(entity)));
+                SprintBackLogJpaMapper.toJpaEntity(
+                    entity, SprintBackLogJpaMapper::attachScrumMaster,
+                    SprintBackLogJpaMapper::attachProductBackLog)),
+            SprintBackLogJpaMapper::attachStatus);
     }
 
     @Override
     public SprintBackLog findById(UUID s) {
         return this.jpaSprintBackLogRepository.findById(s)
-            .map(SprintBackLogJpaMapper::toDomainEntity)
+            .map(sp
+                 -> SprintBackLogJpaMapper.toDomain(
+                     sp, SprintBackLogJpaMapper::attachStatus))
             .orElseThrow(SprintBackLogNotFoundException::new);
     }
 
@@ -31,7 +36,9 @@ public class SprintBackLogRepositoryAdapter implements SprintBackLogRepository {
     public List<SprintBackLog> findAll() {
         return this.jpaSprintBackLogRepository.findAll()
             .stream()
-            .map(SprintBackLogJpaMapper::toDomainEntity)
+            .map(s
+                 -> SprintBackLogJpaMapper.toDomain(
+                     s, SprintBackLogJpaMapper::attachStatus))
             .toList();
     }
 
@@ -49,5 +56,16 @@ public class SprintBackLogRepositoryAdapter implements SprintBackLogRepository {
     public UUID getProductBackLogIdBySprintId(UUID sprintId) {
         return this.jpaSprintBackLogRepository.getProductBackLogIdBySprintId(
             sprintId);
+    }
+
+    @Override
+    public List<SprintBackLog> findAllByProductBackLogId(UUID productId) {
+        return this.jpaSprintBackLogRepository
+            .findAllByProductBackLog_Id(productId)
+            .stream()
+            .map(s
+                 -> SprintBackLogJpaMapper.toDomain(
+                     s, SprintBackLogJpaMapper::attachStatus))
+            .toList();
     }
 }

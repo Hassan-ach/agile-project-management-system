@@ -1,15 +1,12 @@
 package com.ensa.agile.infrastructure.persistence.jpa.task.task;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.stereotype.Repository;
-
 import com.ensa.agile.application.task.exception.TaskNotFoundException;
 import com.ensa.agile.domain.task.entity.Task;
 import com.ensa.agile.domain.task.repository.TaskRepository;
-
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
@@ -18,14 +15,20 @@ public class TaskRepositoryAdapter implements TaskRepository {
 
     @Override
     public Task save(Task entity) {
-        return TaskJpaMapper.toDomainEntity(
-            jpaTaskRepository.save(TaskJpaMapper.toJpaEntity(entity)));
+        return TaskJpaMapper.toDomain(
+            jpaTaskRepository.save(
+                TaskJpaMapper.toJpaEntity(entity, TaskJpaMapper::attachAssignee,
+                                          TaskJpaMapper::attachUserStory,
+                                          TaskJpaMapper::attachSprintBackLog)),
+            TaskJpaMapper::attachStatus, TaskJpaMapper::attachAssignee);
     }
 
     @Override
     public Task findById(UUID id) {
         return jpaTaskRepository.findById(id)
-            .map(TaskJpaMapper::toDomainEntity)
+            .map(t
+                 -> TaskJpaMapper.toDomain(t, TaskJpaMapper::attachStatus,
+                                           TaskJpaMapper::attachAssignee))
             .orElseThrow(TaskNotFoundException::new);
     }
 
@@ -33,7 +36,7 @@ public class TaskRepositoryAdapter implements TaskRepository {
     public List<Task> findAll() {
         return jpaTaskRepository.findAll()
             .stream()
-            .map(TaskJpaMapper::toDomainEntity)
+            .map(t -> TaskJpaMapper.toDomain(t, TaskJpaMapper::attachStatus))
             .toList();
     }
 
@@ -57,21 +60,21 @@ public class TaskRepositoryAdapter implements TaskRepository {
     public List<Task> findAllByUserStoryId(UUID storyId) {
         return jpaTaskRepository.findAllByUserStory_Id(storyId)
             .stream()
-            .map(TaskJpaMapper::toDomainEntity)
+            .map(t -> TaskJpaMapper.toDomain(t, TaskJpaMapper::attachStatus))
             .toList();
     }
-    
+
     @Override
     public UUID getSprintIdByTaskId(UUID taskId) {
-        return jpaTaskRepository.geSprintIdByTaskId(taskId)
-            .orElseThrow(TaskNotFoundException::new);
+        return jpaTaskRepository.geSprintIdByTaskId(taskId).orElseThrow(
+            TaskNotFoundException::new);
     }
 
     @Override
     public List<Task> findAllByAssigneeId(UUID assigneeId) {
         return jpaTaskRepository.findAllByAssignee_Id(assigneeId)
             .stream()
-            .map(TaskJpaMapper::toDomainEntity)
+            .map(t -> TaskJpaMapper.toDomain(t, TaskJpaMapper::attachStatus))
             .toList();
     }
 
@@ -79,8 +82,15 @@ public class TaskRepositoryAdapter implements TaskRepository {
     public List<Task> findAllBySprintId(UUID sprintId) {
         return jpaTaskRepository.findAllBySprintBackLog_Id(sprintId)
             .stream()
-            .map(TaskJpaMapper::toDomainEntity)
+            .map(t -> TaskJpaMapper.toDomain(t, TaskJpaMapper::attachStatus))
             .toList();
     }
 
+    @Override
+    public List<Task> findAllByProductBackLogId(UUID productId) {
+        return jpaTaskRepository.findAllByUserStory_ProductBackLogId(productId)
+            .stream()
+            .map(t -> TaskJpaMapper.toDomain(t, TaskJpaMapper::attachStatus))
+            .toList();
+    }
 }

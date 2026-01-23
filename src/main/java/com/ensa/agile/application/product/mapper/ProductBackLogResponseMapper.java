@@ -1,134 +1,101 @@
 package com.ensa.agile.application.product.mapper;
 
+import java.util.ArrayList;
+import java.util.function.BiConsumer;
+
 import com.ensa.agile.application.epic.mapper.EpicResponseMapper;
-import com.ensa.agile.application.epic.response.EpicResponse;
 import com.ensa.agile.application.product.response.ProductBackLogResponse;
 import com.ensa.agile.application.story.mapper.UserStoryResponseMapper;
-import com.ensa.agile.application.story.response.UserStoryResponse;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProductBackLogResponseMapper {
 
-    public static ProductBackLogResponse
-    toResponse(ProductBackLog productBackLog) {
-        if (productBackLog == null) {
-            return new ProductBackLogResponse();
-        }
+    // ========================================================================
+    // DOMAIN -> RESPONSE
+    // ========================================================================
+
+    /**
+     * 1. Base Mapper: Maps strict metadata only.
+     */
+    public static ProductBackLogResponse toResponse(ProductBackLog domain) {
+        if (domain == null)
+            return null;
+
         return ProductBackLogResponse.builder()
-            .id(productBackLog.getId())
-            .name(productBackLog.getName())
-            .description(productBackLog.getDescription())
+            .id(domain.getId())
+            .name(domain.getName())
+            .description(domain.getDescription())
+            // Audit Metadata
+            .createdBy(domain.getCreatedBy())
+            .createdDate(domain.getCreatedDate())
+            .lastModifiedBy(domain.getLastModifiedBy())
+            .lastModifiedDate(domain.getLastModifiedDate())
+            .epics(new ArrayList<>())
+            .userStories(new ArrayList<>())
             .build();
     }
 
-    public static ProductBackLogResponse
-    toResponseWithEpics(ProductBackLog productBackLog,
-                        List<EpicResponse> epics) {
-        if (productBackLog == null) {
-            return new ProductBackLogResponse();
+    /**
+     * 2. Orchestrator: Map metadata + specific relationships.
+     * Usage: ProductBackLogResponseMapper.toResponse(domain,
+     * ProductBackLogResponseMapper::attachEpics);
+     */
+    @SafeVarargs
+    public static ProductBackLogResponse toResponse(
+        ProductBackLog domain,
+        BiConsumer<ProductBackLogResponse, ProductBackLog>... enrichers) {
+        ProductBackLogResponse response = toResponse(domain);
+        if (response != null && enrichers != null) {
+            for (BiConsumer<ProductBackLogResponse, ProductBackLog> enricher :
+                 enrichers) {
+                enricher.accept(response, domain);
+            }
         }
-        return ProductBackLogResponse.builder()
-            .id(productBackLog.getId())
-            .name(productBackLog.getName())
-            .description(productBackLog.getDescription())
-            .epics(epics == null ? new ArrayList<>() : epics)
-            .build();
-    }
-    public static ProductBackLogResponse
-    toResponseWithUserStories(ProductBackLog productBackLog,
-                              List<UserStoryResponse> UserStories) {
-        if (productBackLog == null) {
-            return new ProductBackLogResponse();
-        }
-        return ProductBackLogResponse.builder()
-            .id(productBackLog.getId())
-            .name(productBackLog.getName())
-            .description(productBackLog.getDescription())
-            .userStories(UserStories == null ? new ArrayList<>() : UserStories)
-            .build();
+        return response;
     }
 
-    public static ProductBackLogResponse
-    toResponseWithEpicsAndUserStories(ProductBackLog productBackLog) {
-        if (productBackLog == null) {
-            return new ProductBackLogResponse();
+    // 3. Attachers
+    public static void attachMembers(ProductBackLogResponse response,
+                                     ProductBackLog domain) {
+        if (domain.getProjectMembers() != null) {
+            response.setProjectMembers(
+                domain.getProjectMembers()
+                    .stream()
+                    .map(ProjectMemberResponseMapper::toResponse)
+                    .toList());
         }
-        return ProductBackLogResponse.builder()
-            .id(productBackLog.getId())
-            .name(productBackLog.getName())
-            .description(productBackLog.getDescription())
-            .epics(productBackLog.getEpics() == null
-                       ? new ArrayList<>()
-                       : productBackLog.getEpics()
-                             .stream()
-                             .map(EpicResponseMapper::toResponseWithUserStories)
-                             .toList())
-            .userStories(productBackLog.getUserStories() == null
-                             ? new ArrayList<>()
-                             : productBackLog.getUserStories()
-                                   .stream()
-                                   .map(UserStoryResponseMapper::toResponse)
-                                   .toList())
-            .build();
+    }
+    public static void attachEpics(ProductBackLogResponse response,
+                                   ProductBackLog domain) {
+        if (domain.getEpics() != null) {
+            response.setEpics(domain.getEpics()
+                                  .stream()
+                                  .map(EpicResponseMapper::toResponse)
+                                  .toList());
+        }
     }
 
-    // public static ProductBackLogResponse
-    // toResponse(List<ProductBackLogRow> rows) {
-    //     if (rows == null || rows.isEmpty()) {
-    //         return ProductBackLogResponse.builder().build();
-    //     }
-    //
-    //     ProductBackLogRow row0 = rows.get(0);
-    //     ProductBackLogResponse resp =
-    //         ProductBackLogResponse.builder()
-    //             .id(row0.getBacklogId())
-    //             .name(row0.getBacklogName())
-    //             .description(row0.getBacklogDescription())
-    //             .build();
-    //
-    //     HashMap<String, EpicResponse> epics =
-    //         new HashMap<String, EpicResponse>();
-    //     List<UserStoryResponse> userStories = new ArrayList<>();
-    //
-    //     for (ProductBackLogRow row : rows) {
-    //         if (row.getEpicId() != null) {
-    //             epics.computeIfAbsent(
-    //                 row.getEpicId(),
-    //                 id
-    //                 -> EpicResponse.builder()
-    //                        .id(id)
-    //                        .title(row.getEpicTitle())
-    //                        .description(row.getEpicDescription())
-    //                        .userStories(new ArrayList<>())
-    //                        .build());
-    //         }
-    //
-    //         if (row.getStoryId() == null)
-    //             continue;
-    //
-    //         UserStoryResponse us =
-    //             UserStoryResponse.builder()
-    //                 .id(row.getStoryId())
-    //                 .title(row.getStoryTitle())
-    //                 .description(row.getStoryDescription())
-    //                 .status(row.getStatus())
-    //                 .priority(row.getPriority())
-    //                 .storyPoints(row.getStoryPoints())
-    //                 .acceptanceCriteria(row.getAcceptanceCriteria())
-    //                 .build();
-    //
-    //         if (row.getEpicId() == null) {
-    //             userStories.add(us);
-    //         } else {
-    //             epics.get(row.getEpicId()).getUserStories().add(us);
-    //         }
-    //     }
-    //
-    //     resp.setUserStories(userStories);
-    //     resp.setEpics(epics.values().stream().toList());
-    //
-    //     return resp;
-    // }
+    public static void attachUserStories(ProductBackLogResponse response,
+                                         ProductBackLog domain) {
+        if (domain.getUserStories() != null) {
+            response.setUserStories(
+                domain.getUserStories()
+                    .stream()
+                    .map(UserStoryResponseMapper::toResponse)
+                    .toList());
+        }
+    }
+
+    public static void attachEpicsWithStories(ProductBackLogResponse response,
+                                              ProductBackLog domain) {
+        if (domain.getEpics() != null) {
+            response.setEpics(
+                domain.getEpics()
+                    .stream()
+                    .map(epic
+                         -> EpicResponseMapper.toResponse(
+                             epic, EpicResponseMapper::attachUserStories))
+                    .toList());
+        }
+    }
 }

@@ -1,15 +1,12 @@
 package com.ensa.agile.infrastructure.persistence.jpa.user;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.stereotype.Repository;
-
 import com.ensa.agile.application.user.exception.UserNotFoundException;
 import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.domain.user.repository.UserRepository;
-
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,13 +18,13 @@ public class UserRepositoryAdapter implements UserRepository {
     public User save(User user) {
         UserJpaEntity entity = UserJpaMapper.toJpaEntity(user);
         UserJpaEntity saved = jpaUserRepository.save(entity);
-        return UserJpaMapper.toDomainEntity(saved);
+        return UserJpaMapper.toDomain(saved);
     }
 
     @Override
     public User findByEmail(String email) {
         return jpaUserRepository.findByEmail(email)
-            .map(UserJpaMapper::toDomainEntity)
+            .map(UserJpaMapper::toDomain)
             .orElseThrow(UserNotFoundException::new);
     }
 
@@ -39,13 +36,13 @@ public class UserRepositoryAdapter implements UserRepository {
     @Override
     public List<User> findAll() {
         List<UserJpaEntity> entities = jpaUserRepository.findAll();
-        return entities.stream().map(UserJpaMapper::toDomainEntity).toList();
+        return entities.stream().map(UserJpaMapper::toDomain).toList();
     }
 
     @Override
     public User findById(UUID id) {
         return jpaUserRepository.findById(id)
-            .map(UserJpaMapper::toDomainEntity)
+            .map(UserJpaMapper::toDomain)
             .orElseThrow(UserNotFoundException::new);
     }
 

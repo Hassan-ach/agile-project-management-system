@@ -1,15 +1,12 @@
 package com.ensa.agile.infrastructure.persistence.jpa.sprint.member;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.stereotype.Repository;
-
 import com.ensa.agile.application.sprint.exception.SprintMemberNotFoundException;
 import com.ensa.agile.domain.sprint.entity.SprintMember;
 import com.ensa.agile.domain.sprint.repository.SprintMembersRepository;
-
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
@@ -18,7 +15,7 @@ public class SprintMemberRepositoryAdapter implements SprintMembersRepository {
 
     @Override
     public SprintMember save(SprintMember entity) {
-        return SprintMemberJpaMapper.toDomainEntity(
+        return SprintMemberJpaMapper.toDomain(
             this.jpaSprintMemberRepository.save(
                 SprintMemberJpaMapper.toJpaEntity(entity)));
     }
@@ -26,7 +23,7 @@ public class SprintMemberRepositoryAdapter implements SprintMembersRepository {
     @Override
     public SprintMember findById(UUID s) {
         return this.jpaSprintMemberRepository.findById(s)
-            .map(SprintMemberJpaMapper::toDomainEntity)
+            .map(SprintMemberJpaMapper::toDomain)
             .orElseThrow(SprintMemberNotFoundException::new);
     }
 
@@ -34,7 +31,7 @@ public class SprintMemberRepositoryAdapter implements SprintMembersRepository {
     public List<SprintMember> findAll() {
         return this.jpaSprintMemberRepository.findAll()
             .stream()
-            .map(SprintMemberJpaMapper::toDomainEntity)
+            .map(SprintMemberJpaMapper::toDomain)
             .toList();
     }
 
@@ -63,8 +60,7 @@ public class SprintMemberRepositoryAdapter implements SprintMembersRepository {
     }
 
     @Override
-    public void deleteByUserIdAndSprintBackLogId(UUID userId,
-                                                    UUID sprintId) {
+    public void deleteByUserIdAndSprintBackLogId(UUID userId, UUID sprintId) {
         this.jpaSprintMemberRepository.deleteByUser_IdAndSprintBackLog_Id(
             userId, sprintId);
     }

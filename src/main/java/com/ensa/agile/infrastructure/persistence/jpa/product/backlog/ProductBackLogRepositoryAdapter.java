@@ -22,7 +22,7 @@ public class ProductBackLogRepositoryAdapter
         try {
             var jpaEntity = ProductBackLogJpaMapper.toJpaEntity(entity);
             var saved = jpaProductBackLogRepository.save(jpaEntity);
-            return ProductBackLogJpaMapper.toDomainEntity(saved);
+            return ProductBackLogJpaMapper.toDomain(saved);
         } catch (DataIntegrityViolationException e) {
             throw new DataBasePersistenceException();
         }
@@ -31,7 +31,7 @@ public class ProductBackLogRepositoryAdapter
     @Override
     public ProductBackLog findById(UUID s) {
         return this.jpaProductBackLogRepository.findById(s)
-            .map(ProductBackLogJpaMapper::toDomainEntity)
+            .map(ProductBackLogJpaMapper::toDomain)
             .orElseThrow(ProductBackLogNotFoundException::new);
     }
 
@@ -39,7 +39,7 @@ public class ProductBackLogRepositoryAdapter
     public List<ProductBackLog> findAll() {
         return this.jpaProductBackLogRepository.findAll()
             .stream()
-            .map(ProductBackLogJpaMapper::toDomainEntity)
+            .map(ProductBackLogJpaMapper::toDomain)
             .toList();
     }
 

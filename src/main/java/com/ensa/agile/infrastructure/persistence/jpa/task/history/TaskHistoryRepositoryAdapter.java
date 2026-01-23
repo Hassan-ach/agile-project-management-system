@@ -14,14 +14,13 @@ public class TaskHistoryRepositoryAdapter implements TaskHistoryRepository {
 
     @Override
     public TaskHistory save(TaskHistory entity) {
-        return TaskHistoryJpaMapper.toDomainEntity(
-            this.jpaTaskHistoryRepository.save(
-                TaskHistoryJpaMapper.toJpaEntity(entity)));
+        return TaskHistoryJpaMapper.toDomain(this.jpaTaskHistoryRepository.save(
+            TaskHistoryJpaMapper.toJpaEntity(entity)));
     }
 
     @Override
     public TaskHistory findById(String id) {
-        return TaskHistoryJpaMapper.toDomainEntity(
+        return TaskHistoryJpaMapper.toDomain(
             this.jpaTaskHistoryRepository.findById(id).orElseThrow());
     }
 
@@ -29,7 +28,7 @@ public class TaskHistoryRepositoryAdapter implements TaskHistoryRepository {
     public List<TaskHistory> findAll() {
         return this.jpaTaskHistoryRepository.findAll()
             .stream()
-            .map(TaskHistoryJpaMapper::toDomainEntity)
+            .map(TaskHistoryJpaMapper::toDomain)
             .toList();
     }
 
