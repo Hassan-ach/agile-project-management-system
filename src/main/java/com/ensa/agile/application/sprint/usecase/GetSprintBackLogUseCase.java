@@ -12,8 +12,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class GetSprintBackLogUseCase
     extends BaseUseCase<SprintBackLogGetRequest, SprintBackLogResponse> {
-    private SprintBackLogRepository sprintBackLogRepository;
-    private IFetchService fetchService;
+
+    private final SprintBackLogRepository sprintBackLogRepository;
+    private final IFetchService fetchService;
+
     public GetSprintBackLogUseCase(
         ITransactionalWrapper tr,
         SprintBackLogRepository sprintBackLogRepository,

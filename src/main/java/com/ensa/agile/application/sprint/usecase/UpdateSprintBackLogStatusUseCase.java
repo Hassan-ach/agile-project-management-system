@@ -4,6 +4,8 @@ import com.ensa.agile.application.common.request.UpdateStatusRequest;
 import com.ensa.agile.application.common.response.UpdateStatusResponse;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
+import com.ensa.agile.application.sprint.mapper.SprintHistoryResponseMapper;
+import com.ensa.agile.application.sprint.response.SprintHistoryResponse;
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
 import com.ensa.agile.domain.sprint.entity.SprintHistory;
 import com.ensa.agile.domain.sprint.enums.SprintStatus;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateSprintBackLogStatusUseCase
     extends BaseUseCase<UpdateStatusRequest<SprintStatus>,
-                        UpdateStatusResponse<SprintHistory>> {
+                        UpdateStatusResponse<SprintHistoryResponse>> {
 
     private final SprintHistoryRepository sprintHistoryRepository;
     private final SprintBackLogRepository sprintBackLogRepository;
@@ -28,7 +30,7 @@ public class UpdateSprintBackLogStatusUseCase
         this.sprintBackLogRepository = sprintBackLogRepository;
     }
 
-    public UpdateStatusResponse<SprintHistory>
+    public UpdateStatusResponse<SprintHistoryResponse>
     execute(UpdateStatusRequest<SprintStatus> request) {
 
         SprintBackLog sprint =
@@ -38,7 +40,7 @@ public class UpdateSprintBackLogStatusUseCase
         // check if the new status is CANCELLED, if not validate the transition
         if (request.getStatus() != SprintStatus.CANCELLED) {
             if (status.getStatus() == request.getStatus()) {
-                return UpdateStatusResponse.<SprintHistory>builder()
+                return UpdateStatusResponse.<SprintHistoryResponse>builder()
                     .status(null)
                     .updated(false)
                     .message("Status is already " + request.getStatus().name())
@@ -48,7 +50,7 @@ public class UpdateSprintBackLogStatusUseCase
             SprintStatus nextStatus = status.getNextStatus();
 
             if (nextStatus != request.getStatus()) {
-                return UpdateStatusResponse.<SprintHistory>builder()
+                return UpdateStatusResponse.<SprintHistoryResponse>builder()
                     .status(null)
                     .updated(false)
                     .message("Invalid status transition from " +
@@ -57,13 +59,15 @@ public class UpdateSprintBackLogStatusUseCase
                     .build();
             }
         }
-        SprintHistory newStatus = SprintHistory.builder()
-                                      .sprint(sprint)
-                                      .status(request.getStatus())
-                                      .note(request.getNote())
-                                      .build();
-        return UpdateStatusResponse.<SprintHistory>builder()
-            .status(this.sprintHistoryRepository.save(newStatus))
+
+        SprintHistory newStatus =
+            this.sprintHistoryRepository.save(SprintHistory.builder()
+                                                  .sprint(sprint)
+                                                  .status(request.getStatus())
+                                                  .note(request.getNote())
+                                                  .build());
+        return UpdateStatusResponse.<SprintHistoryResponse>builder()
+            .status(SprintHistoryResponseMapper.toResponse(newStatus))
             .updated(true)
             .message("Sprint status updated to " + request.getStatus().name())
             .build();

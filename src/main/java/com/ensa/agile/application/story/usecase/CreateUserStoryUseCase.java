@@ -54,6 +54,8 @@ public class CreateUserStoryUseCase
                 .status(StoryStatus.TODO)
                 .build());
 
-        return UserStoryResponseMapper.toResponse(us, status);
+        us.setStatus(status);
+
+        return UserStoryResponseMapper.toResponse(us);
     }
 }

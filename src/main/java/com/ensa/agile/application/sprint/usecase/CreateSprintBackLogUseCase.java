@@ -1,10 +1,5 @@
 package com.ensa.agile.application.sprint.usecase;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.stereotype.Component;
-
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.sprint.mapper.SprintBackLogResponseMapper;
@@ -26,6 +21,9 @@ import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.story.repository.UserStoryRepository;
 import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.domain.user.repository.UserRepository;
+import java.util.List;
+import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CreateSprintBackLogUseCase
@@ -38,14 +36,11 @@ public class CreateSprintBackLogUseCase
     private final UserRepository userRepository;
     private final SprintHistoryRepository sprintHistoryRepository;
 
-    public CreateSprintBackLogUseCase(ITransactionalWrapper tr,
-                                      SprintBackLogRepository sblr,
-                                      SprintMembersRepository smr,
-                                      UserRepository ur,
-                                      ProductBackLogRepository pbr,
-                                      ProjectMemberRepository pmr,
-                                      UserStoryRepository usr,
-                                      SprintHistoryRepository shr) {
+    public CreateSprintBackLogUseCase(
+        ITransactionalWrapper tr, SprintBackLogRepository sblr,
+        SprintMembersRepository smr, UserRepository ur,
+        ProductBackLogRepository pbr, ProjectMemberRepository pmr,
+        UserStoryRepository usr, SprintHistoryRepository shr) {
         super(tr);
         this.sprintBackLogRepository = sblr;
         this.productBackLogRepository = pbr;
@@ -58,17 +53,18 @@ public class CreateSprintBackLogUseCase
 
     public SprintBackLogResponse execute(SprintBackLogCreateRequest request) {
 
-        User user = this.userRepository.findByEmail(
-            request.getScrumMasterEmail());
-        
-        if(!this.projectMemberRepository
-        .existsByUserIdAndProductBackLogIdAndRole(user.getId(),
-            request.getProductId(), 
-            RoleType.SCRUM_MASTER)) {
+        User user =
+            this.userRepository.findByEmail(request.getScrumMasterEmail());
 
-            throw new ValidationException("The user with email " + 
-                request.getScrumMasterEmail() + 
-                " is not a member of the project associated with the product backlog.");
+        if (!this.projectMemberRepository
+                 .existsByUserIdAndProductBackLogIdAndRole(
+                     user.getId(), request.getProductId(),
+                     RoleType.SCRUM_MASTER)) {
+
+            throw new ValidationException(
+                "The user with email " + request.getScrumMasterEmail() +
+                (" is not a member of the project associated with the "
+                 + "product backlog."));
         }
 
         List<UserStory> userStories =
@@ -100,15 +96,13 @@ public class CreateSprintBackLogUseCase
                                                 sprint);
 
         this.sprintMembersRepository.save(
-            SprintMember.builder()
-            .sprintBackLog(sprint)
-            .user(user)
-            .build()
-        );
+            SprintMember.builder().sprintBackLog(sprint).user(user).build());
 
+        sprint.setStatus(status);
+        sprint.setUserStories(userStories);
 
-        return SprintBackLogResponseMapper.toResponse(sprint, userStories,
-                                                      status);
+        return SprintBackLogResponseMapper.toResponse(
+            sprint, SprintBackLogResponseMapper::attachUserStories);
     }
 
     // this function to make sure that all user stories are exists and not

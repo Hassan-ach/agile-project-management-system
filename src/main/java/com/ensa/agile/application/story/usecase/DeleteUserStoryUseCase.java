@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DeleteUserStoryUseCase extends BaseUseCase<UUID, DeleteResponse> {
-    private UserStoryRepository userStoryRepository;
+
+    private final UserStoryRepository userStoryRepository;
+
     public DeleteUserStoryUseCase(ITransactionalWrapper tr,
                                   UserStoryRepository userStoryRepository) {
         super(tr);

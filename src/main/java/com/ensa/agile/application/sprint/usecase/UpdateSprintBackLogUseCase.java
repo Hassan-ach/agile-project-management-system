@@ -1,7 +1,5 @@
 package com.ensa.agile.application.sprint.usecase;
 
-import org.springframework.stereotype.Component;
-
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.sprint.mapper.SprintBackLogResponseMapper;
@@ -10,13 +8,14 @@ import com.ensa.agile.application.sprint.response.SprintBackLogResponse;
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
 import com.ensa.agile.domain.sprint.repository.SprintBackLogRepository;
 import com.ensa.agile.domain.user.repository.UserRepository;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UpdateSprintBackLogUseCase
     extends BaseUseCase<SprintBackLogUpdateRequest, SprintBackLogResponse> {
 
-    private SprintBackLogRepository sprintBackLogRepository;
-    private UserRepository userRepository;
+    private final SprintBackLogRepository sprintBackLogRepository;
+    private final UserRepository userRepository;
 
     public UpdateSprintBackLogUseCase(
         ITransactionalWrapper tr,

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginUseCase
     extends BaseUseCase<AuthenticationRequest, AuthenticationResponse> {
+
     private final IAuthenticationService autenticationService;
 
     public LoginUseCase(IAuthenticationService autenticationService,

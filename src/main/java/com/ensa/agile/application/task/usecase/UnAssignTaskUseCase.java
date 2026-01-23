@@ -17,6 +17,7 @@ import com.ensa.agile.domain.user.repository.UserRepository;
 @Component
 public class UnAssignTaskUseCase
     extends BaseUseCase<UpdateAssignTaskRequest, UpdateAssignTaskResponse> {
+
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final TaskHistoryRepository taskHistoryRepository;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateTaskUseCase
     extends BaseUseCase<TaskUpdateRequest, TaskResponse> {
+
     private final TaskRepository taskRepository;
 
     public UpdateTaskUseCase(ITransactionalWrapper tr,

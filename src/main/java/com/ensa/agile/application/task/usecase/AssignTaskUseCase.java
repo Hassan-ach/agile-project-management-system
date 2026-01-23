@@ -1,7 +1,5 @@
 package com.ensa.agile.application.task.usecase;
 
-import org.springframework.stereotype.Component;
-
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
 import com.ensa.agile.application.task.mapper.TaskResponseMapper;
@@ -14,10 +12,12 @@ import com.ensa.agile.domain.task.repository.TaskHistoryRepository;
 import com.ensa.agile.domain.task.repository.TaskRepository;
 import com.ensa.agile.domain.user.entity.User;
 import com.ensa.agile.domain.user.repository.UserRepository;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AssignTaskUseCase
     extends BaseUseCase<UpdateAssignTaskRequest, UpdateAssignTaskResponse> {
+
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final TaskHistoryRepository taskHistoryRepository;
@@ -41,9 +41,9 @@ public class AssignTaskUseCase
         Task task = this.taskRepository.findById(request.getId());
 
         // check if the assignee is a member of the sprint
-        if (!sprintMembersRepository
-            .existsBySprintBackLogIdAndUserId(
-                taskRepository.getSprintIdByTaskId(request.getId()), assignee.getId())) {
+        if (!sprintMembersRepository.existsBySprintBackLogIdAndUserId(
+                taskRepository.getSprintIdByTaskId(request.getId()),
+                assignee.getId())) {
 
             return UpdateAssignTaskResponse.builder()
                 .task(null)
@@ -56,7 +56,7 @@ public class AssignTaskUseCase
         // check if the task is already assigned
         if (task.getAssignee() != null) {
             return UpdateAssignTaskResponse.builder()
-                .task(TaskResponseMapper.toResponse(task))
+                .task(null)
                 .assigned(false)
                 .message("Task is already assigned to " +
                          task.getAssignee().getEmail())
@@ -77,7 +77,8 @@ public class AssignTaskUseCase
         newTask.setStatus(status);
 
         return UpdateAssignTaskResponse.builder()
-            .task(TaskResponseMapper.toResponse(newTask))
+            .task(TaskResponseMapper.toResponse(
+                newTask, TaskResponseMapper::attachAssignee))
             .assigned(true)
             .message("Task assigned to " + assignee.getEmail())
             .build();

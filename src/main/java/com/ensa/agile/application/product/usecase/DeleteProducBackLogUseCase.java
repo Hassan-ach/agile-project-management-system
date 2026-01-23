@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeleteProducBackLogUseCase
     extends BaseUseCase<UUID, RemoveResponse> {
-    private ProductBackLogRepository productBackLogRepository;
+    private final ProductBackLogRepository productBackLogRepository;
 
     public DeleteProducBackLogUseCase(ITransactionalWrapper tr,
                                       ProductBackLogRepository pr) {

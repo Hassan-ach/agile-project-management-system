@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RefreshTokenUseCase
     extends BaseUseCase<RefreshTokenRequest, AuthenticationResponse> {
+
     private final IAuthenticationService autenticationService;
 
     public RefreshTokenUseCase(ITransactionalWrapper tr,

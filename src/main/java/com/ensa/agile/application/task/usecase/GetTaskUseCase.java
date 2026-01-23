@@ -12,6 +12,7 @@ import com.ensa.agile.domain.task.repository.TaskRepository;
 
 @Component
 public class GetTaskUseCase extends BaseUseCase<TaskGetRequest, TaskResponse> {
+
     private final TaskRepository taskRepository;
     public GetTaskUseCase(ITransactionalWrapper tr,
                           TaskRepository taskRepository) {

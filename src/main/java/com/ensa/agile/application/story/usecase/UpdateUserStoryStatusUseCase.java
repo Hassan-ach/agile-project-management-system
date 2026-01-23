@@ -4,6 +4,8 @@ import com.ensa.agile.application.common.request.UpdateStatusRequest;
 import com.ensa.agile.application.common.response.UpdateStatusResponse;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
+import com.ensa.agile.application.story.mapper.UserStoryHistoryResponseMapper;
+import com.ensa.agile.application.story.response.UserStoryHistoryResponse;
 import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.story.entity.UserStoryHistory;
 import com.ensa.agile.domain.story.enums.StoryStatus;
@@ -14,7 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateUserStoryStatusUseCase
     extends BaseUseCase<UpdateStatusRequest<StoryStatus>,
-                        UpdateStatusResponse<UserStoryHistory>> {
+                        UpdateStatusResponse<UserStoryHistoryResponse>> {
+
     private final UserStoryRepository userStoryRepository;
     private final UserStoryHistoryRepository userStoryHistoryRepository;
 
@@ -27,14 +30,14 @@ public class UpdateUserStoryStatusUseCase
     }
 
     @Override
-    public UpdateStatusResponse<UserStoryHistory>
+    public UpdateStatusResponse<UserStoryHistoryResponse>
     execute(UpdateStatusRequest<StoryStatus> request) {
         UserStory story = this.userStoryRepository.findById(request.getId());
 
         UserStoryHistory status = story.getStatus();
         if (status.getStatus() == request.getStatus()) {
-            return UpdateStatusResponse.<UserStoryHistory>builder()
-                .status(null)
+            return UpdateStatusResponse.<UserStoryHistoryResponse>builder()
+                .status(UserStoryHistoryResponseMapper.toResponse(status))
                 .updated(false)
                 .message("Status is already " + request.getStatus().name())
                 .build();
@@ -43,7 +46,7 @@ public class UpdateUserStoryStatusUseCase
         StoryStatus nextStatus = status.getNextStatus();
 
         if (nextStatus != request.getStatus()) {
-            return UpdateStatusResponse.<UserStoryHistory>builder()
+            return UpdateStatusResponse.<UserStoryHistoryResponse>builder()
                 .status(null)
                 .updated(false)
                 .message("Invalid status transition from " +
@@ -57,8 +60,9 @@ public class UpdateUserStoryStatusUseCase
                                          .status(request.getStatus())
                                          .note(request.getNote())
                                          .build();
-        return UpdateStatusResponse.<UserStoryHistory>builder()
-            .status(this.userStoryHistoryRepository.save(newStatus))
+        return UpdateStatusResponse.<UserStoryHistoryResponse>builder()
+            .status(UserStoryHistoryResponseMapper.toResponse(
+                this.userStoryHistoryRepository.save(newStatus)))
             .updated(true)
             .message("Status updated to " + request.getStatus().name())
             .build();

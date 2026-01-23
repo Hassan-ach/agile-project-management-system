@@ -14,8 +14,9 @@ import com.ensa.agile.domain.story.repository.UserStoryRepository;
 public class GetUserStoryUseCase
     extends BaseUseCase<UserStoryGetRequest, UserStoryResponse> {
 
-    private UserStoryRepository userStoryRepository;
-    private IFetchService fetchService;
+    private final UserStoryRepository userStoryRepository;
+    private final IFetchService fetchService;
+
     public GetUserStoryUseCase(ITransactionalWrapper tr,
                                UserStoryRepository userStoryRepository,
                                IFetchService fetchService) {

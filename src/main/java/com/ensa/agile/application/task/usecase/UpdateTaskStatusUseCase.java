@@ -4,6 +4,8 @@ import com.ensa.agile.application.common.request.UpdateStatusRequest;
 import com.ensa.agile.application.common.response.UpdateStatusResponse;
 import com.ensa.agile.application.global.transaction.ITransactionalWrapper;
 import com.ensa.agile.application.global.usecase.BaseUseCase;
+import com.ensa.agile.application.task.mapper.TaskHistoryResponseMapper;
+import com.ensa.agile.application.task.response.TaskHistoryResponse;
 import com.ensa.agile.domain.task.entity.Task;
 import com.ensa.agile.domain.task.entity.TaskHistory;
 import com.ensa.agile.domain.task.enums.TaskStatus;
@@ -14,7 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateTaskStatusUseCase
     extends BaseUseCase<UpdateStatusRequest<TaskStatus>,
-                        UpdateStatusResponse<TaskHistory>> {
+                        UpdateStatusResponse<TaskHistoryResponse>> {
+
     private final TaskHistoryRepository taskHistoryRepository;
     private final TaskRepository taskRepository;
 
@@ -27,7 +30,7 @@ public class UpdateTaskStatusUseCase
     }
 
     @Override
-    public UpdateStatusResponse<TaskHistory>
+    public UpdateStatusResponse<TaskHistoryResponse>
     execute(UpdateStatusRequest<TaskStatus> request) {
 
         Task task = this.taskRepository.findById(request.getId());
@@ -36,7 +39,7 @@ public class UpdateTaskStatusUseCase
         // check if the new status is BLOCKED, if not validate the transition
         if (request.getStatus() != TaskStatus.BLOCKED) {
             if (status.getStatus() == request.getStatus()) {
-                return UpdateStatusResponse.<TaskHistory>builder()
+                return UpdateStatusResponse.<TaskHistoryResponse>builder()
                     .status(null)
                     .updated(false)
                     .message("Status is already " + request.getStatus().name())
@@ -44,7 +47,7 @@ public class UpdateTaskStatusUseCase
             }
             TaskStatus nextStatus = status.getNextStatus();
             if (nextStatus != request.getStatus()) {
-                return UpdateStatusResponse.<TaskHistory>builder()
+                return UpdateStatusResponse.<TaskHistoryResponse>builder()
                     .status(null)
                     .updated(false)
                     .message("Invalid status transition from " +
@@ -60,8 +63,9 @@ public class UpdateTaskStatusUseCase
                                     .note(request.getNote())
                                     .build();
 
-        return UpdateStatusResponse.<TaskHistory>builder()
-            .status(this.taskHistoryRepository.save(newStatus))
+        return UpdateStatusResponse.<TaskHistoryResponse>builder()
+            .status(TaskHistoryResponseMapper.toResponse(
+                this.taskHistoryRepository.save(newStatus)))
             .updated(true)
             .message("Task status updated successfully to " +
                      request.getStatus().name())

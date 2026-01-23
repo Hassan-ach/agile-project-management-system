@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeleteSprintBackLogUseCase
     extends BaseUseCase<UUID, DeleteResponse> {
-    private SprintBackLogRepository sprintBackLogRepository;
+    private final SprintBackLogRepository sprintBackLogRepository;
 
     public DeleteSprintBackLogUseCase(
         ITransactionalWrapper tr,

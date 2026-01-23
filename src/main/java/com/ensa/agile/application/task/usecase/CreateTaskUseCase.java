@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateTaskUseCase
     extends BaseUseCase<TaskCreateRequest, TaskResponse> {
+
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final UserStoryRepository userStoryRepository;
@@ -43,13 +44,15 @@ public class CreateTaskUseCase
 
     @Override
     public TaskResponse execute(TaskCreateRequest request) {
-        User ur = this.userRepository.findByEmail(request.getAssigneeEmail());
+        User ur =
+            request.getAssigneeEmail() != null
+                ? this.userRepository.findByEmail(request.getAssigneeEmail())
+                : null;
         UserStory userStory =
             this.userStoryRepository.findById(request.getUserStoryId());
-        SprintBackLog sp =
-            this.sprintBackLogRepository.findById(
-            userStoryRepository.getSprintBackLogIdByUserStoryId(request.getUserStoryId())
-        );
+        SprintBackLog sp = this.sprintBackLogRepository.findById(
+            userStoryRepository.getSprintBackLogIdByUserStoryId(
+                request.getUserStoryId()));
 
         Task task = this.taskRepository.save(
             Task.builder()
@@ -69,7 +72,9 @@ public class CreateTaskUseCase
                 .build());
 
         task.setStatus(status);
+        task.setAssignee(ur);
 
-        return TaskResponseMapper.toResponse(task, ur.getEmail());
+        return TaskResponseMapper.toResponse(
+            task, TaskResponseMapper::attachAssignee);
     }
 }
