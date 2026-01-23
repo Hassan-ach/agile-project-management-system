@@ -8,13 +8,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @AllArgsConstructor
@@ -41,16 +41,6 @@ public class EpicJpaEntity extends BaseJpaEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_backlog_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductBackLogJpaEntity productBackLog;
-
-    public EpicJpaEntity(UUID id, String title, String description,
-                         ProductBackLogJpaEntity productBackLog, UUID createdBy,
-                         LocalDateTime createdDate, UUID lastModifiedBy,
-                         LocalDateTime lastModifiedDate) {
-
-        super(id, createdDate, createdBy, lastModifiedDate, lastModifiedBy);
-        this.title = title;
-        this.description = description;
-        this.productBackLog = productBackLog;
-    }
 }

@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JoinFormula;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Table(name = "sprint_backlogs",
        uniqueConstraints =
@@ -47,10 +49,12 @@ public class SprintBackLogJpaEntity extends BaseJpaEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_backlog_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductBackLogJpaEntity productBackLog;
 
     @ManyToOne
     @JoinColumn(name = "scrum_master_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private UserJpaEntity scrumMaster;
 
     @Column(name = "start_date", nullable = false) private LocalDate startDate;
@@ -59,8 +63,9 @@ public class SprintBackLogJpaEntity extends BaseJpaEntity {
 
     @Column(nullable = false) private String goal;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinFormula("(SELECT sh.id FROM sprint_histories sh WHERE "
-                 + "sh.sprint_backlog_id = id ORDER BY sh.created_date DESC LIMIT 1)")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinFormula(
+        "(SELECT sh.id FROM sprint_histories sh WHERE "
+        + "sh.sprint_backlog_id = id ORDER BY sh.created_date DESC LIMIT 1)")
     private SprintHistoryJpaEntity status;
 }

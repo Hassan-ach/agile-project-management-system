@@ -22,6 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JoinFormula;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Table(name = "user_stories",
        uniqueConstraints =
@@ -59,19 +61,22 @@ public class UserStoryJpaEntity extends BaseJpaEntity {
 
     @ManyToOne
     @JoinColumn(name = "epic_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private EpicJpaEntity epic;
 
     @ManyToOne
     @JoinColumn(name = "product_backlog_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductBackLogJpaEntity productBackLog;
 
     @ManyToOne
     @JoinColumn(name = "sprint_backlog_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private SprintBackLogJpaEntity sprintBackLog;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinFormula("(SELECT ush.id FROM user_story_histories ush WHERE "
-                 +
-                 "ush.user_story_id = id ORDER BY ush.created_date DESC LIMIT 1)")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinFormula(
+        "(SELECT ush.id FROM user_story_histories ush WHERE "
+        + "ush.user_story_id = id ORDER BY ush.created_date DESC LIMIT 1)")
     private UserStoryHistoryJpaEntity status;
 }

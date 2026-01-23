@@ -7,6 +7,7 @@ import com.ensa.agile.infrastructure.persistence.jpa.task.history.TaskHistoryJpa
 import com.ensa.agile.infrastructure.persistence.jpa.user.UserJpaEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -18,6 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JoinFormula;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Table(name = "tasks",
        uniqueConstraints =
@@ -45,10 +48,12 @@ public class TaskJpaEntity extends BaseJpaEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_story_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserStoryJpaEntity userStory;
 
     @ManyToOne
     @JoinColumn(name = "sprint_backlog_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private SprintBackLogJpaEntity sprintBackLog;
 
     @ManyToOne
@@ -60,7 +65,7 @@ public class TaskJpaEntity extends BaseJpaEntity {
 
     @Column(name = "actual_hours", nullable = true) private Double actualHours;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinFormula("(SELECT th.id FROM task_histories th WHERE "
                  + "th.task_id = id ORDER BY th.created_date DESC LIMIT 1)")
     private TaskHistoryJpaEntity status;

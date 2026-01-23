@@ -3,10 +3,10 @@ package com.ensa.agile.infrastructure.persistence.jpa.story.history;
 import com.ensa.agile.domain.story.enums.StoryStatus;
 import com.ensa.agile.infrastructure.persistence.jpa.global.entity.BaseJpaEntity;
 import com.ensa.agile.infrastructure.persistence.jpa.story.userstory.UserStoryJpaEntity;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Table(name = "user_story_histories",
        indexes =
@@ -30,9 +32,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class UserStoryHistoryJpaEntity extends BaseJpaEntity {
-    
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_story_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserStoryJpaEntity userStory;
 
     @Enumerated(EnumType.STRING) private StoryStatus status;

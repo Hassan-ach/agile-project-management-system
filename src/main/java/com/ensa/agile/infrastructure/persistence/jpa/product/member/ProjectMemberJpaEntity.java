@@ -5,6 +5,7 @@ import com.ensa.agile.domain.product.enums.RoleType;
 import com.ensa.agile.infrastructure.persistence.jpa.global.entity.BaseJpaEntity;
 import com.ensa.agile.infrastructure.persistence.jpa.product.backlog.ProductBackLogJpaEntity;
 import com.ensa.agile.infrastructure.persistence.jpa.user.UserJpaEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,6 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -42,10 +45,12 @@ public class ProjectMemberJpaEntity extends BaseJpaEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserJpaEntity user;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_backlog_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductBackLogJpaEntity productBackLog;
 
     @Enumerated(EnumType.STRING) private RoleType role;

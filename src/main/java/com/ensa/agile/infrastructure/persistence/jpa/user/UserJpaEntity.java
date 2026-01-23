@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,6 @@ import org.springframework.security.core.GrantedAuthority;
 @Setter
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class UserJpaEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID id;
@@ -36,13 +34,16 @@ public class UserJpaEntity {
 
     @Column(nullable = false) private String password;
 
-    @Column(name = "is_email_verified") private boolean emailVerified;
+    @Column(name = "is_email_verified", nullable = false)
+    private Boolean emailVerified;
 
-    @Column(name = "is_enabled") private boolean enabled;
+    @Column(name = "is_enabled", nullable = false) private Boolean enabled;
 
-    @Column(name = "is_account_locked") private boolean locked;
+    @Column(name = "is_account_locked", nullable = false)
+    private Boolean locked;
 
-    @Column(name = "is_crendetial_expired") private boolean credentialsExpired;
+    @Column(name = "is_crendetial_expired", nullable = false)
+    private Boolean credentialsExpired;
 
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDate createdDate;
@@ -58,6 +59,23 @@ public class UserJpaEntity {
         this.locked = false;
         this.credentialsExpired = false;
         this.createdDate = LocalDate.now();
+    }
+    public UserJpaEntity(UUID id, String firstName, String lastName,
+                         String email, String password, Boolean emailVerified,
+                         Boolean enabled, Boolean locked,
+                         Boolean credentialsExpired, LocalDate createdDate) {
+
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.emailVerified = emailVerified == null ? false : emailVerified;
+        this.enabled = enabled == null ? false : enabled;
+        this.locked = locked == null ? true : locked;
+        this.credentialsExpired =
+            credentialsExpired == null ? true : credentialsExpired;
+        this.createdDate = createdDate;
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
