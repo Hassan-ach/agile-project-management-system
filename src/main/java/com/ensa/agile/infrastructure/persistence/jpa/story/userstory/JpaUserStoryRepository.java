@@ -18,6 +18,8 @@ public interface JpaUserStoryRepository
 
     List<UserStoryJpaEntity> findAllBySprintBackLog_Id(UUID sprintId);
 
+    List<UserStoryJpaEntity> findAllByProductBackLog_Id(UUID productId);
+
     @Query(""" 
             SELECT u FROM UserStoryJpaEntity u
             WHERE u.id IN :ids

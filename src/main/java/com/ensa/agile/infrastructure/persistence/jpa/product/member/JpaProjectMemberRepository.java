@@ -1,10 +1,13 @@
 package com.ensa.agile.infrastructure.persistence.jpa.product.member;
 
 import com.ensa.agile.domain.product.enums.RoleType;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface JpaProjectMemberRepository
     extends JpaRepository<ProjectMemberJpaEntity, UUID> {
 
@@ -22,10 +25,11 @@ public interface JpaProjectMemberRepository
                                                           RoleType role);
 
     void deleteByUser_IdAndProductBackLog_Id(UUID userId,
-                                                UUID productBackLogId);
+                                             UUID productBackLogId);
     void deleteByUser_EmailAndProductBackLog_Id(String userEmail,
                                                 UUID productBackLogId);
 
     Optional<ProjectMemberJpaEntity>
     findByUser_IdAndProductBackLog_Id(UUID userId, UUID productBackLogId);
+    List<ProjectMemberJpaEntity> findAllByProductBackLog_Id(UUID projectId);
 }

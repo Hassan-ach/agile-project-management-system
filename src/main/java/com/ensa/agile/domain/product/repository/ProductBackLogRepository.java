@@ -5,5 +5,4 @@ import com.ensa.agile.domain.product.entity.ProductBackLog;
 import java.util.UUID;
 
 public interface ProductBackLogRepository
-    extends BaseDomainRepository<ProductBackLog, UUID> {
-}
+    extends BaseDomainRepository<ProductBackLog, UUID> {}

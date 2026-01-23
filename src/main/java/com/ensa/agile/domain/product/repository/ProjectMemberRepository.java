@@ -1,10 +1,14 @@
 package com.ensa.agile.domain.product.repository;
 
+import java.util.List;
+import java.util.UUID;
+
+import com.ensa.agile.domain.global.annotation.Loggable;
 import com.ensa.agile.domain.global.repository.BaseDomainRepository;
 import com.ensa.agile.domain.product.entity.ProjectMember;
 import com.ensa.agile.domain.product.enums.RoleType;
-import java.util.UUID;
 
+@Loggable
 public interface ProjectMemberRepository
     extends BaseDomainRepository<ProjectMember, UUID> {
 
@@ -14,7 +18,7 @@ public interface ProjectMemberRepository
                                                  UUID productBackLogId);
 
     boolean existsByUserIdAndProductBackLogId(UUID userId,
-                                                 UUID productBackLogId);
+                                              UUID productBackLogId);
 
     boolean existsByUserIdAndProductBackLogIdAndRole(UUID userId,
                                                      UUID productBackLogId,
@@ -26,9 +30,10 @@ public interface ProjectMemberRepository
     void deleteByUserEmailAndProductBackLogId(String userEmail,
                                               UUID productBackLogId);
 
-    void deleteByUserIdAndProductBackLogId(UUID userId,
-                                              UUID productBackLogId);
+    void deleteByUserIdAndProductBackLogId(UUID userId, UUID productBackLogId);
 
     ProjectMember findByUserIdAndProductBackLogId(UUID userId,
                                                   UUID productBackLogId);
+
+    List<ProjectMember> findAllByProductBackLogId(UUID projectId);
 }
