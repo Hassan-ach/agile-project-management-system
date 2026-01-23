@@ -21,8 +21,11 @@ import com.ensa.agile.testfactory.TestEpicFactory;
 import com.ensa.agile.testfactory.TestProductBackLogFactory;
 import com.ensa.agile.testfactory.TestUserFactory;
 
+import jakarta.transaction.Transactional;
+
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 class JpaEpicRepositoryTest {
 
     @Autowired

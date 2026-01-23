@@ -26,8 +26,11 @@ import com.ensa.agile.testfactory.TestTaskFactory;
 import com.ensa.agile.testfactory.TestUserFactory;
 import com.ensa.agile.testfactory.TestUserStoryFactory;
 
+import jakarta.transaction.Transactional;
+
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 class JpaTaskRepositoryTest {
 
     @Autowired

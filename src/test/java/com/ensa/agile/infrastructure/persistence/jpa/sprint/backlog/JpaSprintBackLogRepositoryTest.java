@@ -21,8 +21,11 @@ import com.ensa.agile.testfactory.TestSprintBackLogFactory;
 import com.ensa.agile.testfactory.TestSprintHistoryFactory;
 import com.ensa.agile.testfactory.TestUserFactory;
 
+import jakarta.transaction.Transactional;
+
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 class JpaSprintBackLogRepositoryTest {
 
     @Autowired

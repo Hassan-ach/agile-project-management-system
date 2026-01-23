@@ -31,28 +31,24 @@ import com.ensa.agile.testfactory.TestUserFactory;
 import com.ensa.agile.testfactory.TestUserStoryFactory;
 import com.ensa.agile.testfactory.TestUserStoryHistoryFactory;
 
+import jakarta.transaction.Transactional;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 class JpaUserStoryRepositoryTest {
 
-    @Autowired
-    private JpaUserStoryRepository userStoryRepository;
+    @Autowired private JpaUserStoryRepository userStoryRepository;
 
-    @Autowired
-    private JpaUserStoryHistoryRepository userStoryHistoryRepository;
+    @Autowired private JpaUserStoryHistoryRepository userStoryHistoryRepository;
 
-    @Autowired
-    private JpaEpicRepository epicRepository;
+    @Autowired private JpaEpicRepository epicRepository;
 
-    @Autowired
-    private JpaSprintBackLogRepository sprintBackLogRepository;
+    @Autowired private JpaSprintBackLogRepository sprintBackLogRepository;
 
-    @Autowired
-    private JpaProductBackLogRepository productBackLogRepository;
+    @Autowired private JpaProductBackLogRepository productBackLogRepository;
 
-    @Autowired
-    private JpaUserRepository userRepository;
+    @Autowired private JpaUserRepository userRepository;
 
     private EpicJpaEntity epic;
     private ProductBackLogJpaEntity product;
@@ -64,36 +60,35 @@ class JpaUserStoryRepositoryTest {
         var owner = userRepository.save(TestUserFactory.validJpaUser());
 
         product = productBackLogRepository.save(
-            TestProductBackLogFactory.validJpaProduct(owner)
-        );
+            TestProductBackLogFactory.validJpaProduct(owner));
 
-        epic = epicRepository.save(
-            TestEpicFactory.validJpaEpic(product, owner)
-        );
+        epic =
+            epicRepository.save(TestEpicFactory.validJpaEpic(product, owner));
 
         sprint = sprintBackLogRepository.save(
-            TestSprintBackLogFactory.validJpaSprint( product, owner, owner)
-        );
+            TestSprintBackLogFactory.validJpaSprint(product, owner, owner));
 
         userStory = userStoryRepository.save(
-            TestUserStoryFactory.validJpaUserStoryWithEpic( product,epic, owner)
-        );
+            TestUserStoryFactory.validJpaUserStoryWithEpic(product, epic,
+                                                           owner));
 
         userStoryHistoryRepository.save(
-            TestUserStoryHistoryFactory.validUserStoryHistoryJpaEntity(userStory, StoryStatus.TODO, owner)
-        );
+            TestUserStoryHistoryFactory.validUserStoryHistoryJpaEntity(
+                userStory, StoryStatus.TODO, owner));
     }
 
     @Test
     void findAllByEpicId_shouldReturnUserStories() {
-        List<UserStoryJpaEntity> stories = userStoryRepository.findAllByEpic_Id(epic.getId());
+        List<UserStoryJpaEntity> stories =
+            userStoryRepository.findAllByEpic_Id(epic.getId());
         assertEquals(1, stories.size());
         assertEquals(userStory.getId(), stories.get(0).getId());
     }
 
     @Test
     void findByBatch_shouldReturnMatchingUserStories() {
-        List<UserStoryJpaEntity> stories = userStoryRepository.findByBatch(List.of(userStory.getId()));
+        List<UserStoryJpaEntity> stories =
+            userStoryRepository.findByBatch(List.of(userStory.getId()));
         assertEquals(1, stories.size());
         assertEquals(userStory.getId(), stories.get(0).getId());
     }
@@ -102,7 +97,9 @@ class JpaUserStoryRepositoryTest {
     void assignToSprint_shouldUpdateSprintBackLog() {
         userStoryRepository.assignToSprint(List.of(userStory.getId()), sprint);
 
-        Optional<UUID> sprintIdOpt = userStoryRepository.getSprintBackLogIdByUserStoryId(userStory.getId());
+        Optional<UUID> sprintIdOpt =
+            userStoryRepository.getSprintBackLogIdByUserStoryId(
+                userStory.getId());
         assertTrue(sprintIdOpt.isPresent());
         assertEquals(sprint.getId(), sprintIdOpt.get());
     }
@@ -112,16 +109,19 @@ class JpaUserStoryRepositoryTest {
         userStory.setSprintBackLog(sprint);
         userStoryRepository.save(userStory);
 
-        Optional<UUID> sprintIdOpt = userStoryRepository.getSprintBackLogIdByUserStoryId(userStory.getId());
+        Optional<UUID> sprintIdOpt =
+            userStoryRepository.getSprintBackLogIdByUserStoryId(
+                userStory.getId());
         assertTrue(sprintIdOpt.isPresent());
         assertEquals(sprint.getId(), sprintIdOpt.get());
     }
 
     @Test
     void getProductBackLogIdByUserStoryId_shouldReturnOptional() {
-        Optional<UUID> productIdOpt = userStoryRepository.getProductBackLogIdByUserStoryId(userStory.getId());
+        Optional<UUID> productIdOpt =
+            userStoryRepository.getProductBackLogIdByUserStoryId(
+                userStory.getId());
         assertTrue(productIdOpt.isPresent());
         assertEquals(product.getId(), productIdOpt.get());
     }
 }
-

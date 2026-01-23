@@ -19,16 +19,16 @@ import com.ensa.agile.testfactory.TestProductBackLogFactory;
 import com.ensa.agile.testfactory.TestProjectMemberFactory;
 import com.ensa.agile.testfactory.TestUserFactory;
 
+import jakarta.transaction.Transactional;
+
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 class JpaProjectMemberRepositoryTest {
 
-    @Autowired
-    private JpaProductBackLogRepository productBackLogRepository;
-    @Autowired
-    private JpaUserRepository userRepository;
-    @Autowired
-    private JpaProjectMemberRepository projectMemberRepository;
+    @Autowired private JpaProductBackLogRepository productBackLogRepository;
+    @Autowired private JpaUserRepository userRepository;
+    @Autowired private JpaProjectMemberRepository projectMemberRepository;
 
     private UserJpaEntity loggedUser;
     private UserJpaEntity member;
@@ -40,80 +40,57 @@ class JpaProjectMemberRepositoryTest {
         member = userRepository.save(TestUserFactory.validJpaUser());
 
         product = productBackLogRepository.save(
-            TestProductBackLogFactory.validJpaProduct(loggedUser)
-        );
+            TestProductBackLogFactory.validJpaProduct(loggedUser));
 
         projectMemberRepository.save(
             TestProjectMemberFactory.validJpaProjectMember(
-                RoleType.PRODUCT_OWNER,
-                MemberStatus.ACTIVE,
-                product,
-                loggedUser,
-                loggedUser
-            )
-        );
+                RoleType.PRODUCT_OWNER, MemberStatus.ACTIVE, product,
+                loggedUser, loggedUser));
         projectMemberRepository.save(
             TestProjectMemberFactory.validJpaProjectMember(
-                RoleType.SCRUM_MASTER,
-                MemberStatus.ACTIVE,
-                product,
-                member,
-                loggedUser
-            )
-        );
+                RoleType.SCRUM_MASTER, MemberStatus.ACTIVE, product, member,
+                loggedUser));
     }
 
     @Test
     void existsByUserIdAndProductId_shouldReturnTrue() {
-        assertTrue(
-            projectMemberRepository.existsByUser_IdAndProductBackLog_Id(
-                member.getId(),
-                product.getId()
-            )
-        );
+        assertTrue(projectMemberRepository.existsByUser_IdAndProductBackLog_Id(
+            member.getId(), product.getId()));
     }
 
     @Test
     void existsByUserEmailAndProductId_shouldReturnTrue() {
         assertTrue(
             projectMemberRepository.existsByUser_EmailAndProductBackLog_Id(
-                member.getEmail(),
-                product.getId()
-            )
-        );
+                member.getEmail(), product.getId()));
     }
 
     @Test
     void existsByUserIdProductIdAndRole_scrumMaster_shouldReturnTrue() {
         assertTrue(
             projectMemberRepository.existsByUser_IdAndProductBackLog_IdAndRole(
-                member.getId(),
-                product.getId(),
-                RoleType.SCRUM_MASTER
-            )
-        );
+                member.getId(), product.getId(), RoleType.SCRUM_MASTER));
     }
 
     @Test
     void existsByUserIdProductIdAndRole_productOwner_shouldReturnTrue() {
         assertTrue(
             projectMemberRepository.existsByUser_IdAndProductBackLog_IdAndRole(
-                loggedUser.getId(),
-                product.getId(),
-                RoleType.PRODUCT_OWNER
-            )
-        );
+                loggedUser.getId(), product.getId(), RoleType.PRODUCT_OWNER));
     }
 
     @Test
     void existsByUserEmailProductIdAndRole_productOwner_shouldReturnTrue() {
-        assertTrue(
-            projectMemberRepository.existsByUser_EmailAndProductBackLog_IdAndRole(
-                loggedUser.getEmail(),
-                product.getId(),
-                RoleType.PRODUCT_OWNER
-            )
-        );
+        assertTrue(projectMemberRepository
+                       .existsByUser_EmailAndProductBackLog_IdAndRole(
+                           loggedUser.getEmail(), product.getId(),
+                           RoleType.PRODUCT_OWNER));
+    }
+
+    @Test
+    void findAllByProductBackLogId_shouldReturnMembersList() {
+        var members =
+            projectMemberRepository.findAllByProductBackLog_Id(product.getId());
+        assertTrue(members.size() == 2);
     }
 }
-
