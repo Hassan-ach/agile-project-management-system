@@ -23,13 +23,9 @@ public class SprintBackLogUpdateRequest {
 
     public SprintBackLogUpdateRequest(UUID id, SprintBackLogUpdateRequest req) {
 
-        if (req == null) {
-            throw new ValidationException("request cannot be null");
-        }
+        ValidationUtil.requireNonNull(req, "request");
 
-        if (id == null) {
-            throw new ValidationException("ID cannot be null or blank");
-        }
+        ValidationUtil.requireNonNull(id, "sprint id");
 
         if (req.getName() == null && req.getGoal() == null &&
             req.getStartDate() == null && req.getEndDate() == null &&
@@ -37,42 +33,25 @@ public class SprintBackLogUpdateRequest {
             throw new ValidationException(
                 "At least one field must be provided for update");
         }
+        this.name = ValidationUtil.update(this.name, req.getName(),
+                                          ValidationUtil::requireNonBlank,
+                                          "sprint name");
 
-        if (req.getName() != null) {
-            if (req.getName().isBlank()) {
-                throw new ValidationException("name cannot be blank");
-            } else {
-                this.name = req.getName();
-            }
-        }
+        this.goal = ValidationUtil.update(this.goal, req.getGoal(),
+                                          ValidationUtil::requireNonBlank,
+                                          "sprint goal");
 
-        if (req.getGoal() != null) {
-            if (req.getGoal().isBlank()) {
-                throw new ValidationException("description cannot be blank");
-            } else {
-                this.goal = req.getGoal();
-            }
-        }
+        this.startDate = ValidationUtil.update(
+            this.startDate, req.getStartDate(),
+            ValidationUtil::requireFutureDate, "sprint start date");
 
-        if (req.getStartDate() != null) {
-            this.startDate = req.getStartDate();
-        }
+        this.endDate = ValidationUtil.update(this.endDate, req.getEndDate(),
+                                             ValidationUtil::requireFutureDate,
+                                             "sprint end date");
 
-        if (req.getEndDate() != null) {
-            this.endDate = req.getEndDate();
-        }
-
-        if (req.getScrumMasterEmail() != null) {
-            if (req.getScrumMasterEmail().isBlank()) {
-                throw new ValidationException(
-                    "scrumMasterEmail cannot be blank");
-            }
-            if (!ValidationUtil.isValidEmail(req.getScrumMasterEmail())) {
-                throw new ValidationException("scrumMaster Email is not valid");
-            } else {
-                this.scrumMasterEmail = req.getScrumMasterEmail();
-            }
-        }
+        this.scrumMasterEmail = ValidationUtil.update(
+            this.scrumMasterEmail, req.getScrumMasterEmail(),
+            ValidationUtil::requireValidEmail, "scrum master email");
 
         this.id = id;
     }

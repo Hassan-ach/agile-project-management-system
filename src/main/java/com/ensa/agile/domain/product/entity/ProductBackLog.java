@@ -3,6 +3,7 @@ package com.ensa.agile.domain.product.entity;
 import com.ensa.agile.domain.epic.entity.Epic;
 import com.ensa.agile.domain.global.entity.BaseDomainEntity;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import com.ensa.agile.domain.global.utils.ValidationUtil;
 import com.ensa.agile.domain.sprint.entity.SprintBackLog;
 import com.ensa.agile.domain.story.entity.UserStory;
 import java.util.ArrayList;
@@ -39,23 +40,15 @@ public class ProductBackLog extends BaseDomainEntity {
     }
 
     public void updateMetadata(String name, String description) {
-        if (name != null)
-            this.name = name;
-        if (description != null)
-            this.description = description;
-
-        this.validate();
+        name = ValidationUtil.update(
+            this.name, name, ValidationUtil::requireNonBlank, "project name");
+        description = ValidationUtil.update(this.description, description,
+                                            ValidationUtil::requireNonBlank,
+                                            "project description");
     }
 
     public void validate() {
-        if (this.name == null || this.name.isEmpty()) {
-            throw new ValidationException(
-                "Product Backlog name cannot be null or empty");
-        }
-
-        if (this.description == null || this.description.isEmpty()) {
-            throw new ValidationException(
-                "Product Backlog description cannot be null or empty");
-        }
+        ValidationUtil.requireNonBlank(name, "project name");
+        ValidationUtil.requireNonBlank(description, "project description");
     }
 }

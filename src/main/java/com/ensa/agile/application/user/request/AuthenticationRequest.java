@@ -18,20 +18,16 @@ public class AuthenticationRequest {
 
     // This constructor is for validation purposes
     public AuthenticationRequest(AuthenticationRequest req) {
-        if (req == null) {
-            throw new ValidationException("Request cannot be null");
-        }
+        ValidationUtil.requireNonNull(req, "authentication request");
 
-        if (req.email == null || req.email.trim().isBlank() ||
-            !ValidationUtil.isValidEmail(req.email)) {
-            throw new ValidationException("Email must be valid and cannot be "
-                                          + "blank");
-        }
-
-        if (req.password == null || req.password.trim().isBlank()) {
-            throw new ValidationException("Password cannot be blank");
-        }
         this.email = req.email;
         this.password = req.password;
+
+        validate();
+    }
+
+    public void validate() {
+        ValidationUtil.requireValidEmail(email, "email");
+        ValidationUtil.requireStrongPassword(password, "password");
     }
 }

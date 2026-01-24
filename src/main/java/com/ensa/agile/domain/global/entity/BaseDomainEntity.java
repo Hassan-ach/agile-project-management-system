@@ -18,7 +18,7 @@ public class BaseDomainEntity {
 
     public BaseDomainEntity(UUID id) {
         this.id = id;
-        this.createdDate = LocalDateTime.now();
+        this.createdDate = null;
         this.createdBy = null;
         this.lastModifiedDate = null;
         this.lastModifiedBy = null;

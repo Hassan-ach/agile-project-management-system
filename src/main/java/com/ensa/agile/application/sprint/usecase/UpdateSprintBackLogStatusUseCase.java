@@ -36,36 +36,20 @@ public class UpdateSprintBackLogStatusUseCase
         SprintBackLog sprint =
             this.sprintBackLogRepository.findById(request.getId());
         SprintHistory status = sprint.getStatus();
+        status.setSprint(sprint);
 
-        // check if the new status is CANCELLED, if not validate the transition
-        if (request.getStatus() != SprintStatus.CANCELLED) {
-            if (status.getStatus() == request.getStatus()) {
-                return UpdateStatusResponse.<SprintHistoryResponse>builder()
-                    .status(null)
-                    .updated(false)
-                    .message("Status is already " + request.getStatus().name())
-                    .build();
-            }
-
-            SprintStatus nextStatus = status.getNextStatus();
-
-            if (nextStatus != request.getStatus()) {
-                return UpdateStatusResponse.<SprintHistoryResponse>builder()
-                    .status(null)
-                    .updated(false)
-                    .message("Invalid status transition from " +
-                             status.getStatus().name() + " to " +
-                             request.getStatus().name())
-                    .build();
-            }
+        // check if the new status is the current status
+        if (status.getStatus() == request.getStatus()) {
+            return UpdateStatusResponse.<SprintHistoryResponse>builder()
+                .status(null)
+                .updated(false)
+                .message("Status is already " + request.getStatus().name())
+                .build();
         }
 
-        SprintHistory newStatus =
-            this.sprintHistoryRepository.save(SprintHistory.builder()
-                                                  .sprint(sprint)
-                                                  .status(request.getStatus())
-                                                  .note(request.getNote())
-                                                  .build());
+        SprintHistory newStatus = this.sprintHistoryRepository.save(
+            status.updateState(request.getStatus(), request.getNote()));
+
         return UpdateStatusResponse.<SprintHistoryResponse>builder()
             .status(SprintHistoryResponseMapper.toResponse(newStatus))
             .updated(true)

@@ -1,13 +1,11 @@
 package com.ensa.agile.infrastructure.persistence.jpa.product.backlog;
 
 import com.ensa.agile.application.product.exception.ProductBackLogNotFoundException;
-import com.ensa.agile.domain.global.exception.DataBasePersistenceException;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
 import com.ensa.agile.domain.product.repository.ProductBackLogRepository;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -19,13 +17,9 @@ public class ProductBackLogRepositoryAdapter
 
     @Override
     public ProductBackLog save(ProductBackLog entity) {
-        try {
-            var jpaEntity = ProductBackLogJpaMapper.toJpaEntity(entity);
-            var saved = jpaProductBackLogRepository.save(jpaEntity);
-            return ProductBackLogJpaMapper.toDomain(saved);
-        } catch (DataIntegrityViolationException e) {
-            throw new DataBasePersistenceException();
-        }
+        var jpaEntity = ProductBackLogJpaMapper.toJpaEntity(entity);
+        var saved = jpaProductBackLogRepository.save(jpaEntity);
+        return ProductBackLogJpaMapper.toDomain(saved);
     }
 
     @Override

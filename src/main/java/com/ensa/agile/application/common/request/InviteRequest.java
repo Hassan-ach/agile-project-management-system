@@ -1,8 +1,9 @@
 package com.ensa.agile.application.common.request;
 
-import com.ensa.agile.domain.global.exception.ValidationException;
-import com.ensa.agile.domain.global.utils.ValidationUtil;
 import java.util.UUID;
+
+import com.ensa.agile.domain.global.utils.ValidationUtil;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -24,14 +25,7 @@ public class InviteRequest {
     public InviteRequest(String email) { this.email = email; }
 
     public void validate() {
-        if (email == null || email.isBlank()) {
-            throw new ValidationException("Email cannot be null or empty");
-        }
-        if (!ValidationUtil.isValidEmail(email)) {
-            throw new ValidationException("Email format is invalid");
-        }
-        if (productId == null) {
-            throw new ValidationException("Product ID cannot be null ");
-        }
+        ValidationUtil.requireValidEmail(email, "user email");
+        ValidationUtil.requireNonNull(productId, "product id");
     }
 }

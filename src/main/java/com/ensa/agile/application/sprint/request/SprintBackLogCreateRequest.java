@@ -26,40 +26,22 @@ public class SprintBackLogCreateRequest {
     // This constructor is for validation purposes
     public SprintBackLogCreateRequest(UUID productId,
                                       SprintBackLogCreateRequest req) {
-        if (req == null) {
-            throw new ValidationException("request cannot be null");
-        }
-        if (productId == null) {
-            throw new ValidationException("productId cannot be null");
-        }
-        if (req.getName() == null || req.getName().isBlank()) {
-            throw new ValidationException("name cannot be null or blank");
-        }
-        if (req.getScrumMasterEmail() == null ||
-            req.getScrumMasterEmail().isBlank()) {
-            throw new ValidationException(
-                "scrumMasterEmail cannot be null or blank");
-        }
-        if (!ValidationUtil.isValidEmail(req.getScrumMasterEmail())) {
-            throw new ValidationException("scrumMaster Email is not valid");
-        }
-        if (req.getStartDate() == null) {
-            throw new ValidationException("startDate cannot be null");
-        }
-        if (req.getEndDate() == null) {
-            throw new ValidationException("endDate cannot be null");
-        }
-        if (req.getEndDate().isBefore(req.getStartDate())) {
-            throw new ValidationException("endDate cannot be before startDate");
-        }
+        ValidationUtil.requireNonNull(req, "request");
+        ValidationUtil.requireNonNull(productId, "product id");
 
-        if (req.getStartDate().isBefore(LocalDate.now())) {
-            throw new ValidationException("startDate cannot be in the past");
-        }
+        ValidationUtil.requireNonBlank(req.getName(), "sprint name");
 
-        if (req.getGoal() == null || req.getGoal().isBlank()) {
-            throw new ValidationException("goal cannot be null or blank");
-        }
+        ValidationUtil.requireValidEmail(req.getScrumMasterEmail(),
+                                         "scrumMaster Email");
+
+        ValidationUtil.requireFutureDate(startDate, "sprint start date");
+        ValidationUtil.requireFutureDate(endDate, "sprint end date");
+
+        ValidationUtil.requireBefore(startDate, "sprint start date", endDate,
+                                     "sprint end date");
+
+        ValidationUtil.requireNonBlank(req.getGoal(), "sprint goal");
+
         this.name = req.getName();
         this.scrumMasterEmail = req.getScrumMasterEmail();
         this.startDate = req.getStartDate();

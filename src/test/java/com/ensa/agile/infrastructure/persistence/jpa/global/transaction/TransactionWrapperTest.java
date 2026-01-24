@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(TransactionWrapper.class)
+@Transactional
 class TransactionWrapperTest {
 
     @Autowired private TransactionWrapper tWrapper;
@@ -45,7 +46,6 @@ class TransactionWrapperTest {
         user = userRepository.save(TestUserFactory.validJpaUser());
     }
 
-    @Test
     //* This because of how psql behaves with transactions
     // - in postgresql, if one query failed it marks the intire transaction as
     // "Aborted"
@@ -55,6 +55,7 @@ class TransactionWrapperTest {
     // it will always fail
     // - to avoid this we need to annotate the test with
     // @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     void execute_shouldRollbackIfAndThrowExceptionIfAnyExceptionAccured() {
 

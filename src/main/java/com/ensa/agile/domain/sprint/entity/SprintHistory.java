@@ -2,6 +2,7 @@ package com.ensa.agile.domain.sprint.entity;
 
 import com.ensa.agile.domain.global.entity.BaseDomainEntity;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import com.ensa.agile.domain.global.utils.ValidationUtil;
 import com.ensa.agile.domain.sprint.enums.SprintStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,31 +27,31 @@ public class SprintHistory extends BaseDomainEntity {
     }
 
     public void validate() {
-        if (this.status == null) {
-            throw new ValidationException(
-                "SprintHistory must have a valid status.");
-        }
+        ValidationUtil.requireNonNull(sprint, "sprint history sprint");
 
-        if (this.note != null && this.note.length() > 500) {
-            throw new ValidationException(
-                "SprintHistory note cannot exceed 500 characters.");
-        }
+        ValidationUtil.requireMaxLength(note, "sprint history note", 500);
     }
 
-    public SprintStatus getNextStatus() {
-        switch (this.status) {
-        case PLANNED:
-            return SprintStatus.ACTIVE;
-        case ACTIVE:
-            return SprintStatus.COMPLETED;
-        case COMPLETED:
-            throw new ValidationException(
-                "Cannot transition from COMPLETED to another status.");
-        case CANCELLED:
-            throw new ValidationException(
-                "Cannot transition from CANCELLED to another status.");
-        default:
-            throw new ValidationException("Invalid status transition.");
-        }
+    public SprintHistory updateState(SprintStatus newStatus, String n) {
+        var st = ValidationUtil.requireStateTransition(
+            this.status, newStatus, "sprint status", (s) -> {
+                switch (newStatus) {
+                case ACTIVE:
+                    return s == SprintStatus.PLANNED;
+                case COMPLETED:
+                    return s == SprintStatus.ACTIVE;
+                case CANCELLED:
+                    return s == SprintStatus.PLANNED ||
+                        s == SprintStatus.ACTIVE;
+                default:
+                    return false;
+                }
+            });
+
+        return SprintHistory.builder()
+            .sprint(this.sprint)
+            .status(st)
+            .note(n)
+            .build();
     }
 }

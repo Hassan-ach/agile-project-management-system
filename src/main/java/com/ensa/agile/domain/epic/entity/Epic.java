@@ -2,6 +2,7 @@ package com.ensa.agile.domain.epic.entity;
 
 import com.ensa.agile.domain.global.entity.BaseDomainEntity;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import com.ensa.agile.domain.global.utils.ValidationUtil;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
 import com.ensa.agile.domain.story.entity.UserStory;
 import java.util.ArrayList;
@@ -32,23 +33,16 @@ public class Epic extends BaseDomainEntity {
     }
 
     public void updateMetadata(String title, String description) {
-        if (title != null) {
-            this.title = title;
-        }
-        if (description != null) {
-            this.description = description;
-        }
-        this.validate();
+        title = ValidationUtil.update(
+            this.title, title, ValidationUtil::requireNonBlank, "epic title");
+
+        description = ValidationUtil.update(this.description, description,
+                                            ValidationUtil::requireNonBlank,
+                                            "epic description");
     }
 
     public void validate() {
-        if (title == null || title.isEmpty()) {
-            throw new ValidationException("Epic title cannot be null or empty");
-        }
-
-        if (description == null || description.isEmpty()) {
-            throw new ValidationException(
-                "Epic description cannot be null or empty");
-        }
+        ValidationUtil.requireNonBlank(title, "epic title");
+        ValidationUtil.requireNonBlank(description, "epic description");
     }
 }

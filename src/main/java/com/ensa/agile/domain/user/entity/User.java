@@ -1,6 +1,5 @@
 package com.ensa.agile.domain.user.entity;
 
-import com.ensa.agile.domain.global.exception.ValidationException;
 import com.ensa.agile.domain.global.utils.ValidationUtil;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -49,42 +48,27 @@ public class User {
     }
 
     public void validate() {
-        if (this.firstName == null || this.firstName.isEmpty()) {
-            throw new ValidationException("First name cannot be null or empty");
-        }
-        if (this.lastName == null || this.lastName.isEmpty()) {
-            throw new ValidationException("Last name cannot be null or empty");
-        }
-        if (this.email == null || this.email.isEmpty()) {
-            throw new ValidationException("Email cannot be null or empty");
-        }
-        if (this.password == null || this.password.isEmpty()) {
-            throw new ValidationException("Password cannot be null or empty");
-        }
+        ValidationUtil.requireNonBlank(this.firstName, "user first name");
+        ValidationUtil.requireNonBlank(this.lastName, "user last name");
+        ValidationUtil.requireStrongPassword(this.password, "user password");
 
-        if (!ValidationUtil.isValidPassword(this.password)) {
-            throw new ValidationException(
-                "Password does not meet complexity requirements");
-        }
-
-        if (!ValidationUtil.isValidEmail(this.email)) {
-            throw new ValidationException("Email format is invalid");
-        }
+        ValidationUtil.requireValidEmail(this.email, "user email");
     }
 
     public void updateMetadata(String firstName, String lastName,
                                String password) {
-        if (firstName != null) {
-            this.firstName = firstName;
-        }
-        if (lastName != null) {
-            this.lastName = lastName;
-        }
-        if (password != null) {
-            this.password = password;
-        }
 
-        validate();
+        this.firstName = ValidationUtil.update(this.firstName, firstName,
+                                               ValidationUtil::requireNonBlank,
+                                               "user first name");
+
+        this.lastName = ValidationUtil.update(this.lastName, lastName,
+                                              ValidationUtil::requireNonBlank,
+                                              "user last name");
+
+        this.password = ValidationUtil.update(
+            this.password, password, ValidationUtil::requireStrongPassword,
+            "user password");
     }
 
     public void verifyEmail() { this.emailVerified = true; }

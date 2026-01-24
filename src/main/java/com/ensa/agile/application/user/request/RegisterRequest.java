@@ -39,31 +39,15 @@ public class RegisterRequest {
 
     public void validate() throws ValidationException {
 
-        if (firstName == null || firstName.trim().isBlank() ||
-            firstName.length() < 3) {
-            throw new ValidationException(
-                "First name must be at least 3 characters long and cannot be "
-                + "blank");
-        }
-        if (lastName == null || lastName.trim().isBlank() ||
-            lastName.length() < 3) {
-            throw new ValidationException(
-                "Last name must be at least 3 characters long and cannot be "
-                + "blank");
-        }
-        if (email == null || email.trim().isBlank() ||
-            !ValidationUtil.isValidEmail(email)) {
-            throw new ValidationException("Email must be valid and cannot be "
-                                          + "blank");
-        }
-        if (password == null || password.length() < 8) {
-            throw new ValidationException(
-                "Password must be at least 8 characters long if provided");
-        }
-        if (passwordConfirm == null || !passwordConfirm.equals(password)) {
-            throw new ValidationException(
-                "Password confirmation does not match "
-                + "the password");
-        }
+        ValidationUtil.requireMinLength(firstName, "user first name", 3);
+
+        ValidationUtil.requireMinLength(lastName, "user last name", 3);
+        ValidationUtil.requireValidEmail(email, "user email");
+
+        ValidationUtil.requireStrongPassword(password, "user password");
+
+        ValidationUtil.require(passwordConfirm, "password Confirm", (p) -> {
+            return p != null && p.equals(password);
+        }, "Password confirmation does not match the password");
     }
 }

@@ -2,6 +2,7 @@ package com.ensa.agile.domain.sprint.entity;
 
 import com.ensa.agile.domain.global.entity.BaseDomainEntity;
 import com.ensa.agile.domain.global.exception.ValidationException;
+import com.ensa.agile.domain.global.utils.ValidationUtil;
 import com.ensa.agile.domain.product.entity.ProductBackLog;
 import com.ensa.agile.domain.story.entity.UserStory;
 import com.ensa.agile.domain.user.entity.User;
@@ -30,16 +31,15 @@ public class SprintBackLog extends BaseDomainEntity {
 
     protected SprintBackLog(SprintBackLogBuilder<?, ?> b) {
         super(b);
-        this.name = b.name != null ? b.name : "";
-        this.productBackLog =
-            b.productBackLog != null ? b.productBackLog : null;
-        this.scrumMaster = b.scrumMaster != null ? b.scrumMaster : null;
+        this.name = b.name;
+        this.productBackLog = b.productBackLog;
+        this.scrumMaster = b.scrumMaster;
         this.members = b.members != null ? b.members : new ArrayList<>();
         this.userStories =
             b.userStories != null ? b.userStories : new ArrayList<>();
         this.startDate = b.startDate;
         this.endDate = b.endDate;
-        this.goal = b.goal != null ? b.goal : "";
+        this.goal = b.goal;
         this.status = b.status;
         this.sprintHistories =
             b.sprintHistories != null ? b.sprintHistories : new ArrayList<>();
@@ -48,23 +48,22 @@ public class SprintBackLog extends BaseDomainEntity {
 
     public void updateMetadata(String name, LocalDate startDate,
                                LocalDate endDate, String goal) {
-        if (name != null) {
-            this.name = name;
-        }
+        this.name = ValidationUtil.update(
+            this.name, name, ValidationUtil::requireNonBlank, "sprint name");
 
-        if (startDate != null) {
-            this.startDate = startDate;
-        }
+        this.startDate = ValidationUtil.update(
+            this.startDate, startDate, ValidationUtil::requireFutureDate,
+            "sprint start date");
 
-        if (endDate != null) {
-            this.endDate = endDate;
-        }
+        this.endDate = ValidationUtil.update(this.endDate, endDate,
+                                             ValidationUtil::requireFutureDate,
+                                             "sprint end date");
 
-        if (goal != null) {
-            this.goal = goal;
-        }
+        ValidationUtil.requireBefore(this.startDate, "sprint start date",
+                                     endDate, "sprint end date");
 
-        this.validate();
+        this.goal = ValidationUtil.update(
+            this.goal, goal, ValidationUtil::requireNonBlank, "sprint goal");
     }
 
     public void updateScrumMaster(User scrumMaster) {
@@ -73,17 +72,8 @@ public class SprintBackLog extends BaseDomainEntity {
     }
 
     public void validate() {
-        if (startDate.isAfter(endDate)) {
-            throw new ValidationException(
-                "Sprint start date must be before end date");
-        }
-
-        if (name.isBlank()) {
-            throw new ValidationException("Sprint name must not be empty");
-        }
-
-        if (goal.isBlank()) {
-            throw new ValidationException("Sprint goal must not be empty");
-        }
+        ValidationUtil.requireBefore(this.startDate, "sprint start date",
+                                     endDate, "sprint end date");
+        ValidationUtil.requireNonBlank(goal, "sprint goal");
     }
 }
