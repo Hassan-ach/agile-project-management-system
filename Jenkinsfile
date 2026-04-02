@@ -1,14 +1,14 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.9-eclipse-temurin-17'
+        }
+    }
 
     triggers {
         githubPush()
     }
 
-    tools {
-        jdk 'jdk-21'
-        maven 'Maven-3.9'
-    }
 
     environment {
         DB_NAME = 'agile_db'
