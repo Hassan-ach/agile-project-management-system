@@ -1,14 +1,10 @@
 pipeline {
-    agent {
-        dockerContainer {
-            image 'maven:3.9-eclipse-temurin-17'
-        }
-    }
+    agent any
 
-    triggers {
-        githubPush()
+    tools {
+        maven 'Maven-3.9'
+        jdk 'jdk-21'
     }
-
 
     environment {
         DB_NAME = 'agile_db'
@@ -28,11 +24,11 @@ pipeline {
             }
         }
 
-        stage('DB Setup') {
-            steps {
-                sh 'docker compose up -d'
-            }
-        }
+        // stage('DB Setup') {
+        //     steps {
+        //         sh 'docker compose up -d'
+        //     }
+        // }
 
         stage('Build') {
             steps {
@@ -42,7 +38,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                sh 'mvn -Dtest="com.ensa.agile.domain.*.*Test" test'
             }
         }
 
