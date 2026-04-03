@@ -55,10 +55,15 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline succeeded'
+            mail to: 'elhassan.achlou@edu.uiz.ac.ma',
+                 subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Build succeeded\n${env.BUILD_URL}"
         }
+
         failure {
-            echo 'Pipeline failed'
+            mail to: 'elhassan.achlou@edu.uiz.ac.ma',
+                 subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Build failed\n${env.BUILD_URL}"
         }
     }
 }
