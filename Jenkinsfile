@@ -19,7 +19,6 @@ pipeline {
         JWT_SECRET_KEY = 'fc8153c3bfca60f62af67835b8118e9710af4e065cbab2b24f3ffdd3193e1465'
     }
 
-
     stages {
 
         stage('Checkout') {
