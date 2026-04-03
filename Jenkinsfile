@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'docker-local'}
+    agent {label 'docker-agent'}
 
     triggers {
         githubPush()
